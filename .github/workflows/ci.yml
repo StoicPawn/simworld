@@ -17,10 +17,17 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Validate
         run: python scripts/validate.py
-      - name: Smoke simulation
+      - name: Smoke kernel simulation
         run: >-
           python scripts/run_simulation.py
           --config configs/worlds/kernel_smoke.json
           --seed 42
           --horizon 100
           --output /tmp/simworld-smoke
+      - name: First real world simulation
+        run: >-
+          python scripts/run_first_world.py
+          --config configs/worlds/first_world.json
+          --seed 104729
+          --years 40
+          --output /tmp/simworld-first-world

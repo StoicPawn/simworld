@@ -1,0 +1,76 @@
+name: Run First Real World
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: "World seed"
+        required: true
+        default: "104729"
+        type: string
+      years:
+        description: "Years to simulate"
+        required: true
+        default: "40"
+        type: string
+      execution:
+        description: "Execution environment"
+        required: true
+        default: cloud
+        type: choice
+        options: [cloud, local]
+
+permissions:
+  contents: read
+
+jobs:
+  cloud:
+    if: inputs.execution == 'cloud'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install -e '.[dev]'
+      - name: Validate
+        run: python scripts/validate.py
+      - name: Simulate
+        run: >-
+          python scripts/run_first_world.py
+          --config configs/worlds/first_world.json
+          --seed "${{ inputs.seed }}"
+          --years "${{ inputs.years }}"
+          --output "runs/first-world-${{ github.run_id }}-${{ github.run_attempt }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: first-world-${{ github.run_id }}-${{ github.run_attempt }}
+          path: runs/first-world-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 30
+
+  local:
+    if: inputs.execution == 'local'
+    runs-on: [self-hosted, agent-pc]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap
+        run: python scripts/bootstrap.py
+      - name: Validate
+        run: python scripts/validate.py
+      - name: Simulate
+        run: >-
+          python scripts/run_first_world.py
+          --config configs/worlds/first_world.json
+          --seed "${{ inputs.seed }}"
+          --years "${{ inputs.years }}"
+          --output "runs/first-world-${{ github.run_id }}-${{ github.run_attempt }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: first-world-${{ github.run_id }}-${{ github.run_attempt }}
+          path: runs/first-world-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 30
