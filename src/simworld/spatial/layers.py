@@ -50,6 +50,34 @@ class ChunkedRaster:
             return np.full(self.spec.chunk_shape(chunk), self.fill_value, dtype=self.dtype)
         return array.copy()
 
+    def write_array(self, values: NDArray[Any]) -> None:
+        """Write a full raster efficiently while preserving chunked storage."""
+        expected = (self.spec.height, self.spec.width)
+        if values.shape != expected:
+            raise ValueError(f"expected raster shape {expected}, got {values.shape}")
+        for chunk_y in range((self.spec.height + self.spec.chunk_size - 1) // self.spec.chunk_size):
+            for chunk_x in range((self.spec.width + self.spec.chunk_size - 1) // self.spec.chunk_size):
+                chunk = ChunkCoord(chunk_x, chunk_y)
+                row0 = chunk_y * self.spec.chunk_size
+                col0 = chunk_x * self.spec.chunk_size
+                shape = self.spec.chunk_shape(chunk)
+                block = np.asarray(
+                    values[row0 : row0 + shape[0], col0 : col0 + shape[1]], dtype=self.dtype
+                )
+                if np.all(block == self.fill_value):
+                    self._chunks.pop(chunk, None)
+                else:
+                    self._chunks[chunk] = block.copy()
+
+    def to_array(self) -> NDArray[Any]:
+        """Materialize the raster into a dense array for analysis/export."""
+        result = np.full((self.spec.height, self.spec.width), self.fill_value, dtype=self.dtype)
+        for chunk, block in self._chunks.items():
+            row0 = chunk.y * self.spec.chunk_size
+            col0 = chunk.x * self.spec.chunk_size
+            result[row0 : row0 + block.shape[0], col0 : col0 + block.shape[1]] = block
+        return result
+
     @property
     def allocated_chunks(self) -> int:
         return len(self._chunks)
