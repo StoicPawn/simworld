@@ -1,0 +1,59 @@
+version: 1
+execution:
+  max_iterations_default: 6
+  max_iterations_hard: 10
+  timeout_minutes_default: 45
+  repeated_failure_stop: 3
+  allow_direct_main_push: false
+  allow_auto_merge: false
+  allow_secret_changes: false
+  allow_production_access: false
+
+validation:
+  command: scripts/validate.sh
+  required: true
+  tests_must_not_be_weakened: true
+
+paths:
+  preferred_write_roots:
+    - src/
+    - tests/
+    - examples/
+    - scripts/
+    - docs/
+    - configs/
+    - .agent/
+    - .github/workflows/
+  forbidden_patterns:
+    - .env
+    - '*.pem'
+    - '*.key'
+    - credentials*
+    - secrets*
+
+architecture:
+  narrative_is_derived: true
+  allow_simultaneous_events: true
+  allow_isolated_events: true
+  allow_branching_causal_chains: true
+  allow_converging_causal_chains: true
+  relevance_is_not_causal_force: true
+  relevance_can_decay: true
+  quiet_regions_evolve: true
+  variable_resolution_required: true
+  preserve_truth_knowledge_separation: true
+  llm_is_bounded_component: true
+
+runner_capabilities:
+  github_cloud:
+    python: true
+    docker: true
+    local_llm: false
+    gpu: false
+    long_simulation: false
+  agent_pc:
+    python: true
+    docker: optional
+    local_llm: optional
+    gpu: optional
+    long_simulation: true
