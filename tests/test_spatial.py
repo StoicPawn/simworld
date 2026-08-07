@@ -71,6 +71,14 @@ def test_impassable_cells_break_connectivity() -> None:
     assert world_map.path(CellCoord(0, 0), CellCoord(2, 0)) is None
 
 
+def test_diagonal_movement_cannot_cut_blocked_corner() -> None:
+    world_map = SpatialMap.create(GridSpec(width=2, height=2))
+    world_map.layers.set("passable", CellCoord(1, 0), False)
+    world_map.layers.set("passable", CellCoord(0, 1), False)
+
+    assert world_map.path(CellCoord(0, 0), CellCoord(1, 1)) is None
+
+
 def test_pathfinder_discovers_only_pass_through_barrier() -> None:
     spec = GridSpec(width=9, height=7, cell_size_m=1_000.0, chunk_size=4)
     world_map = SpatialMap.create(spec)
