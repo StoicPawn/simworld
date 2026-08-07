@@ -31,23 +31,42 @@ class MovementModel:
         passable_layer: str = "passable",
         elevation_layer: str = "elevation_m",
         slope_weight: float = 6.0,
+        heuristic_cost_floor: float = 0.0,
+        allow_corner_cutting: bool = False,
     ) -> None:
         if slope_weight < 0:
             raise ValueError("slope_weight cannot be negative")
+        if heuristic_cost_floor < 0:
+            raise ValueError("heuristic_cost_floor cannot be negative")
         self.spec = spec
         self.layers = layers
         self.movement_cost_layer = movement_cost_layer
         self.passable_layer = passable_layer
         self.elevation_layer = elevation_layer
         self.slope_weight = slope_weight
+        self.heuristic_cost_floor = heuristic_cost_floor
+        self.allow_corner_cutting = allow_corner_cutting
 
     def is_passable(self, cell: CellCoord) -> bool:
         return bool(self.layers.get(self.passable_layer, cell))
+
+    def _diagonal_crosses_blocked_corner(
+        self, origin: CellCoord, destination: CellCoord
+    ) -> bool:
+        dx = destination.x - origin.x
+        dy = destination.y - origin.y
+        if abs(dx) != 1 or abs(dy) != 1 or self.allow_corner_cutting:
+            return False
+        side_a = CellCoord(origin.x + dx, origin.y)
+        side_b = CellCoord(origin.x, origin.y + dy)
+        return not self.is_passable(side_a) or not self.is_passable(side_b)
 
     def step_cost(self, origin: CellCoord, destination: CellCoord) -> float:
         if destination not in self.spec.neighbors(origin, diagonals=True):
             raise ValueError("movement is only defined between adjacent cells")
         if not self.is_passable(origin) or not self.is_passable(destination):
+            return inf
+        if self._diagonal_crosses_blocked_corner(origin, destination):
             return inf
 
         horizontal_m = self.spec.distance_m(origin, destination)
@@ -63,7 +82,9 @@ class MovementModel:
         return horizontal_m * terrain_factor * (1.0 + self.slope_weight * grade)
 
     def heuristic(self, cell: CellCoord, goal: CellCoord) -> float:
-        return self.spec.distance_m(cell, goal)
+        # A floor of zero degrades safely to Dijkstra. A positive value may be used
+        # only when the caller knows it is a lower bound for all traversable costs.
+        return self.spec.distance_m(cell, goal) * self.heuristic_cost_floor
 
 
 def shortest_path(
@@ -73,11 +94,11 @@ def shortest_path(
     *,
     max_expansions: int | None = None,
 ) -> PathResult | None:
-    """Find the minimum-cost path with A*.
+    """Find a minimum-cost traversable path with A*/Dijkstra semantics.
 
     ``None`` means no traversable connection exists under the current map state.
-    The path therefore reacts automatically when geography or infrastructure layers
-    change; no strategic corridor is hard-coded.
+    The path reacts automatically when geography or infrastructure layers change;
+    no strategic corridor is hard-coded.
     """
 
     model.spec.require_cell(start)
