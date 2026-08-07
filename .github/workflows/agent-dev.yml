@@ -1,0 +1,204 @@
+name: SimWorld Development Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What should the coding agent implement?"
+        required: true
+        type: string
+      execution:
+        description: "Where should the agent run?"
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - local
+          - cloud
+      max_iterations:
+        description: "Maximum bounded Codex iterations"
+        required: true
+        default: "6"
+        type: choice
+        options:
+          - "3"
+          - "5"
+          - "6"
+          - "8"
+          - "10"
+      base_ref:
+        description: "Base branch/ref (blank = branch from which this workflow is launched)"
+        required: false
+        default: ""
+        type: string
+      model:
+        description: "Optional Codex model override"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+concurrency:
+  group: simworld-agent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  router:
+    runs-on: ubuntu-latest
+    outputs:
+      use_local: ${{ steps.choose.outputs.use_local }}
+      base_ref: ${{ steps.choose.outputs.base_ref }}
+    steps:
+      - name: Choose execution environment
+        id: choose
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.execution }}
+          REQUESTED_BASE: ${{ inputs.base_ref }}
+        shell: bash
+        run: |
+          BASE_REF="${REQUESTED_BASE:-$GITHUB_REF_NAME}"
+          echo "base_ref=$BASE_REF" >> "$GITHUB_OUTPUT"
+
+          if [ "$MODE" = "local" ]; then
+            echo "use_local=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$MODE" = "cloud" ]; then
+            echo "use_local=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # In auto mode, use the PC only when a runner labelled agent-pc is online and idle.
+          # If the API is unavailable or permission is insufficient, fail safely to GitHub cloud.
+          RUNNERS="$(gh api "repos/$GITHUB_REPOSITORY/actions/runners?per_page=100" 2>/dev/null || true)"
+          if [ -z "$RUNNERS" ]; then
+            echo "Runner status unavailable; using cloud fallback."
+            echo "use_local=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          COUNT="$(printf '%s' "$RUNNERS" | jq '[.runners[] | select(any(.labels[]; .name == "agent-pc")) | select(.status == "online" and .busy == false)] | length')"
+          if [ "$COUNT" -gt 0 ]; then
+            echo "use_local=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_local=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  local:
+    needs: router
+    if: needs.router.outputs.use_local == 'true'
+    runs-on: [self-hosted, agent-pc]
+    timeout-minutes: 60
+    outputs:
+      branch: ${{ steps.agent.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.router.outputs.base_ref }}
+          fetch-depth: 0
+
+      - name: Bootstrap project
+        run: python scripts/bootstrap.py
+
+      - name: Check Codex installation
+        run: codex --version
+
+      - name: Run bounded coding agent
+        id: agent
+        env:
+          AGENT_TASK: ${{ inputs.task }}
+          MAX_ITERATIONS: ${{ inputs.max_iterations }}
+          RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          CODEX_MODEL: ${{ inputs.model }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/agent_loop.py
+
+  cloud:
+    needs: router
+    if: needs.router.outputs.use_local != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      branch: ${{ steps.agent.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.router.outputs.base_ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Require cloud Codex credential
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY repository secret is required for cloud fallback."
+            exit 1
+          fi
+
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+
+      - name: Bootstrap project
+        run: python scripts/bootstrap.py
+
+      - name: Run bounded coding agent
+        id: agent
+        env:
+          AGENT_TASK: ${{ inputs.task }}
+          MAX_ITERATIONS: ${{ inputs.max_iterations }}
+          RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          CODEX_MODEL: ${{ inputs.model }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/agent_loop.py
+
+  publish:
+    needs: [router, local, cloud]
+    if: always() && (needs.local.result == 'success' || needs.cloud.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open draft pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ needs.local.outputs.branch || needs.cloud.outputs.branch }}
+          BASE_REF: ${{ needs.router.outputs.base_ref }}
+          TASK: ${{ inputs.task }}
+        shell: bash
+        run: |
+          if [ -z "$BRANCH" ]; then
+            echo "Agent completed without publishing a branch."
+            exit 1
+          fi
+          TITLE="Agent: $(printf '%s' "$TASK" | tr '\n' ' ' | cut -c1-90)"
+          cat > /tmp/pr-body.md <<EOF
+          ## Automated SimWorld development run
+
+          **Task**
+
+          $TASK
+
+          The bounded agent loop read the repository constitution and project matrix, modified an isolated `agent/*` branch, and passed `scripts/validate.py` before publication.
+
+          This PR is intentionally **draft**. It is never merged automatically.
+          EOF
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --head "$BRANCH" \
+            --base "$BASE_REF" \
+            --title "$TITLE" \
+            --body-file /tmp/pr-body.md \
+            --draft
