@@ -7,6 +7,7 @@ requiring higher-level political or narrative concepts.
 
 from simworld.spatial.grid import CellCoord, ChunkCoord, GridSpec
 from simworld.spatial.layers import ChunkedRaster, SpatialLayers
+from simworld.spatial.map import SpatialMap
 from simworld.spatial.movement import MovementModel, PathResult, shortest_path
 
 __all__ = [
@@ -15,6 +16,7 @@ __all__ = [
     "GridSpec",
     "ChunkedRaster",
     "SpatialLayers",
+    "SpatialMap",
     "MovementModel",
     "PathResult",
     "shortest_path",
