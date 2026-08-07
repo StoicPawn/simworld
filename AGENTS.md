@@ -1,10 +1,24 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
-Build SimWorld as a general multi-scale causal world simulator. The long-term target is not a story generator: it is a simulation engine from which many overlapping histories can be reconstructed, queried, compared, simulated forward, and eventually used for probabilistic inverse inference and geopolitical scenario analysis.
+Build SimWorld as a general multi-scale causal world simulator with a **geopolitical and spatial-first architecture**. The long-term target is not a story generator: it is a simulation engine from which many overlapping histories can be reconstructed, queried, compared, simulated forward, and eventually used for probabilistic inverse inference and geopolitical scenario analysis.
+
+## Foundational substrate
+
+SimWorld treats **time and space as co-equal simulation substrates**.
+
+```text
+TIME + SPACE
+    ↓
+ENTITIES + EVENTS + PROCESSES
+    ↓
+HISTORIES / POLITICS / ECONOMY / CONFLICT / INFERENCE
+```
+
+The map is causal state, not decoration. Read `docs/SPATIAL_FOUNDATION.md` before introducing geography, regions, resources, population, movement, infrastructure, borders, war, trade, climate, or geopolitical inference.
 
 ## Architectural invariants
 
@@ -20,6 +34,14 @@ Build SimWorld as a general multi-scale causal world simulator. The long-term ta
 10. **Keep the kernel domain-agnostic.** Geography, resources, population, economy, institutions, politics, conflict, beliefs and inference belong in modules layered on the core.
 11. **LLMs are bounded components, not the simulator.** Deterministic state, constraints, validation and causal mechanics stay outside the language model whenever possible.
 12. **Reproducibility matters.** A seed and configuration must be sufficient to reproduce deterministic/stochastic choices within a compatible engine version.
+13. **SimWorld is spatial-first.** Physical geography must exist below political, demographic and economic systems rather than being painted onto them later.
+14. **The map must be causal.** Terrain, water, slope, climate, resources, accessibility and infrastructure must influence feasible actions, costs and propagation.
+15. **Use layered geography.** Keep physical truth, anthropized geography, political control and perceived/known geography distinguishable.
+16. **Regions are derived and mutable.** Do not make administrative/political regions the primitive spatial truth; they are views over cells/areas and may overlap, split or merge.
+17. **Strategic value is emergent.** Never assign a permanent `strategic = true` role when value can be derived from connectivity, resources, networks, technology, actors and time.
+18. **Fine spatial resolution must scale.** Do not instantiate planet-scale raster cells as heavyweight Python objects. Prefer arrays, chunks, tiles, indexes and vectorized operations.
+19. **Spatial importance remains dynamic.** A remote cell, pass, harbour, deposit or region may be irrelevant for centuries and later become central, then fade again.
+20. **Spatial truth and spatial knowledge are different.** A resource or route can exist without being known, correctly mapped or believed by an actor.
 
 ## Development discipline
 
@@ -32,6 +54,7 @@ Build SimWorld as a general multi-scale causal world simulator. The long-term ta
 - Add tests for new invariants and regressions.
 - Update project state/roadmap only when a milestone actually changes.
 - Do not implement future domains early just because they are interesting. Respect dependency order in `.agent/roadmap.yaml`.
+- Spatial foundations must be established before deeply modelling population, economy, states, borders, trade or conflict.
 
 ## Mandatory validation
 
