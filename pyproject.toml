@@ -9,7 +9,9 @@ description = "Multi-scale procedural world and emergent-history simulation engi
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "StoicPawn" }]
-dependencies = []
+dependencies = [
+  "numpy>=2.0",
+]
 
 [project.optional-dependencies]
 dev = [

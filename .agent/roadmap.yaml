@@ -1,6 +1,6 @@
 project: simworld
-version: 2
-current_phase: phase_0_automation
+version: 3
+current_phase: phase_2_spatial_foundation
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -24,7 +24,7 @@ phases:
       - event_driven_scheduler
 
   - id: phase_0_automation
-    status: in_progress
+    status: implemented
     depends_on: [phase_0_kernel]
     capabilities:
       - permanent_agent_rules
@@ -38,6 +38,7 @@ phases:
   - id: phase_1_core_foundations
     status: planned
     depends_on: [phase_0_automation]
+    execution_track: core
     capabilities:
       - typed_relations
       - state_delta_reducers
@@ -46,28 +47,38 @@ phases:
       - experiment_metadata
 
   - id: phase_2_spatial_foundation
-    status: planned
-    depends_on: [phase_1_core_foundations]
-    capabilities:
-      - coordinate_reference_system
-      - world_extent
+    status: in_progress
+    depends_on: [phase_0_automation]
+    execution_track: spatial
+    may_progress_in_parallel_with: [phase_1_core_foundations]
+    implemented_capabilities:
+      - planar_coordinate_grid
       - raster_grid_abstraction
-      - chunk_tile_abstraction
+      - lazy_chunk_allocation
       - aligned_spatial_layers
-      - spatial_queries
       - neighbourhood_queries
-      - adjacency
       - distance_utilities
       - movement_cost_surface
+      - elevation_slope_movement_penalty
+      - passability_layer
+      - least_cost_routing_a_star
+    remaining_capabilities:
+      - coordinate_reference_system
+      - real_world_georeferencing
+      - world_extent_projection_policy
+      - chunk_persistence
+      - spatial_serialization
       - region_views_over_cells
-      - deterministic_spatial_serialization
-      - spatial_boundary_tests
+      - spatial_indexes_for_sparse_entities
+      - multi_resolution_tiles
+      - deterministic_spatial_generation_substreams
+      - spatial_boundary_tests_at_scale
 
   - id: phase_3_physical_geography
     status: planned
     depends_on: [phase_2_spatial_foundation]
     capabilities:
-      - elevation
+      - elevation_generation_or_ingestion
       - slope
       - land_water
       - coastline
@@ -78,7 +89,6 @@ phases:
       - natural_hazards_basics
       - spatial_resources
       - accessibility
-      - least_cost_routing
       - background_region_processes
 
   - id: phase_4_population
