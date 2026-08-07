@@ -49,6 +49,14 @@ def slugify(value: str, *, limit: int = 42) -> str:
     return (value[:limit].rstrip("-") or "task")
 
 
+def set_github_output(name: str, value: str) -> None:
+    output_path = os.environ.get("GITHUB_OUTPUT")
+    if not output_path:
+        return
+    with Path(output_path).open("a", encoding="utf-8") as handle:
+        handle.write(f"{name}={value}\n")
+
+
 def validate(log_path: Path) -> tuple[bool, str]:
     completed = run(
         [sys.executable, "scripts/validate.py"],
@@ -156,6 +164,7 @@ best coherent change you can in this iteration; the outer controller will run va
                 run(["git", "diff", "--cached", "--check"])
                 run(["git", "commit", "-m", f"Agent: {task[:72]}"])
                 run(["git", "push", "-u", "origin", branch])
+                set_github_output("branch", branch)
                 print(f"AGENT_BRANCH={branch}")
                 return 0
             failure = f"Repository validation failed. Tail:\n{validation_tail}"
