@@ -1,0 +1,66 @@
+{
+  "name": "kernel_smoke",
+  "entities": [
+    {
+      "id": "region_west",
+      "kind": "region",
+      "name": "Western Basin",
+      "tags": ["region"]
+    },
+    {
+      "id": "region_east",
+      "kind": "region",
+      "name": "Eastern Uplands",
+      "tags": ["region"]
+    },
+    {
+      "id": "house_arden",
+      "kind": "group",
+      "name": "House Arden",
+      "tags": ["group"]
+    },
+    {
+      "id": "settlement_merin",
+      "kind": "settlement",
+      "name": "Merin",
+      "tags": ["settlement"]
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_west_harvest",
+      "kind": "harvest_surplus",
+      "time": 10,
+      "participants": ["house_arden"],
+      "locations": ["region_west"],
+      "impact": 1.2,
+      "payload": {"note": "local background event"}
+    },
+    {
+      "id": "evt_east_storm",
+      "kind": "severe_storm",
+      "time": 10,
+      "locations": ["region_east"],
+      "impact": 2.0,
+      "payload": {"note": "simultaneous distant event"}
+    },
+    {
+      "id": "evt_road_damage",
+      "kind": "road_damage",
+      "time": 11,
+      "locations": ["region_east"],
+      "causes": ["evt_east_storm"],
+      "impact": 1.5
+    },
+    {
+      "id": "evt_market_pressure",
+      "kind": "market_pressure",
+      "time": 15,
+      "participants": ["house_arden"],
+      "locations": ["settlement_merin"],
+      "causes": ["evt_west_harvest", "evt_road_damage"],
+      "impact": 3.0,
+      "payload": {"note": "two previously separate histories converge"}
+    }
+  ]
+}
