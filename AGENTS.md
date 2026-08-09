@@ -1,6 +1,6 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/DEVELOPMENT_LEDGER.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/MATERIAL_ECONOMY_FOUNDATION.md`, `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`, `docs/DEVELOPMENT_LEDGER.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
@@ -15,6 +15,8 @@ TIME + SPACE
     ↓
 OBJECTIVE WORLD STATE
     ↓
+MATERIAL / SOCIAL PROCESSES
+    ↓
 EVENTS / EXPERIENCES / INFORMATION
     ↓
 MEMORY / BELIEFS / NEEDS / SOCIAL TRANSMISSION
@@ -24,7 +26,7 @@ DECISIONS / ACTIONS
 CHANGED WORLD STATE
 ```
 
-The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Read `docs/SPATIAL_FOUNDATION.md` before spatial/domain work, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` before modelling agents/communication/culture, and `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md` before families, reproduction, households, houses, dynasties, inheritance or social networks.
+The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Ownership is not control. Organization is not statehood. Read the relevant foundation document before changing each domain.
 
 ## Architectural invariants
 
@@ -72,6 +74,15 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 42. **Inheritance is multi-dimensional.** Property, debt, names, offices, claims and narrative custody may pass differently and to different people.
 43. **Succession is not blood-only.** Biology, dependence, social ties, expressed intent, norms, institutions, power and recognition can compete; no universal single-heir function is allowed.
 44. **Life-process detail must scale adaptively.** Do not require every aggregate person in a planet-scale simulation to be permanently materialized as a full agent.
+45. **Material categories stay distinct.** Resource truth, access, possession, ownership, effective control, productive capacity, inventory, wealth and actor beliefs about them are different states.
+46. **Scarcity is not a scripted social event.** It changes constraints and incentives but never directly calls revolt, migration, trade, repression or another prescribed response.
+47. **Property is historical.** Rights are temporal, partial, typed and may later be contested; do not overwrite provenance.
+48. **Economic specialization should emerge.** Prefer continuous heterogeneity, geography, learning and accumulated advantages over unexplained permanent castes.
+49. **Obligation is not consent.** A duty may be accepted, tolerated, disputed, imposed, misunderstood or unknown to third parties.
+50. **Compliance is not legitimacy.** Compliance may arise from trust, dependency, norms, incentives, fear, coercion or error.
+51. **Dependency is not loyalty.** Material or informational dependence may create effective power without affection or political identification.
+52. **Organization is not statehood.** Generic organizations may remain economic, familial, religious, military or mixed; size and durability alone never make a state.
+53. **Authority is derived, domain-specific and distinct from legitimacy.** Track compliance, dependency, recognition, provision and coercion separately. Economic authority does not automatically imply military, religious or territorial authority.
 
 ## Development discipline
 
@@ -84,9 +95,10 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 - Add tests for new invariants and regressions.
 - **Every material architectural or simulation change must update `docs/DEVELOPMENT_LEDGER.md` in chronological order, plus `.agent/project_state.md` and `.agent/roadmap.yaml` when capabilities or milestone status change.**
 - Do not implement future domains early just because they are interesting. Respect dependency order in `.agent/roadmap.yaml`.
-- Spatial foundations must be established before deeply modelling population, economy, states, borders, trade or conflict.
-- Epistemic/social foundations must be used rather than bypassed when later political actors, families, institutions and cultures are added.
-- Never model houses/dynasties as unexplained containers if their membership can be derived from biological/social/economic/institutional relations.
+- Spatial foundations must remain below population, economy, organizations, states, borders, trade and conflict.
+- Epistemic/social foundations must be used rather than bypassed by later political actors, families, institutions and cultures.
+- Never model houses/dynasties as unexplained containers if membership can be derived from biological/social/economic/institutional relations.
+- Never model a state merely by renaming an organization; territorial control, recognition, extraction/provision, coercive capacity and institutional persistence must be explicit substrates.
 
 ## Mandatory validation
 
