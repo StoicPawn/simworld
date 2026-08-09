@@ -31,3 +31,12 @@ jobs:
           --seed 104729
           --years 40
           --output /tmp/simworld-first-world
+      - name: Epistemic social world simulation
+        run: >-
+          python scripts/run_social_world.py
+          --seed 104729
+          --years 25
+          --width 64
+          --height 48
+          --settlements 7
+          --output /tmp/simworld-social-world
