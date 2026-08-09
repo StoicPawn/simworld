@@ -89,12 +89,6 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - the same death may produce multiple incompatible succession outcomes across property, debt, office, name and narrative custody;
 - relationship state must evolve through accumulated interaction rather than static labels.
 
-**Integration target:** generational vertical slice and event store.
-
-**Validation target:** unit tests for household membership, relationship evolution, gestation delay, contested inheritance and integrated multi-year simulation.
-
-**Known limitation:** this remains a vertical slice; production, explicit ownership registries, law, institutions, marriage norms, child development, spatial encounter networks and fully endogenous political organizations are subsequent layers.
-
 ---
 
 ## 2026-08-09 — M7 Material economy, property and spatial exchange
@@ -146,8 +140,6 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - effective authority and legitimacy are separate signals;
 - authority is domain-specific and historically derived;
 - economic dependency may become political power later, but never automatically.
-
-**Validation:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
 
 **Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
 
@@ -202,3 +194,36 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 **Scalability rationale:** the simulator keeps a small set of generic relations and lets historical institutions add meaning later. This is preferred to creating separate hard-coded systems for prehistoric possession, feudal tenure, customary property and modern title.
 
 **Reference:** `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
+
+---
+
+## 2026-08-09 — M11 Encounter-driven movement and social opportunity
+
+**Intent:** remove spontaneous social connection as a default mechanism in the detailed simulation. Relationships should have a causal opportunity path through co-presence, movement or later institutional/activity contexts.
+
+**New primitives/processes:**
+- `Visit` for temporary movement between settlements;
+- `Encounter` for shared-space contact between two actors;
+- `EncounterLedger` for cumulative pair exposure;
+- local encounters among people physically associated with the same settlement;
+- temporary travel constrained by the existing least-cost accessibility layer;
+- travel can create encounters with people at the destination;
+- new friendship/rivalry ties in this vertical slice can arise only after sufficient accumulated encounter exposure.
+
+**New invariants:**
+- visit != relationship;
+- encounter != relationship;
+- co-presence creates opportunity, not outcome;
+- detailed social ties should have a causal contact path rather than appearing from arbitrary random pairing;
+- work, markets, worship, schooling, military service and offices should later add encounter contexts over this same substrate instead of each inventing their own social-network generator.
+
+**Integration:** `EncounterWorldSimulation` overrides the old spontaneous social-pairing step while preserving all lower physical, material, epistemic, generational and institutional processes. `person_visit` and `social_encounter` are explicit historical events.
+
+**Validation:** dedicated tests cover symmetric cumulative exposure, visits without automatic relationship formation, and the requirement that encounter-derived ties have prior exposure. CI runs a dedicated encounter-world slice.
+
+**Known limitations / next dependencies:**
+- current presence is settlement-level rather than cell/activity-site level;
+- visits are temporary and simplified, not full trajectories;
+- existing relationship evolution is not yet conditioned on encounter frequency;
+- exchange and information transmission still use their prior opportunity logic and should progressively consume the encounter substrate;
+- next step should enrich recurring movement/activity contexts without creating era-specific primitives.
