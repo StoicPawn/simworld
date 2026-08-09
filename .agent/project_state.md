@@ -2,14 +2,15 @@
 
 ## Current phase
 
-**First real world + epistemic/cultural foundation active**
+**First real world + epistemic/cultural + generational social-network foundation active**
 
-The repository now has four connected foundations:
+The repository now has five connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
 3. spatial/geopolitical substrate;
-4. first epistemic-social layer.
+4. epistemic-social/cultural layer;
+5. biological generations + multiplex social networks.
 
 ## Foundational architecture
 
@@ -30,10 +31,12 @@ CONSEQUENCES
     ↓
 PERCEIVED LEARNING + SOCIAL MEMORY
     ↓
-FUTURE ACTIONS
+BIOLOGICAL GENERATIONS + SOCIAL NETWORK PROPAGATION
+    ↓
+FUTURE ACTIONS / EMERGENT GROUPS / INSTITUTIONS
 ```
 
-This feedback loop is now part of the project's permanent architecture. Read `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`.
+Read `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` and `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`.
 
 ## Implemented world substrate
 
@@ -60,7 +63,7 @@ This feedback loop is now part of the project's permanent architecture. Read `do
 - migration joins previously separate causal histories;
 - reproducible long runs.
 
-## New epistemic/social implementation
+## Epistemic/social implementation
 
 ### Needs
 `NeedState` represents pressures such as food security, stability, legitimacy and authority. Needs alter incentives but never directly invoke policies.
@@ -68,85 +71,103 @@ This feedback loop is now part of the project's permanent architecture. Read `do
 ### Knowledge and belief
 `EpistemicState` separates beliefs and memories from world truth. Actors update beliefs only through observations or messages available to them.
 
-### Trust
-`TrustProfile` is contextual. One source can be trusted differently for food, military, finance or other domains. Trust can update when later evidence allows a claim to be evaluated.
+### Trust and communication
+`TrustProfile` is contextual. `Message` separates asserted content from simulator-side truth provenance. Reports can be distorted; receivers update beliefs using trust, not hidden truth.
 
-### Communication
-`Message` separates asserted content from simulator-side truth provenance. Reports can be distorted by fear, grievance, limited honesty or noise. Receivers update beliefs using their trust, not hidden truth.
-
-### Learning
-`StrategyLearner` stores perceived rewards separately from latent/modelled effects. This permits actors to learn the wrong causal lesson.
-
-Example now possible in code:
-
-```text
-coercion
--> visible stability rises
--> house learns coercion works
--> latent resentment rises
--> future truthful reporting can worsen
-```
-
-### Decision-making
-`choose_action` uses bounded stochastic choice over feasible actions. Similar needs can produce different policies because beliefs, resources, dispositions, past learning and randomness differ.
-
-The first action menu includes field expansion, food procurement, reserve distribution, coercion, investigation and inaction. This is a vertical-slice menu, not a hard-coded mapping from shortage to solution.
+### Learning and decision
+`StrategyLearner` stores perceived rewards separately from latent/modelled effects. `choose_action` uses bounded stochastic choice over feasible actions, so the same shortage need can lead to different policies or inaction.
 
 ### Social memory
-`Narrative` and `SocialMemory` make stories first-class information objects linked to origin events. Narratives can have versions, confidence, emotional valence, transmission ancestry and mutation.
+`Narrative` and `SocialMemory` make stories first-class information objects linked to origin events. Narrative versions may branch, mutate and persist through trusted transmission. Culture is derived rather than assigned.
 
-A ruling house and local population can form different memories of the same hardship. Repeated transmission can preserve or distort claims. Culture is intended to be derived from persistent distributions of such beliefs/narratives, not assigned as a stereotype.
+## New biological/generational foundation
 
-## Integrated social-world vertical slice
+### Biological persons
+`PersonRecord` stores birth/death and biological parentage separately from social identity. Parent, child, sibling, ancestor, descendant and shared-ancestor relationships are derived through `KinshipGraph`.
 
-Each settlement receives:
-- a local house/political actor;
-- a local representative;
-- contextual trust relations;
-- private epistemic state;
-- strategy learning state;
-- political needs.
+### Reproduction
+`ReproductiveProfile` and `conception_probability` provide a probabilistic reproductive substrate. Intimacy or partnership creates opportunity, never a guaranteed birth. Probability may depend on biological capability, age, health, contact, resources, intent and later prevention/technology.
 
-Each simulated year can now produce:
-- harvest and demographic events;
-- experienced shortage;
-- petitions/reports that may misstate reality;
-- house belief updates;
-- stochastic policy choice;
-- immediate political effects;
-- latent resentment effects;
-- later report verification and trust updating;
-- narrative formation;
-- narrative transmission and drift;
-- migration/discovery from the physical layer.
+A birth creates:
+- biological parent links;
+- parent-child social ties;
+- sibling ties where applicable;
+- a co-parent relation between the two parents.
 
-The event graph therefore contains both material and informational causality.
+It does **not** force romance, affection, marriage, co-residence, loyalty or cooperation.
 
-## Still deliberately incomplete
+### Multiplex social network
+`SocialGraph` and `SocialTie` support simultaneous time-dependent relations such as:
+- friendship;
+- rivalry;
+- romantic/intimate connection;
+- parent-child;
+- sibling;
+- co-parenting;
+- later care, debt, employment, patronage, political alliance and other domains.
 
-The implementation is an architectural seed, not a full cognitive or political model. Next work should deepen:
+Each tie can carry strength, sentiment, trust, dependence, visibility and temporal extent. First-, second- and higher-order network connections are queryable.
+
+### Emergent family/house concept
+`LineageView` is a derived view over biological descent. The simulation can identify lineage candidates retrospectively from descent size plus social cohesion, but does not declare a `House` from blood alone.
+
+Future family/house/dynasty formation must combine some subset of:
+- descent;
+- shared residence;
+- property;
+- inherited roles/claims;
+- names;
+- social cohesion;
+- memory/narratives;
+- self-recognition;
+- recognition by outsiders;
+- alliance/marriage networks.
+
+Branches of one biological lineage may split into different houses. Unrelated people may be incorporated into the same social/institutional family. Kin may become enemies.
+
+## Integrated generational vertical slice
+
+The current generational runner materializes a small number of people per settlement and then permits:
+- heterogeneous romantic/intimate ties;
+- friendship and rivalry;
+- probabilistic births;
+- deaths;
+- derived siblings/ancestors/descendants;
+- co-parent relations without forced affection;
+- new local social connections;
+- networks-of-networks queries;
+- retrospective lineage candidates;
+- interaction with existing geography, food, politics, imperfect information, learning and narratives.
+
+Detailed persons are **not** intended to replace aggregate population. Planet-scale simulations must keep most people aggregated and materialize individuals/families only when causal relevance, requested observation or institutional role requires it.
+
+## Next work
 
 1. deterministic RNG substreams by actor/domain;
-2. typed relations and social networks;
-3. households, generations and role succession;
-4. richer memory retrieval/forgetting;
-5. internal causal models and mistaken causal theories;
-6. strategic deception and information networks;
-7. production, inventories and real trade;
-8. endogenous settlement founding/abandonment;
-9. institutional memory, norms and sanctions;
-10. competing narrative branches rather than a single latest-version view;
-11. endogenous identities, religions, ideologies and cultures;
-12. territorial authority and state formation;
-13. diplomacy/conflict using actor beliefs rather than omniscient state;
+2. relationship evolution: formation, decay, separation, reconciliation, caregiving and household co-residence;
+3. mate/partner meeting through spatial/social networks rather than initial pair seeding;
+4. pregnancy/gestation and infant/child dependency rather than instantaneous annual birth;
+5. household resource pools and care burdens;
+6. inheritance of property, debt, office, claims, names and stories as distinct processes;
+7. family branching, incorporation and explicit recognition mechanisms;
+8. richer memory retrieval/forgetting and intergenerational narrative transmission;
+9. internal causal models and mistaken causal theories;
+10. production, inventories and trade;
+11. norms, sanctions, religion, identities and culture emerging over generations;
+12. authority/state formation from networks, resources, institutions and recognition;
+13. diplomacy/conflict using actor beliefs rather than omniscient truth;
 14. counterfactual and inverse inference over hidden information/beliefs.
 
 ## Architectural warnings
 
 - Never encode `problem -> correct action` as a historical law.
 - Never give political actors direct access to hidden world state.
-- Never equate what an actor says with what it believes.
+- Never equate speech, belief and reality.
 - Never equate immediate perceived success with true long-run success.
 - Never make a narrative replace event provenance.
-- Never assign culture as an unexplained static trope when it can emerge from transmission and institutions.
+- Never assign culture as an unexplained static trope.
+- Never equate biological kinship with loyalty, affection or political identity.
+- Never make partnership deterministically produce children.
+- Never make offspring imply romance between parents.
+- Never make `House` or `Dynasty` a primitive biological truth.
 - Preserve many simultaneous histories and allow chains to remain isolated, branch or converge.
