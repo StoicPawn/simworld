@@ -31,6 +31,12 @@ class WorldState:
     def events(self) -> tuple[Event, ...]:
         return tuple(self._events)
 
+    def advance_to(self, time: int) -> None:
+        """Advance simulated time monotonically without inventing an event."""
+        if time < self.current_time:
+            raise ValueError("cannot move world time backwards")
+        self.current_time = time
+
     def add_entity(self, entity: Entity) -> None:
         if entity.id in self.entities:
             raise ValueError(f"duplicate entity id: {entity.id}")
