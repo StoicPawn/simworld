@@ -5,7 +5,7 @@ from random import Random
 
 from simworld.core.entity import Entity
 from simworld.core.event import Event
-from simworld.simulation.first_world import FirstWorldConfig
+from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
 from simworld.simulation.social_world import SocialSimulationResult, SocialWorldSimulation
 from simworld.social.kinship import KinshipGraph, PersonRecord, lineage_from_roots
 from simworld.social.network import SocialGraph, SocialTie
@@ -30,7 +30,7 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
-        self.generational_rng = Random(config.seed ^ 0xB10FAMILY)
+        self.generational_rng = Random(config.seed ^ 0xB10FA11)
         self.kinship = KinshipGraph()
         self.network = SocialGraph()
         self.person_ids: list[str] = []
@@ -90,18 +90,22 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
                     )
                 )
 
-            # Initial network is heterogeneous: intimacy is not synonymous with romance.
             pairs = ((0, 1), (2, 3), (4, 5))
             for a_idx, b_idx in pairs:
                 a, b = founders[a_idx], founders[b_idx]
                 romantic = self.generational_rng.random() < 0.67
                 self.network.add(
                     SocialTie(
-                        a, b,
+                        a,
+                        b,
                         kind="romantic" if romantic else "intimate",
                         strength=self.generational_rng.uniform(0.55, 0.95),
                         started_at=0,
-                        sentiment=self.generational_rng.uniform(0.15, 0.9) if romantic else self.generational_rng.uniform(-0.15, 0.45),
+                        sentiment=(
+                            self.generational_rng.uniform(0.15, 0.9)
+                            if romantic
+                            else self.generational_rng.uniform(-0.15, 0.45)
+                        ),
                         trust=self.generational_rng.uniform(0.4, 0.9),
                     )
                 )
@@ -109,9 +113,11 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
                 if self.generational_rng.random() < 0.6:
                     self.network.add(
                         SocialTie(
-                            founders[i], founders[i + 1], "friendship",
-                            strength=self.generational_rng.uniform(0.25, 0.8),
-                            started_at=0,
+                            founders[i],
+                            founders[i + 1],
+                            "friendship",
+                            self.generational_rng.uniform(0.25, 0.8),
+                            0,
                             sentiment=self.generational_rng.uniform(0.15, 0.85),
                             trust=self.generational_rng.uniform(0.35, 0.85),
                         )
@@ -160,25 +166,70 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
         self.world.add_entity(child)
         self.person_ids.append(child.id)
         self._settlement_people.setdefault(settlement_id, set()).add(child.id)
-        self.kinship.add_person(PersonRecord(child.id, year, "gestational" if child.attributes["gestational"] else "non_gestational", mother_id, father_id))
+        self.kinship.add_person(
+            PersonRecord(
+                child.id,
+                year,
+                "gestational" if child.attributes["gestational"] else "non_gestational",
+                mother_id,
+                father_id,
+            )
+        )
         self._profiles[child.id] = ReproductiveProfile(
-            child.id, year, bool(child.attributes["gestational"]), float(child.attributes["fertility"]), float(child.attributes["health"])
+            child.id,
+            year,
+            bool(child.attributes["gestational"]),
+            float(child.attributes["fertility"]),
+            float(child.attributes["health"]),
         )
         for parent in (mother_id, father_id):
-            self.network.add(SocialTie(parent, child.id, "parent_child", 1.0, year, sentiment=0.65, trust=0.7, dependence=1.0))
-        # Prole implies a co-parent relation, not romance or affection.
-        self.network.add(SocialTie(mother_id, father_id, "co_parent", 0.72, year, sentiment=0.0, trust=0.5, dependence=0.55))
-        for sibling in self.kinship.siblings(child.id):
-            self.network.add(SocialTie(child.id, sibling, "sibling", 0.82, year, sentiment=0.25, trust=0.55, dependence=0.3))
-        event = Event(
-            kind="birth",
-            time=year,
-            participants=(mother_id, father_id, child.id),
-            locations=(settlement_id,),
-            impact=0.45,
-            payload={"mother_id": mother_id, "father_id": father_id, "child_id": child.id},
+            self.network.add(
+                SocialTie(
+                    parent,
+                    child.id,
+                    "parent_child",
+                    1.0,
+                    year,
+                    sentiment=0.65,
+                    trust=0.7,
+                    dependence=1.0,
+                )
+            )
+        self.network.add(
+            SocialTie(
+                mother_id,
+                father_id,
+                "co_parent",
+                0.72,
+                year,
+                sentiment=0.0,
+                trust=0.5,
+                dependence=0.55,
+            )
         )
-        self.world.record_event(event)
+        for sibling in self.kinship.siblings(child.id):
+            self.network.add(
+                SocialTie(
+                    child.id,
+                    sibling,
+                    "sibling",
+                    0.82,
+                    year,
+                    sentiment=0.25,
+                    trust=0.55,
+                    dependence=0.3,
+                )
+            )
+        self.world.record_event(
+            Event(
+                kind="birth",
+                time=year,
+                participants=(mother_id, father_id, child.id),
+                locations=(settlement_id,),
+                impact=0.45,
+                payload={"mother_id": mother_id, "father_id": father_id, "child_id": child.id},
+            )
+        )
         return child.id
 
     def _run_reproduction(self, year: int) -> None:
@@ -187,11 +238,30 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
             settlement_id = str(mother.attributes["settlement_id"])
             house_id = self._house_for_settlement[settlement_id]
             house = self.world.entities[house_id]
-            resource_security = max(0.05, min(1.0, float(house.attributes["stability"]) * 0.55 + float(house.attributes["treasury"]) * 0.45))
-            intent = max(0.0, min(1.0, 0.45 + 0.25 * tie.sentiment + self.generational_rng.uniform(-0.2, 0.2)))
+            resource_security = max(
+                0.05,
+                min(
+                    1.0,
+                    float(house.attributes["stability"]) * 0.55
+                    + float(house.attributes["treasury"]) * 0.45,
+                ),
+            )
+            intent = max(
+                0.0,
+                min(
+                    1.0,
+                    0.45
+                    + 0.25 * tie.sentiment
+                    + self.generational_rng.uniform(-0.2, 0.2),
+                ),
+            )
             probability = conception_probability(
-                self._profiles[mother_id], self._profiles[father_id], time=year,
-                contact_intensity=tie.strength, resource_security=resource_security, reproductive_intent=intent,
+                self._profiles[mother_id],
+                self._profiles[father_id],
+                time=year,
+                contact_intensity=tie.strength,
+                resource_security=resource_security,
+                reproductive_intent=intent,
             )
             if conception_occurs(probability, self.generational_rng):
                 self._birth(year, mother_id, father_id, settlement_id)
@@ -203,18 +273,43 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
             entity = self.world.entities[person_id]
             age = year - int(entity.attributes["birth_time"])
             health = float(entity.attributes["health"])
-            risk = 0.0008 + max(0, age - 45) ** 2 / 150000.0 + (1.0 - health) * 0.006
+            risk = (
+                0.0008
+                + max(0, age - 45) ** 2 / 150000.0
+                + (1.0 - health) * 0.006
+            )
             if age < 5:
                 risk += 0.006
             if self.generational_rng.random() < min(0.5, risk):
                 entity.attributes["alive"] = False
                 record = self.kinship.people[person_id]
-                self.kinship.people[person_id] = PersonRecord(record.id, record.birth_time, record.sex, record.mother_id, record.father_id, year)
-                self.world.record_event(Event(kind="death", time=year, participants=(person_id,), locations=(str(entity.attributes["settlement_id"]),), impact=0.35, payload={"age": age}))
+                self.kinship.people[person_id] = PersonRecord(
+                    record.id,
+                    record.birth_time,
+                    record.sex,
+                    record.mother_id,
+                    record.father_id,
+                    year,
+                )
+                self.world.record_event(
+                    Event(
+                        kind="death",
+                        time=year,
+                        participants=(person_id,),
+                        locations=(str(entity.attributes["settlement_id"]),),
+                        impact=0.35,
+                        payload={"age": age},
+                    )
+                )
 
     def _evolve_social_network(self, year: int) -> None:
         for settlement_id, people in self._settlement_people.items():
-            alive = [p for p in people if self._alive(p) and year - int(self.world.entities[p].attributes["birth_time"]) >= 12]
+            alive = [
+                p
+                for p in people
+                if self._alive(p)
+                and year - int(self.world.entities[p].attributes["birth_time"]) >= 12
+            ]
             if len(alive) < 2:
                 continue
             for _ in range(max(1, len(alive) // 4)):
@@ -223,9 +318,35 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
                     continue
                 related = self.kinship.biological_relatedness_hint(a, b)
                 kind = "friendship" if self.generational_rng.random() < 0.72 else "rivalry"
-                sentiment = self.generational_rng.uniform(0.1, 0.75) if kind == "friendship" else self.generational_rng.uniform(-0.85, -0.15)
-                self.network.add(SocialTie(a, b, kind, self.generational_rng.uniform(0.15, 0.65), year, sentiment=sentiment, trust=self.generational_rng.uniform(0.25, 0.75)))
-                self.world.record_event(Event(kind="social_tie_formed", time=year, participants=(a, b), locations=(settlement_id,), impact=0.12, payload={"kind": kind, "biological_relatedness_hint": round(related, 5)}))
+                sentiment = (
+                    self.generational_rng.uniform(0.1, 0.75)
+                    if kind == "friendship"
+                    else self.generational_rng.uniform(-0.85, -0.15)
+                )
+                self.network.add(
+                    SocialTie(
+                        a,
+                        b,
+                        kind,
+                        self.generational_rng.uniform(0.15, 0.65),
+                        year,
+                        sentiment=sentiment,
+                        trust=self.generational_rng.uniform(0.25, 0.75),
+                    )
+                )
+                self.world.record_event(
+                    Event(
+                        kind="social_tie_formed",
+                        time=year,
+                        participants=(a, b),
+                        locations=(settlement_id,),
+                        impact=0.12,
+                        payload={
+                            "kind": kind,
+                            "biological_relatedness_hint": round(related, 5),
+                        },
+                    )
+                )
 
     def _lineage_candidates(self) -> tuple[dict[str, object], ...]:
         candidates: list[dict[str, object]] = []
@@ -238,13 +359,26 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
             cohesion_values: list[float] = []
             members = list(view.members)
             for i, a in enumerate(members):
-                for b in members[i + 1:]:
+                for b in members[i + 1 :]:
                     strength = self.network.connection_strength(a, b, self.config.years)
                     if strength > 0:
                         cohesion_values.append(strength)
-            cohesion = sum(cohesion_values) / len(cohesion_values) if cohesion_values else 0.0
-            candidates.append({"root_id": root, "members": len(view.members), "living": len(living), "social_cohesion": round(cohesion, 4)})
-        candidates.sort(key=lambda x: (-int(x["members"]), -float(x["social_cohesion"])))
+            cohesion = (
+                sum(cohesion_values) / len(cohesion_values)
+                if cohesion_values
+                else 0.0
+            )
+            candidates.append(
+                {
+                    "root_id": root,
+                    "members": len(view.members),
+                    "living": len(living),
+                    "social_cohesion": round(cohesion, 4),
+                }
+            )
+        candidates.sort(
+            key=lambda x: (-int(x["members"]), -float(x["social_cohesion"]))
+        )
         return tuple(candidates)
 
     def run(self) -> GenerationalSimulationResult:
@@ -253,7 +387,9 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
             food_ratio = self._run_harvests(year)
             self._run_demography(year, food_ratio)
             for settlement_id in self.settlement_ids:
-                petition = self._experience_and_request(year, settlement_id, food_ratio[settlement_id])
+                petition = self._experience_and_request(
+                    year, settlement_id, food_ratio[settlement_id]
+                )
                 self._apply_house_action(year, settlement_id, petition)
                 self._verify_reports(year, settlement_id, food_ratio[settlement_id])
             self._run_migration(year, food_ratio)
@@ -262,12 +398,23 @@ class GenerationalWorldSimulation(SocialWorldSimulation):
             self._run_mortality(year)
             self._evolve_social_network(year)
             self._transmit_memory(year)
-        social = SocialSimulationResult(
-            base=super(SocialWorldSimulation, self).run() if False else self._result_without_rerun(),
-            house_ids=tuple(self.house_ids), representative_ids=tuple(self.representative_ids), social_memory=self.social_memory,
-        )
-        return GenerationalSimulationResult(social, self.kinship, self.network, tuple(self.person_ids), self._lineage_candidates())
 
-    def _result_without_rerun(self):
-        from simworld.simulation.first_world import SimulationResult
-        return SimulationResult(self.config, self.generated, self.world, tuple(self.settlement_ids))
+        base = SimulationResult(
+            self.config,
+            self.generated,
+            self.world,
+            tuple(self.settlement_ids),
+        )
+        social = SocialSimulationResult(
+            base=base,
+            house_ids=tuple(self.house_ids),
+            representative_ids=tuple(self.representative_ids),
+            social_memory=self.social_memory,
+        )
+        return GenerationalSimulationResult(
+            social=social,
+            kinship=self.kinship,
+            network=self.network,
+            person_ids=tuple(self.person_ids),
+            lineage_candidates=self._lineage_candidates(),
+        )
