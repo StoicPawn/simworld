@@ -1,6 +1,6 @@
 project: simworld
-version: 3
-current_phase: phase_2_spatial_foundation
+version: 4
+current_phase: first_real_world_plus_epistemic_foundation
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -10,6 +10,14 @@ foundational_principles:
   regions_are_derived_views: true
   strategic_value_is_emergent: true
   physical_truth_separate_from_actor_spatial_knowledge: true
+  needs_are_pressures_not_policies: true
+  actors_are_non_omniscient: true
+  experience_belief_speech_action_are_distinct: true
+  trust_is_contextual_and_historical: true
+  perceived_learning_may_differ_from_causal_truth: true
+  stories_are_information_objects_not_truth: true
+  culture_is_emergent: true
+  no_canonical_historical_interpretation: true
 
 phases:
   - id: phase_0_kernel
@@ -33,11 +41,9 @@ phases:
       - validation_pipeline
       - simulation_dispatch_skeleton
       - local_cloud_capability_routing
-      - spatial_foundation_contract
 
   - id: phase_1_core_foundations
     status: planned
-    depends_on: [phase_0_automation]
     execution_track: core
     capabilities:
       - typed_relations
@@ -48,9 +54,7 @@ phases:
 
   - id: phase_2_spatial_foundation
     status: in_progress
-    depends_on: [phase_0_automation]
     execution_track: spatial
-    may_progress_in_parallel_with: [phase_1_core_foundations]
     implemented_capabilities:
       - planar_coordinate_grid
       - raster_grid_abstraction
@@ -65,101 +69,141 @@ phases:
     remaining_capabilities:
       - coordinate_reference_system
       - real_world_georeferencing
-      - world_extent_projection_policy
       - chunk_persistence
       - spatial_serialization
       - region_views_over_cells
-      - spatial_indexes_for_sparse_entities
+      - sparse_spatial_indexes
       - multi_resolution_tiles
-      - deterministic_spatial_generation_substreams
-      - spatial_boundary_tests_at_scale
+      - deterministic_spatial_rng_substreams
 
   - id: phase_3_physical_geography
-    status: planned
-    depends_on: [phase_2_spatial_foundation]
+    status: vertical_slice_implemented
     capabilities:
-      - elevation_generation_or_ingestion
+      - generated_elevation
       - slope
       - land_water
-      - coastline
-      - hydrology_basics
-      - rivers_lakes
-      - terrain_biome
-      - climate_baseline
-      - natural_hazards_basics
-      - spatial_resources
+      - rainfall_baseline
+      - temperature_baseline
+      - fertility
+      - timber_truth
+      - ore_truth
+      - habitability
       - accessibility
-      - background_region_processes
+    remaining_capabilities:
+      - coastline_topology
+      - drainage
+      - rivers_lakes
+      - soils
+      - biomes
+      - renewable_resource_stocks
+      - dynamic_climate
+      - hazards
 
   - id: phase_4_population
-    status: planned
-    depends_on: [phase_3_physical_geography]
+    status: vertical_slice_implemented
     capabilities:
-      - demographic_aggregates
-      - settlement_density
+      - settlement_population
+      - geography_constrained_settlement_sites
+      - food_linked_demography
+      - geography_constrained_migration
+    remaining_capabilities:
+      - distributed_population_raster
+      - cohorts
       - households
-      - migration
-      - mortality_births
+      - births_deaths
+      - settlement_founding_abandonment
       - adaptive_person_materialization
-      - population_spatial_distribution
+
+  - id: phase_4b_epistemic_social_foundation
+    status: in_progress
+    may_progress_in_parallel_with: [phase_1_core_foundations, phase_2_spatial_foundation]
+    implemented_capabilities:
+      - needs_as_pressures
+      - probabilistic_beliefs
+      - memory_traces
+      - contextual_trust
+      - messages_and_distortion
+      - later_message_accuracy_evaluation
+      - perceived_strategy_learning
+      - latent_effect_separation
+      - bounded_stochastic_action_choice
+      - narrative_information_objects
+      - narrative_transmission_and_mutation
+      - derived_culture_signal
+      - house_settlement_vertical_slice
+    remaining_capabilities:
+      - causal_models_inside_agents
+      - memory_retrieval_and_forgetting
+      - richer_deception_strategy
+      - social_networks
+      - identity_and_group_membership
+      - norms_and_sanctions
+      - generations_and_role_succession
+      - competing_narrative_branches
+      - institutional_memory
+      - endogenous_value_formation
+      - metacognition_and_confidence_calibration
 
   - id: phase_5_social_economic
     status: planned
-    depends_on: [phase_4_population]
+    depends_on: [phase_3_physical_geography, phase_4_population]
     capabilities:
       - production
       - consumption
+      - inventories
       - trade
       - wealth
       - organizations
       - families_lineages
       - institutions
       - infrastructure_growth
-      - network_effects
       - market_accessibility
 
   - id: phase_6_political_epistemic
-    status: planned
-    depends_on: [phase_5_social_economic]
+    status: foundation_started
+    depends_on: [phase_5_social_economic, phase_4b_epistemic_social_foundation]
     capabilities:
       - states
       - authority
       - claims
       - territorial_control
-      - contested_cells
-      - borders_as_dynamic_layers
+      - borders
       - diplomacy
       - actor_information
       - actor_spatial_knowledge
-      - beliefs
-      - misinformation
-      - hidden_spatial_information
+      - strategic_deception
+      - legitimacy
+      - political_learning
       - bounded_llm_decisions
 
-  - id: phase_7_conflict_history
+  - id: phase_7_culture_institutions_conflict
     status: planned
     depends_on: [phase_6_political_epistemic]
     capabilities:
+      - family_and_dynastic_memory
+      - norms
+      - ideology
+      - religion
+      - emergent_political_culture
+      - institutional_path_dependence
       - conflict
       - military_capacity
-      - military_logistics
       - terrain_constrained_operations
       - fronts_and_occupation
-      - succession
-      - dynastic_politics
       - historical_views
       - narrative_extraction
 
   - id: phase_8_experiments
     status: planned
-    depends_on: [phase_7_conflict_history]
+    depends_on: [phase_7_culture_institutions_conflict]
     capabilities:
       - batch_simulation
       - counterfactuals
       - sensitivity_analysis
       - trajectory_comparison
       - causal_attribution
-      - spatial_sensitivity_analysis
+      - epistemic_counterfactuals
+      - narrative_path_dependence_analysis
 
   - id: phase_9_inverse_inference
     status: planned
@@ -169,9 +213,10 @@ phases:
       - approximate_bayesian_inference
       - abductive_search
       - posterior_over_explanations
-      - latent_spatial_hypotheses
+      - hidden_spatial_hypotheses
       - hidden_resource_hypotheses
-      - hidden_accessibility_hypotheses
+      - hidden_information_hypotheses
+      - hidden_belief_hypotheses
 
   - id: phase_10_real_world
     status: long_term
@@ -182,16 +227,19 @@ phases:
       - historical_reconstruction
       - geopolitical_scenario_analysis
       - uncertainty_aware_helper
-      - spatially_grounded_inverse_analysis
+      - spatially_and_epistemically_grounded_inverse_analysis
 
 constraints:
   never_assume_single_story: true
   relevance_must_not_create_causality: true
   quiet_regions_continue_evolving: true
   support_simultaneous_events: true
-  preserve_partial_information_future_layer: true
-  spatial_foundation_precedes_deep_population_economy_politics: true
+  actor_information_must_not_leak_world_truth: true
+  needs_must_not_call_prescribed_actions: true
+  communication_may_be_false_or_incomplete: true
+  perceived_reward_must_be_distinguishable_from_latent_effect: true
+  narratives_must_not_replace_event_truth: true
+  culture_must_not_be_unexplained_static_stereotype: true
   avoid_heavyweight_object_per_planet_cell: true
-  preserve_layer_separation: true
   strategic_value_must_be_derived: true
   automatic_merge_main: false
