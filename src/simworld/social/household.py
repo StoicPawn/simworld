@@ -21,6 +21,11 @@ class Household:
     care_capacity: float = 1.0
     shared_name: str | None = None
 
+    @property
+    def formed_at(self) -> int:
+        """Semantic alias used when a household is materialized as a world entity."""
+        return self.founded_at
+
     def add_member(self, person_id: str) -> None:
         self.members.add(person_id)
 

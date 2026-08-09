@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Institutional-emergence foundation active above the material world**
+**Material disequilibrium + institutional-emergence foundation active, with primitive property simplified into asset relations**
 
-The repository now has eight connected foundations:
+The repository now has ten connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -12,93 +12,108 @@ The repository now has eight connected foundations:
 4. epistemic-social/cultural layer;
 5. biological generations + multiplex social networks;
 6. household, gestation, relationship evolution and inheritance;
-7. explicit assets/property, inventories, production/consumption and spatial exchange;
-8. obligations, cooperation, generic organizations and derived authority/legitimacy signals.
+7. assets, inventories, production/consumption and spatial exchange;
+8. obligations, cooperation, generic organizations and derived authority/legitimacy;
+9. household-level storage, spoilage, heterogeneous demand and local material shocks;
+10. pre-legal asset relations: possession, use, control, claim and observer-specific recognition.
 
-Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`. Read also `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`.
+Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
 ## Current architecture
 
 ```text
 TIME + SPACE
     ↓
-OBJECTIVE PHYSICAL / SOCIAL WORLD
+PHYSICAL WORLD / ASSETS
     ↓
-RESOURCES / ASSETS / RIGHTS / INVENTORIES
+POSSESSION / USE / CONTROL / CLAIMS
     ↓
-PRODUCTION / CONSUMPTION / EXCHANGE
+RECOGNITION (actor-specific)
     ↓
-OBLIGATIONS / DEPENDENCIES / COOPERATION
+PRODUCTION / STORAGE / CONSUMPTION / SHOCKS
     ↓
-EVENTS + EXPERIENCES
+SURPLUS / DEFICIT / EXCHANGE / OBLIGATIONS
     ↓
-OBSERVATION / COMMUNICATION / MEMORY / BELIEF
+EXPERIENCE / INFORMATION / BELIEF / DECISION
     ↓
-NEEDS / DECISION / ACTION
+HOUSEHOLDS / RELATIONSHIPS / GENERATIONS
     ↓
-HOUSEHOLDS / RELATIONSHIPS / GENERATIONS / SUCCESSION
+COOPERATION / ORGANIZATIONS
     ↓
-GENERIC ORGANIZATIONS
+DERIVED AUTHORITY + LEGITIMACY
     ↓
-DERIVED AUTHORITY + LEGITIMACY SIGNALS
+FUTURE INSTITUTIONS MAY DEFINE/ENFORCE FORMAL PROPERTY
     ↓
-FUTURE: NORMS / OFFICES / CONTROL / CLAIMS / STATES / CONFLICT
+FUTURE TERRITORIAL POLITICS / STATES / CONFLICT
 ```
 
-## Implemented material/institutional bridge
+## Simplification rule
 
-### Obligations
-`ObligationRegistry` represents historically explicit duties between arbitrary actors. Current vertical slice uses grain credit, but the primitive is general enough for future rent, tribute, taxation, labour service, protection, military service and contractual delivery.
+SimWorld should prefer **small generic primitives plus derived historical structures** over separate bespoke systems for each era.
 
-Credit formation depends on actual stock, geography, social connection and previous cooperation. Accepted credit moves real grain and creates an obligation. Repayment, partial repayment and default are explicit events.
+The world does not contain a universal legal fact called `property`. It contains assets and actor↔asset relations:
+- `possess`;
+- `use`;
+- `control`;
+- `claim`.
 
-### Cooperation
-`CooperationLedger` reinforces repeated successful interactions and can weaken after failure. It derives connected cooperation components without declaring those components to be families, houses, guilds, states or any other predetermined institution.
+Other actors may recognize a claim to different degrees. Later norms, offices or institutions may turn some combinations of claim + recognition + control + enforcement into what an observer calls formal property.
 
-### Organizations
-`Organization` is generic: membership, purpose weights, pooled resources and recognition. Repeated cooperation may probabilistically produce an organization. Organizations can pool voluntary grain and redistribute aid. They remain non-political unless later history gives them political roles.
+Documents are future information/evidence objects. A deed or registry entry is not globally authoritative by construction; its force depends on who recognizes its issuer and on effective institutions/enforcement.
 
-### Authority
-`AuthorityIndex` derives domain-specific relationships from separate observations of compliance, dependency, recognition, provision and coercion.
+Read `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
 
-`effective_authority` != `legitimacy_signal`.
+## Current diagnostic principle
 
-A coercive actor can have effective authority with low legitimacy. A recognized actor may have legitimacy but little effective capacity. Material authority does not imply territorial, military, religious or familial authority.
+Do not make the model complicated merely to produce visible history. If a high-level process stays dormant, first ask whether lower-level heterogeneity/opportunities are missing. Do not add event quotas or artificial narrative triggers.
 
 ## Critical invariants
 
 - world truth != actor knowledge;
-- need != action;
+- asset != property;
+- possession != use != control != claim;
+- claim != recognition;
+- recognition != effective control;
+- document != truth;
+- formal property requires institutional context;
+- need/shock != prescribed action;
 - kinship != household != loyalty != political identity;
-- resource truth != access != possession != ownership != control != wealth;
 - request != obligation;
 - compliance != consent;
 - dependency != loyalty;
 - coercion != legitimacy;
-- organization != institution != government != state;
+- organization != state;
 - authority is historical, relational and domain-specific;
-- economic dependency may become political power later but never automatically;
-- family/house/dynasty and state remain emergent categories;
-- no event is generated merely because it makes a better story.
+- never tune event quotas to obtain a desired storyline;
+- prefer derived concepts over hard-coded historical categories.
 
 ## Next work toward the ultimate objective
 
-1. deterministic RNG substreams by actor/process/domain;
-2. spatial/social encounter process based on actual movement, workplaces, markets and institutions;
-3. cell/parcel ownership, possession and contested effective control;
-4. transport, storage, spoilage, roads, ports and market infrastructure;
-5. richer obligations: rent, tribute, taxation, labour service, protection and military duties;
-6. norms, sanctions and actor-specific recognition determining which obligations are considered valid;
-7. offices/roles with succession distinct from organizations and biological lines;
-8. organization fission, merger, competition, nesting and institutional memory;
-9. protection/extraction and material coercive capacity;
-10. emergent family/house recognition from descent + property + memory + names + roles + outsider recognition;
-11. spatial authority/control fields, territorial claims and borders as derived states;
-12. coalitions, diplomacy and conflict using imperfect actor beliefs;
-13. state detection/formation as a retrospective configuration, not a primitive constructor;
-14. batch counterfactual simulation and causal attribution;
-15. inverse inference over hidden resources, information, beliefs, incentives and institutions;
+1. validate M9/M10 across multiple seeds and ensure lower-level disequilibrium can activate exchange/credit without forced events;
+2. deterministic RNG substreams by actor/process/domain;
+3. movement/encounter process based on actual travel, work, markets and institutions;
+4. storage/transport infrastructure and transport loss;
+5. spatial possession/use/control/claims on cells/parcels using the same generic asset-relation model;
+6. actor/institution-specific recognition and dispute over claims;
+7. generic evidence/document objects only when communication/institutions need them;
+8. richer obligations: rent, tribute, labour, protection and military duties;
+9. norms/sanctions, roles/offices and institutional memory;
+10. protection/extraction and coercive capacity;
+11. organization competition/fission/merger and emergent family/house recognition;
+12. spatial authority/control fields, territorial claims and borders as derived states;
+13. coalitions, diplomacy and conflict under imperfect beliefs;
+14. state detection as a retrospective configuration, not a primitive constructor;
+15. counterfactuals and inverse inference;
 16. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical analysis.
+
+## Complexity budget
+
+Before adding a new primitive, ask:
+1. Can this be represented as a state, relation, process, observation or derived view over existing primitives?
+2. Does the concept exist independently of the institution/era being simulated?
+3. Will adding it reduce or increase the number of special-case rules later?
+
+Prefer not to add it when the answers point toward a derived view.
 
 ## Temporary naming warning
 

@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from functools import lru_cache
 from random import Random
 
+from simworld.core.entity import Entity
 from simworld.core.event import Event
 from simworld.economy.exchange import ExchangeProposal, execute_exchange
 from simworld.economy.production import Inventory, ProductionContext, ProductionProcess, produce
-from simworld.economy.property import Asset, PropertyRegistry, PropertyRight
+from simworld.economy.property import Asset, AssetRelation, PropertyRegistry
 from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
 from simworld.simulation.generational_world import GenerationalSimulationResult, GenerationalWorldSimulation
 from simworld.simulation.social_world import SocialSimulationResult
@@ -22,10 +23,13 @@ class MaterialSimulationResult:
 
 
 class MaterialWorldSimulation(GenerationalWorldSimulation):
-    """Adds ownership, household production, inventories and spatial exchange.
+    """Adds assets, possession/use, production, inventories and spatial exchange.
 
-    Scarcity changes feasible actions and incentives; it never directly prescribes a
-    revolt, migration, trade, or political response.
+    The material substrate is deliberately pre-legal. Households can occupy, use and
+    effectively control assets without a universal concept of ownership. Formal
+    property can later emerge from claims, recognition and enforcement institutions.
+    Scarcity changes feasible actions and incentives; it never prescribes a social or
+    political response.
     """
 
     def __init__(self, config: FirstWorldConfig) -> None:
@@ -41,6 +45,17 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
         if self.inventories:
             return
         for household in self.households.active_households():
+            if household.id not in self.world.entities:
+                self.world.add_entity(
+                    Entity(
+                        kind="household",
+                        name=f"Household-{household.id[-8:]}",
+                        created_at=household.formed_at,
+                        id=household.id,
+                        attributes={"settlement_id": household.settlement_id},
+                        tags={"household", "aggregate_social_unit", "material_actor"},
+                    )
+                )
             cell = self._cells[household.settlement_id]
             fertility = float(self.generated.fertility[cell.y, cell.x])
             timber = float(self.generated.timber[cell.y, cell.x])
@@ -55,7 +70,17 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 attributes={"fertility": fertility, "x": cell.x, "y": cell.y},
             )
             self.property_registry.add_asset(field)
-            self.property_registry.grant(PropertyRight(field.id, household.id, 1.0, started_at=0))
+            for relation_kind, strength in (("possess", 1.0), ("use", 1.0), ("control", 0.85)):
+                self.property_registry.relate(
+                    AssetRelation(
+                        asset_id=field.id,
+                        actor_id=household.id,
+                        strength=strength,
+                        kind=relation_kind,
+                        started_at=0,
+                        provenance="initial_occupation",
+                    )
+                )
 
             self.inventories[household.id] = Inventory(
                 household.id,
@@ -69,12 +94,13 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 Event(
                     kind="material_household_initialized",
                     time=0,
-                    participants=tuple(sorted(household.members)),
+                    participants=tuple(sorted(household.members)) + (household.id,),
                     locations=(household.settlement_id,),
                     impact=0.08,
                     payload={
                         "household_id": household.id,
                         "field_asset_id": field.id,
+                        "asset_relation": "occupation_use_control",
                         "farm_skill": round(farm_skill, 4),
                         "wood_skill": round(wood_skill, 4),
                     },
@@ -97,10 +123,10 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
 
     def _field_quality(self, household_id: str, year: int) -> float:
         qualities: list[float] = []
-        for right in self.property_registry.holdings(household_id, year):
-            asset = self.property_registry.assets[right.asset_id]
+        for relation in self.property_registry.relations_of(household_id, year, "use"):
+            asset = self.property_registry.assets[relation.asset_id]
             if asset.kind == "field_plot":
-                qualities.append(asset.productive_capacity * right.share)
+                qualities.append(asset.productive_capacity * relation.strength)
         return sum(qualities) if qualities else 0.0
 
     def _run_material_production(self, year: int, food_ratio: dict[str, float]) -> None:
@@ -149,10 +175,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
             household.food_stock = inventory.amount("grain")
             household.wealth = max(
                 0.0,
-                household.wealth
-                + 0.018 * timber_result.quantity
-                + 0.008 * grain_result.quantity
-                - 0.055 * shortage,
+                household.wealth + 0.018 * timber_result.quantity + 0.008 * grain_result.quantity - 0.055 * shortage,
             )
             if shortage > 0:
                 household.debt += 0.025 * shortage
@@ -161,7 +184,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 Event(
                     kind="material_production",
                     time=year,
-                    participants=tuple(sorted(living)),
+                    participants=tuple(sorted(living)) + (household.id,),
                     locations=(household.settlement_id,),
                     impact=0.08 + 0.08 * shortage,
                     payload={
@@ -214,13 +237,9 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
             for b_id in household_ids[index + 1 :]:
                 b_inv = self.inventories[b_id]
                 complementary = (
-                    a_inv.amount("grain") < 0.55
-                    and a_inv.amount("timber") > 0.7
-                    and b_inv.amount("grain") > 1.0
+                    a_inv.amount("grain") < 0.55 and a_inv.amount("timber") > 0.7 and b_inv.amount("grain") > 1.0
                 ) or (
-                    b_inv.amount("grain") < 0.55
-                    and b_inv.amount("timber") > 0.7
-                    and a_inv.amount("grain") > 1.0
+                    b_inv.amount("grain") < 0.55 and b_inv.amount("timber") > 0.7 and a_inv.amount("grain") > 1.0
                 )
                 if not complementary:
                     continue
@@ -243,13 +262,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 social = self._household_connection(buyer_id, seller_id, year)
                 acceptance = max(
                     0.0,
-                    min(
-                        1.0,
-                        0.46
-                        + 0.27 * spatial
-                        + 0.18 * min(1.0, social)
-                        + self.material_rng.uniform(-0.12, 0.12),
-                    ),
+                    min(1.0, 0.46 + 0.27 * spatial + 0.18 * min(1.0, social) + self.material_rng.uniform(-0.12, 0.12)),
                 )
                 proposal = ExchangeProposal(
                     proposer_id=buyer_id,

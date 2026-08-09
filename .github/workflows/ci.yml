@@ -19,51 +19,22 @@ jobs:
         run: python scripts/validate.py
       - name: Smoke kernel simulation
         run: >-
-          python scripts/run_simulation.py
-          --config configs/worlds/kernel_smoke.json
-          --seed 42
-          --horizon 100
-          --output /tmp/simworld-smoke
+          python scripts/run_simulation.py --config configs/worlds/kernel_smoke.json --seed 42 --horizon 100 --output /tmp/simworld-smoke
       - name: First real world simulation
         run: >-
-          python scripts/run_first_world.py
-          --config configs/worlds/first_world.json
-          --seed 104729
-          --years 40
-          --output /tmp/simworld-first-world
+          python scripts/run_first_world.py --config configs/worlds/first_world.json --seed 104729 --years 40 --output /tmp/simworld-first-world
       - name: Epistemic social world simulation
         run: >-
-          python scripts/run_social_world.py
-          --seed 104729
-          --years 25
-          --width 64
-          --height 48
-          --settlements 7
-          --output /tmp/simworld-social-world
+          python scripts/run_social_world.py --seed 104729 --years 25 --width 64 --height 48 --settlements 7 --output /tmp/simworld-social-world
       - name: Generational social-network simulation
         run: >-
-          python scripts/run_generational_world.py
-          --seed 104729
-          --years 24
-          --width 54
-          --height 40
-          --settlements 5
-          --output /tmp/simworld-generational-world
+          python scripts/run_generational_world.py --seed 104729 --years 24 --width 54 --height 40 --settlements 5 --output /tmp/simworld-generational-world
       - name: Material economy simulation
         run: >-
-          python scripts/run_material_world.py
-          --seed 104729
-          --years 18
-          --width 50
-          --height 38
-          --settlements 5
-          --output /tmp/simworld-material-world
+          python scripts/run_material_world.py --seed 104729 --years 18 --width 50 --height 38 --settlements 5 --output /tmp/simworld-material-world
       - name: Institutional emergence simulation
         run: >-
-          python scripts/run_institutional_world.py
-          --seed 104729
-          --years 20
-          --width 48
-          --height 36
-          --settlements 5
-          --output /tmp/simworld-institutional-world
+          python scripts/run_institutional_world.py --seed 104729 --years 20 --width 48 --height 36 --settlements 5 --output /tmp/simworld-institutional-world
+      - name: Material disequilibrium simulation
+        run: >-
+          python scripts/run_disequilibrium_world.py --seed 104729 --years 30 --width 52 --height 40 --settlements 5 --output /tmp/simworld-disequilibrium-world

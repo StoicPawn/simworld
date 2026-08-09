@@ -1,6 +1,6 @@
 project: simworld
-version: 7
-current_phase: institutional_emergence_foundation
+version: 9
+current_phase: material_disequilibrium_and_asset_claims
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -22,7 +22,11 @@ foundational_principles:
   conception_is_not_birth: true
   inheritance_is_not_blood_only: true
   family_house_dynasty_are_emergent: true
-  property_is_not_control_or_wealth: true
+  assets_precede_property_regimes: true
+  possession_use_control_claim_are_distinct: true
+  recognition_is_actor_specific: true
+  documents_are_evidence_not_truth: true
+  formal_property_is_derived_from_institutions: true
   inventory_is_not_wealth: true
   scarcity_is_not_prescribed_action: true
   obligation_is_not_consent: true
@@ -30,6 +34,9 @@ foundational_principles:
   organization_is_not_state: true
   authority_is_not_legitimacy: true
   authority_is_domain_specific: true
+  heterogeneous_history_from_heterogeneous_processes: true
+  never_target_event_counts: true
+  prefer_generic_primitives_and_derived_views: true
   no_canonical_historical_interpretation: true
 
 phases:
@@ -74,25 +81,33 @@ phases:
     status: in_progress
     implemented_capabilities:
       - explicit_asset_registry
-      - temporal_partial_property_rights
+      - temporal_asset_relations
+      - possession_use_control_claim_separation
+      - observer_specific_claim_recognition
+      - derived_property_architecture
       - household_inventories
       - generic_production_process
       - labour_and_environment_constrained_output
       - real_stock_consumption
-      - material_shortage
       - bilateral_barter
       - spatially_constrained_exchange
-      - socially_influenced_exchange_acceptance
       - general_obligation_registry
       - grain_credit_vertical_slice
       - repayment_partial_repayment_default
-      - debt_dependency_signal
+      - storage_profiles
+      - storage_capacity
+      - spoilage
+      - heterogeneous_age_structured_demand
+      - local_household_material_shocks
+      - explicit_unmet_food_need
     remaining_capabilities:
-      - cell_parcel_property_mosaic
-      - possession_vs_recognized_ownership
-      - contested_control
-      - storage_and_spoilage
-      - transport_capacity
+      - multi_seed_disequilibrium_validation
+      - cell_parcel_asset_relations
+      - contested_possession_and_control
+      - claim_disputes_and_recognition_networks
+      - generic_evidence_document_objects
+      - institution_defined_property_views
+      - transport_capacity_and_transport_loss
       - roads_ports_market_infrastructure
       - richer_credit_contracts
       - debt_networks
@@ -102,39 +117,13 @@ phases:
       - endogenous_specialization_and_technology
       - organization_level_production
       - price_or_nonprice_allocation_institutions
-      - personal_land_inheritance
+      - inheritance_of_asset_relations
       - asset_concentration_metrics
 
   - id: phase_5b_institutional_emergence
     status: in_progress
-    depends_on: [phase_4b_epistemic_social_foundation, phase_5_social_economic]
-    implemented_capabilities:
-      - cooperation_ledger
-      - cooperation_components
-      - generic_organization_registry
-      - organization_membership
-      - shared_organization_resources
-      - probabilistic_organization_formation_from_cooperation
-      - organization_contribution
-      - organization_aid
-      - derived_domain_authority_index
-      - effective_authority_signal
-      - separate_legitimacy_signal
-      - dependency_compliance_recognition_provision_coercion_dimensions
-    remaining_capabilities:
-      - organization_fission_merge_competition
-      - nested_organizations
-      - leadership_and_roles
-      - offices_and_role_succession
-      - rules_and_norms
-      - actor_specific_obligation_recognition
-      - institutional_memory
-      - enforcement_capacity
-      - protection_and_extraction
-      - collective_action
-      - organizational_identity
-      - outsider_recognition
-      - organization_property_and_production
+    implemented_capabilities: [cooperation_ledger, cooperation_components, generic_organization_registry, organization_membership, shared_organization_resources, probabilistic_organization_formation_from_cooperation, organization_contribution, organization_aid, derived_domain_authority_index, effective_authority_signal, separate_legitimacy_signal, dependency_compliance_recognition_provision_coercion_dimensions]
+    remaining_capabilities: [organization_fission_merge_competition, nested_organizations, leadership_and_roles, offices_and_role_succession, rules_and_norms, actor_specific_obligation_recognition, institutional_memory, enforcement_capacity, protection_and_extraction, collective_action, organizational_identity, outsider_recognition, organization_asset_relations_and_production]
 
   - id: phase_6_political_epistemic
     status: foundation_started
@@ -173,15 +162,23 @@ constraints:
   household_must_not_imply_blood_relation: true
   offspring_must_not_imply_romance: true
   inheritance_must_not_be_single_heir_by_default: true
-  ownership_must_not_imply_control: true
+  asset_must_not_imply_property: true
+  possession_must_not_imply_claim: true
+  claim_must_not_imply_recognition: true
+  recognition_must_not_imply_control: true
+  documents_must_not_be_global_truth: true
+  formal_property_requires_institutional_context: true
   wealth_must_not_replace_inventory_or_food_security: true
   scarcity_must_not_directly_trigger_policy_or_revolt: true
-  property_history_must_be_temporal: true
   compliance_must_not_imply_consent: true
   dependency_must_not_imply_loyalty: true
   organization_must_not_imply_statehood: true
   authority_must_not_imply_legitimacy: true
   authority_must_be_domain_specific: true
+  do_not_tune_for_target_event_counts: true
+  shocks_must_create_conditions_not_prescribed_actions: true
+  heterogeneous_results_should_follow_from_heterogeneous_state: true
+  prefer_generic_primitives_over_era_specific_categories: true
   avoid_heavyweight_object_per_planet_cell: true
   strategic_value_must_be_derived: true
   material_changes_require_development_ledger_update: true
