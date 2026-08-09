@@ -73,8 +73,22 @@ def main() -> None:
     (out / "lineages.json").write_text(
         json.dumps(result.lineage_candidates, indent=2), encoding="utf-8"
     )
+
+    serialized_events = [
+        {
+            "id": event.id,
+            "kind": event.kind,
+            "time": event.time,
+            "participants": list(event.participants),
+            "locations": list(event.locations),
+            "causes": list(event.causes),
+            "impact": event.impact,
+            "payload": dict(event.payload),
+        }
+        for event in world.events
+    ]
     (out / "events.jsonl").write_text(
-        "\n".join(json.dumps(event.to_dict(), sort_keys=True) for event in world.events) + "\n",
+        "\n".join(json.dumps(event, sort_keys=True) for event in serialized_events) + "\n",
         encoding="utf-8",
     )
 
