@@ -1,6 +1,6 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/DEVELOPMENT_LEDGER.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
@@ -66,6 +66,12 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 36. **Family/house/dynasty are emergent categories.** Never use biological descent alone as a primitive political unit. Derive them from descent plus social cohesion, property, memory, names, institutions and recognition when applicable.
 37. **Lineages can branch or dissolve.** Related branches may become separate institutions; unrelated people may be incorporated; kin can become enemies.
 38. **Kinship may influence information flow, never guarantee truth.** High family trust can preserve stories and falsehoods alike.
+39. **Household is not kinship.** Co-residence and resource sharing may include unrelated people and may change independently of genealogy.
+40. **Conception is not birth.** Gestation and pregnancy outcome are processes with their own state and uncertainty.
+41. **Relationships evolve.** Strength, sentiment, trust, dependence, separation and reconciliation must be historical processes rather than permanent labels.
+42. **Inheritance is multi-dimensional.** Property, debt, names, offices, claims and narrative custody may pass differently and to different people.
+43. **Succession is not blood-only.** Biology, dependence, social ties, expressed intent, norms, institutions, power and recognition can compete; no universal single-heir function is allowed.
+44. **Life-process detail must scale adaptively.** Do not require every aggregate person in a planet-scale simulation to be permanently materialized as a full agent.
 
 ## Development discipline
 
@@ -76,7 +82,7 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 - Preserve backward compatibility unless the task explicitly authorizes a breaking change.
 - Keep public APIs small and typed.
 - Add tests for new invariants and regressions.
-- Update project state/roadmap only when a milestone actually changes.
+- **Every material architectural or simulation change must update `docs/DEVELOPMENT_LEDGER.md` in chronological order, plus `.agent/project_state.md` and `.agent/roadmap.yaml` when capabilities or milestone status change.**
 - Do not implement future domains early just because they are interesting. Respect dependency order in `.agent/roadmap.yaml`.
 - Spatial foundations must be established before deeply modelling population, economy, states, borders, trade or conflict.
 - Epistemic/social foundations must be used rather than bypassed when later political actors, families, institutions and cultures are added.
