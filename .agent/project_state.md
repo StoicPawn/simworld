@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Institutional-emergence foundation active above the material world**
+**Material disequilibrium + institutional-emergence foundation active**
 
-The repository now has eight connected foundations:
+The repository now has nine connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -13,9 +13,10 @@ The repository now has eight connected foundations:
 5. biological generations + multiplex social networks;
 6. household, gestation, relationship evolution and inheritance;
 7. explicit assets/property, inventories, production/consumption and spatial exchange;
-8. obligations, cooperation, generic organizations and derived authority/legitimacy signals.
+8. obligations, cooperation, generic organizations and derived authority/legitimacy signals;
+9. household-level storage, spoilage, heterogeneous demand and local material shocks creating asynchronous surplus/deficit.
 
-Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`. Read also `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`.
+Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
 ## Current architecture
 
@@ -26,9 +27,11 @@ OBJECTIVE PHYSICAL / SOCIAL WORLD
     ↓
 RESOURCES / ASSETS / RIGHTS / INVENTORIES
     ↓
-PRODUCTION / CONSUMPTION / EXCHANGE
+PRODUCTION / STORAGE / SPOILAGE / CONSUMPTION / LOCAL SHOCKS
     ↓
-OBLIGATIONS / DEPENDENCIES / COOPERATION
+ASYMMETRIC SURPLUS / DEFICIT
+    ↓
+EXCHANGE / CREDIT / OBLIGATIONS / DEPENDENCY / COOPERATION
     ↓
 EVENTS + EXPERIENCES
     ↓
@@ -45,30 +48,31 @@ DERIVED AUTHORITY + LEGITIMACY SIGNALS
 FUTURE: NORMS / OFFICES / CONTROL / CLAIMS / STATES / CONFLICT
 ```
 
-## Implemented material/institutional bridge
+## Current diagnostic principle
 
-### Obligations
-`ObligationRegistry` represents historically explicit duties between arbitrary actors. Current vertical slice uses grain credit, but the primitive is general enough for future rent, tribute, taxation, labour service, protection, military service and contractual delivery.
+The first institutional baseline passed all tests but produced zero exchange/credit/organizations for the reference seed. This is treated as a **model diagnostic**, not as a reason to force historical events. M9 therefore adds plausible material heterogeneity rather than event quotas or arbitrary threshold reductions.
 
-Credit formation depends on actual stock, geography, social connection and previous cooperation. Accepted credit moves real grain and creates an obligation. Repayment, partial repayment and default are explicit events.
+### Material disequilibrium
+- `StorageProfile`: capacity, preservation and exposure differ by household;
+- real grain can be lost through spoilage or insufficient storage capacity;
+- `HouseholdDemandProfile`: food demand depends on household age structure and heterogeneous needs;
+- household-specific vulnerability generates local crop/pest loss, storage damage or tool breakage;
+- households in the same settlement may therefore experience different material histories;
+- unmet food need is recorded after actual inventory consumption;
+- all lower mechanisms remain free to respond or not respond: exchange, credit, migration, household action and organization are not directly invoked by a shock.
 
-### Cooperation
-`CooperationLedger` reinforces repeated successful interactions and can weaken after failure. It derives connected cooperation components without declaring those components to be families, houses, guilds, states or any other predetermined institution.
-
-### Organizations
-`Organization` is generic: membership, purpose weights, pooled resources and recognition. Repeated cooperation may probabilistically produce an organization. Organizations can pool voluntary grain and redistribute aid. They remain non-political unless later history gives them political roles.
-
-### Authority
-`AuthorityIndex` derives domain-specific relationships from separate observations of compliance, dependency, recognition, provision and coercion.
-
-`effective_authority` != `legitimacy_signal`.
-
-A coercive actor can have effective authority with low legitimacy. A recognized actor may have legitimacy but little effective capacity. Material authority does not imply territorial, military, religious or familial authority.
+### Institutional bridge already implemented
+- general obligations with provenance, acceptance, recognition and enforceability;
+- repeated cooperation ledger;
+- generic organizations and resource pooling;
+- domain-specific authority derived from compliance, dependency, recognition, provision and coercion;
+- effective authority remains distinct from legitimacy.
 
 ## Critical invariants
 
 - world truth != actor knowledge;
 - need != action;
+- shock != prescribed response;
 - kinship != household != loyalty != political identity;
 - resource truth != access != possession != ownership != control != wealth;
 - request != obligation;
@@ -77,28 +81,29 @@ A coercive actor can have effective authority with low legitimacy. A recognized 
 - coercion != legitimacy;
 - organization != institution != government != state;
 - authority is historical, relational and domain-specific;
-- economic dependency may become political power later but never automatically;
-- family/house/dynasty and state remain emergent categories;
-- no event is generated merely because it makes a better story.
+- **never tune event quotas to obtain a desired historical storyline**;
+- heterogeneous outcomes should arise from heterogeneous state/processes;
+- family/house/dynasty and state remain emergent categories.
 
 ## Next work toward the ultimate objective
 
-1. deterministic RNG substreams by actor/process/domain;
-2. spatial/social encounter process based on actual movement, workplaces, markets and institutions;
-3. cell/parcel ownership, possession and contested effective control;
-4. transport, storage, spoilage, roads, ports and market infrastructure;
-5. richer obligations: rent, tribute, taxation, labour service, protection and military duties;
-6. norms, sanctions and actor-specific recognition determining which obligations are considered valid;
-7. offices/roles with succession distinct from organizations and biological lines;
-8. organization fission, merger, competition, nesting and institutional memory;
-9. protection/extraction and material coercive capacity;
-10. emergent family/house recognition from descent + property + memory + names + roles + outsider recognition;
-11. spatial authority/control fields, territorial claims and borders as derived states;
-12. coalitions, diplomacy and conflict using imperfect actor beliefs;
-13. state detection/formation as a retrospective configuration, not a primitive constructor;
-14. batch counterfactual simulation and causal attribution;
-15. inverse inference over hidden resources, information, beliefs, incentives and institutions;
-16. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical analysis.
+1. validate whether M9 naturally activates exchange, credit, cooperation and authority across multiple seeds;
+2. deterministic RNG substreams by actor/process/domain;
+3. movement/encounter process based on actual travel, workplaces, markets and institutions;
+4. storage infrastructure, spoilage by good, transport capacity and transport loss;
+5. cell/parcel ownership, possession and contested effective control;
+6. richer obligations: rent, tribute, taxation, labour service, protection and military duties;
+7. norms/sanctions and actor-specific recognition determining which obligations are considered valid;
+8. offices/roles with succession distinct from organizations and biological lines;
+9. organization fission, merger, competition, nesting and institutional memory;
+10. protection/extraction and material coercive capacity;
+11. emergent family/house recognition from descent + property + memory + names + roles + outsider recognition;
+12. spatial authority/control fields, territorial claims and borders as derived states;
+13. coalitions, diplomacy and conflict using imperfect actor beliefs;
+14. state detection/formation as a retrospective configuration, not a primitive constructor;
+15. batch counterfactual simulation and causal attribution;
+16. inverse inference over hidden resources, information, beliefs, incentives and institutions;
+17. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical analysis.
 
 ## Temporary naming warning
 
