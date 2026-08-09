@@ -40,3 +40,12 @@ jobs:
           --height 48
           --settlements 7
           --output /tmp/simworld-social-world
+      - name: Generational social-network simulation
+        run: >-
+          python scripts/run_generational_world.py
+          --seed 104729
+          --years 24
+          --width 54
+          --height 40
+          --settlements 5
+          --output /tmp/simworld-generational-world
