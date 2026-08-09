@@ -1,6 +1,6 @@
 project: simworld
-version: 4
-current_phase: first_real_world_plus_epistemic_foundation
+version: 5
+current_phase: first_real_world_plus_epistemic_generational_relational_foundations
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -18,6 +18,13 @@ foundational_principles:
   stories_are_information_objects_not_truth: true
   culture_is_emergent: true
   no_canonical_historical_interpretation: true
+  seek_prime_causal_matrices: true
+  macro_labels_observational_by_default: true
+  macro_classifiers_causally_inert: true
+  conflict_is_not_war: true
+  cooperation_is_not_alliance: true
+  relations_are_multiplex_and_domain_specific: true
+  same_primitive_matrix_allows_multiple_outcomes: true
 
 phases:
   - id: phase_0_kernel
@@ -106,13 +113,21 @@ phases:
       - geography_constrained_settlement_sites
       - food_linked_demography
       - geography_constrained_migration
+      - biological_person_records
+      - probabilistic_births
+      - deaths
+      - kinship_graph
+      - lineage_views
+      - multiplex_social_networks
     remaining_capabilities:
       - distributed_population_raster
       - cohorts
       - households
-      - births_deaths
-      - settlement_founding_abandonment
+      - pregnancy_gestation
+      - child_dependency
+      - relationship_evolution
       - adaptive_person_materialization
+      - settlement_founding_abandonment
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
@@ -130,19 +145,49 @@ phases:
       - narrative_information_objects
       - narrative_transmission_and_mutation
       - derived_culture_signal
-      - house_settlement_vertical_slice
+      - biological_generations
+      - multiplex_social_networks
     remaining_capabilities:
       - causal_models_inside_agents
       - memory_retrieval_and_forgetting
       - richer_deception_strategy
-      - social_networks
       - identity_and_group_membership
       - norms_and_sanctions
       - generations_and_role_succession
-      - competing_narrative_branches
       - institutional_memory
       - endogenous_value_formation
       - metacognition_and_confidence_calibration
+
+  - id: phase_4c_primitive_relational_matrix
+    status: foundation_implemented
+    may_progress_in_parallel_with: [phase_4b_epistemic_social_foundation, phase_5_social_economic]
+    implemented_capabilities:
+      - actor_interests_by_domain_and_target
+      - perceived_claims
+      - relational_compatibility
+      - relational_incompatibility
+      - capabilities_and_constraints
+      - trust_dependence_contact_uncertainty_matrix
+      - bounded_stochastic_primitive_interaction_choice
+      - primitive_communication_negotiation_exchange_coordination
+      - primitive_withholding_threat_obstruction_seizure_attack_avoidance
+      - retrospective_sustained_cooperation_classifier
+      - retrospective_competitive_rivalry_classifier
+      - retrospective_violent_feud_classifier
+      - retrospective_alliance_like_classifier
+      - retrospective_war_like_classifier
+      - causally_inert_macro_pattern_invariant
+    remaining_capabilities:
+      - perceived_relation_matrices_per_actor
+      - interaction_memory_feedback
+      - coalition_formation_from_networks
+      - third_party_mediation
+      - multi_actor_claim_collisions
+      - endogenous_commitments_treaties_oaths
+      - mobilization_and_logistics_as_lower_level_processes
+      - organizational_command_and_compliance
+      - escalation_deescalation_without_macro_state_machine
+      - pattern_detection_over_dynamic_coalitions
 
   - id: phase_5_social_economic
     status: planned
@@ -161,7 +206,7 @@ phases:
 
   - id: phase_6_political_epistemic
     status: foundation_started
-    depends_on: [phase_5_social_economic, phase_4b_epistemic_social_foundation]
+    depends_on: [phase_5_social_economic, phase_4b_epistemic_social_foundation, phase_4c_primitive_relational_matrix]
     capabilities:
       - states
       - authority
@@ -186,10 +231,11 @@ phases:
       - religion
       - emergent_political_culture
       - institutional_path_dependence
-      - conflict
-      - military_capacity
+      - conflict_patterns
+      - coercive_capacity
+      - logistics
       - terrain_constrained_operations
-      - fronts_and_occupation
+      - fronts_and_occupation_as_derived_spatial_patterns
       - historical_views
       - narrative_extraction
 
@@ -242,4 +288,10 @@ constraints:
   culture_must_not_be_unexplained_static_stereotype: true
   avoid_heavyweight_object_per_planet_cell: true
   strategic_value_must_be_derived: true
+  biological_kinship_must_not_imply_loyalty: true
+  partnership_must_not_imply_offspring: true
+  macro_patterns_must_not_drive_primitive_events: true
+  war_label_must_not_generate_battles: true
+  alliance_label_must_not_guarantee_assistance: true
+  conflict_must_not_imply_violence: true
   automatic_merge_main: false
