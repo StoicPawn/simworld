@@ -1,6 +1,6 @@
 project: simworld
-version: 6
-current_phase: material_economy_foundation
+version: 7
+current_phase: institutional_emergence_foundation
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -25,6 +25,11 @@ foundational_principles:
   property_is_not_control_or_wealth: true
   inventory_is_not_wealth: true
   scarcity_is_not_prescribed_action: true
+  obligation_is_not_consent: true
+  dependency_is_not_loyalty: true
+  organization_is_not_state: true
+  authority_is_not_legitimacy: true
+  authority_is_domain_specific: true
   no_canonical_historical_interpretation: true
 
 phases:
@@ -67,7 +72,6 @@ phases:
 
   - id: phase_5_social_economic
     status: in_progress
-    depends_on: [phase_3_physical_geography, phase_4_population, phase_4c_life_processes]
     implemented_capabilities:
       - explicit_asset_registry
       - temporal_partial_property_rights
@@ -79,6 +83,10 @@ phases:
       - bilateral_barter
       - spatially_constrained_exchange
       - socially_influenced_exchange_acceptance
+      - general_obligation_registry
+      - grain_credit_vertical_slice
+      - repayment_partial_repayment_default
+      - debt_dependency_signal
     remaining_capabilities:
       - cell_parcel_property_mosaic
       - possession_vs_recognized_ownership
@@ -86,25 +94,56 @@ phases:
       - storage_and_spoilage
       - transport_capacity
       - roads_ports_market_infrastructure
-      - credit_contracts
+      - richer_credit_contracts
       - debt_networks
       - rent_tribute_tax
-      - labour_obligations
+      - labour_service_obligations
+      - protection_contracts
       - endogenous_specialization_and_technology
       - organization_level_production
       - price_or_nonprice_allocation_institutions
       - personal_land_inheritance
       - asset_concentration_metrics
-      - firms_guilds_and_other_organizations
+
+  - id: phase_5b_institutional_emergence
+    status: in_progress
+    depends_on: [phase_4b_epistemic_social_foundation, phase_5_social_economic]
+    implemented_capabilities:
+      - cooperation_ledger
+      - cooperation_components
+      - generic_organization_registry
+      - organization_membership
+      - shared_organization_resources
+      - probabilistic_organization_formation_from_cooperation
+      - organization_contribution
+      - organization_aid
+      - derived_domain_authority_index
+      - effective_authority_signal
+      - separate_legitimacy_signal
+      - dependency_compliance_recognition_provision_coercion_dimensions
+    remaining_capabilities:
+      - organization_fission_merge_competition
+      - nested_organizations
+      - leadership_and_roles
+      - offices_and_role_succession
+      - rules_and_norms
+      - actor_specific_obligation_recognition
+      - institutional_memory
+      - enforcement_capacity
+      - protection_and_extraction
+      - collective_action
+      - organizational_identity
+      - outsider_recognition
+      - organization_property_and_production
 
   - id: phase_6_political_epistemic
     status: foundation_started
-    depends_on: [phase_5_social_economic, phase_4b_epistemic_social_foundation]
+    depends_on: [phase_5_social_economic, phase_5b_institutional_emergence, phase_4b_epistemic_social_foundation]
     capabilities: [states, authority, claims, territorial_control, borders, diplomacy, actor_information, actor_spatial_knowledge, strategic_deception, legitimacy, political_learning, bounded_llm_decisions]
+    next_prerequisites: [spatial_control_fields, territorial_claims, protection_extraction, coercive_capacity, recognized_offices, coalition_processes]
 
   - id: phase_7_culture_institutions_conflict
     status: planned
-    depends_on: [phase_6_political_epistemic]
     capabilities: [family_and_dynastic_memory, norms, ideology, religion, emergent_political_culture, institutional_path_dependence, conflict, military_capacity, terrain_constrained_operations, fronts_and_occupation, historical_views, narrative_extraction]
 
   - id: phase_8_experiments
@@ -113,7 +152,7 @@ phases:
 
   - id: phase_9_inverse_inference
     status: planned
-    capabilities: [latent_hypotheses, approximate_bayesian_inference, abductive_search, posterior_over_explanations, hidden_spatial_hypotheses, hidden_resource_hypotheses, hidden_information_hypotheses, hidden_belief_hypotheses]
+    capabilities: [latent_hypotheses, approximate_bayesian_inference, abductive_search, posterior_over_explanations, hidden_spatial_hypotheses, hidden_resource_hypotheses, hidden_information_hypotheses, hidden_belief_hypotheses, hidden_institution_hypotheses]
 
   - id: phase_10_real_world
     status: long_term
@@ -138,6 +177,11 @@ constraints:
   wealth_must_not_replace_inventory_or_food_security: true
   scarcity_must_not_directly_trigger_policy_or_revolt: true
   property_history_must_be_temporal: true
+  compliance_must_not_imply_consent: true
+  dependency_must_not_imply_loyalty: true
+  organization_must_not_imply_statehood: true
+  authority_must_not_imply_legitimacy: true
+  authority_must_be_domain_specific: true
   avoid_heavyweight_object_per_planet_cell: true
   strategic_value_must_be_derived: true
   material_changes_require_development_ledger_update: true

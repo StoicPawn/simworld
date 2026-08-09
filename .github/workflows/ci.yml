@@ -58,3 +58,12 @@ jobs:
           --height 38
           --settlements 5
           --output /tmp/simworld-material-world
+      - name: Institutional emergence simulation
+        run: >-
+          python scripts/run_institutional_world.py
+          --seed 104729
+          --years 20
+          --width 48
+          --height 36
+          --settlements 5
+          --output /tmp/simworld-institutional-world

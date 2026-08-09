@@ -2,19 +2,20 @@
 
 ## Current phase
 
-**First real world + epistemic/cultural + generational + household/inheritance + material economy foundation active**
+**Institutional-emergence foundation active above the material world**
 
-The repository now has seven connected foundations:
+The repository now has eight connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
 3. spatial/geopolitical substrate;
 4. epistemic-social/cultural layer;
 5. biological generations + multiplex social networks;
-6. household, gestation, relationship evolution and inheritance processes;
-7. explicit assets/property, inventories, household production/consumption and spatially constrained exchange.
+6. household, gestation, relationship evolution and inheritance;
+7. explicit assets/property, inventories, production/consumption and spatial exchange;
+8. obligations, cooperation, generic organizations and derived authority/legitimacy signals.
 
-Every material milestone must also be recorded chronologically in `docs/DEVELOPMENT_LEDGER.md`.
+Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`. Read also `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`.
 
 ## Current architecture
 
@@ -25,97 +26,80 @@ OBJECTIVE PHYSICAL / SOCIAL WORLD
     ↓
 RESOURCES / ASSETS / RIGHTS / INVENTORIES
     ↓
-PRODUCTION / CONSUMPTION / EXCHANGE / OBLIGATIONS
+PRODUCTION / CONSUMPTION / EXCHANGE
+    ↓
+OBLIGATIONS / DEPENDENCIES / COOPERATION
     ↓
 EVENTS + EXPERIENCES
     ↓
-OBSERVATION / COMMUNICATION
+OBSERVATION / COMMUNICATION / MEMORY / BELIEF
     ↓
-MEMORY / BELIEF / NEEDS
+NEEDS / DECISION / ACTION
     ↓
-DECISION / ACTION
+HOUSEHOLDS / RELATIONSHIPS / GENERATIONS / SUCCESSION
     ↓
-MATERIAL + SOCIAL CONSEQUENCES
+GENERIC ORGANIZATIONS
     ↓
-RELATIONSHIP / HOUSEHOLD / RESOURCE CHANGE
+DERIVED AUTHORITY + LEGITIMACY SIGNALS
     ↓
-PERCEIVED LEARNING + SOCIAL MEMORY
-    ↓
-BIOLOGICAL GENERATIONS + SUCCESSION
-    ↓
-EMERGENT GROUPS / ORGANIZATIONS / AUTHORITY
-    ↓
-TERRITORIAL POLITICS / STATES / CONFLICT
+FUTURE: NORMS / OFFICES / CONTROL / CLAIMS / STATES / CONFLICT
 ```
 
-## Implemented substrate
+## Implemented material/institutional bridge
 
-### Core and geography
-- persistent entities and immutable events;
-- concurrent timestamps, causal graph, relevance/resolution and seeded scheduling;
-- fine raster/chunk map, aligned layers and terrain-sensitive least-cost routing;
-- generated land/water, elevation, rainfall, temperature, fertility, timber, ore and habitability;
-- settlement sites constrained by geography;
-- hidden resource truth can exist before actor discovery.
+### Obligations
+`ObligationRegistry` represents historically explicit duties between arbitrary actors. Current vertical slice uses grain credit, but the primitive is general enough for future rent, tribute, taxation, labour service, protection, military service and contractual delivery.
 
-### Population, social and epistemic processes
-- local harvests, demography and geography-constrained migration;
-- biological persons, kinship, births/deaths and multiplex social ties;
-- households independent of blood;
-- pregnancy/gestation, relationship evolution and contested succession;
-- needs as pressures, beliefs/memory separate from truth, contextual trust and distorted communication;
-- perceived learning distinct from latent effect;
-- branching narrative objects and transmission.
+Credit formation depends on actual stock, geography, social connection and previous cooperation. Accepted credit moves real grain and creates an obligation. Repayment, partial repayment and default are explicit events.
 
-### Material economy foundation
+### Cooperation
+`CooperationLedger` reinforces repeated successful interactions and can weaken after failure. It derives connected cooperation components without declaring those components to be families, houses, guilds, states or any other predetermined institution.
 
-#### Assets / rights
-`Asset`, `PropertyRight` and `PropertyRegistry` represent material things and historically reconstructible partial rights. Ownership/control is no longer reducible to a scalar wealth field.
+### Organizations
+`Organization` is generic: membership, purpose weights, pooled resources and recognition. Repeated cooperation may probabilistically produce an organization. Organizations can pool voluntary grain and redistribute aid. They remain non-political unless later history gives them political roles.
 
-#### Inventories
-`Inventory` holds actual quantities such as grain, timber and tools. Material availability is therefore distinct from wealth, status or belief about availability.
+### Authority
+`AuthorityIndex` derives domain-specific relationships from separate observations of compliance, dependency, recognition, provision and coercion.
 
-#### Production / consumption
-`ProductionProcess` combines labour with land quality, climate, tools, security and other inputs. Household output varies continuously with geography and circumstances; households are not assigned fixed economic castes. Living household members generate labour capacity. Real grain stocks are consumed; shortages may raise debt/stress but never directly prescribe a political action.
+`effective_authority` != `legitimacy_signal`.
 
-#### Spatial exchange
-Households with complementary stocks may attempt barter. Same-settlement contact is easiest; cross-settlement exchange depends on least-cost spatial accessibility. Existing social connection can affect acceptance without determining it. Rejected exchanges are also historical events.
-
-Read `docs/MATERIAL_ECONOMY_FOUNDATION.md`.
+A coercive actor can have effective authority with low legitimacy. A recognized actor may have legitimacy but little effective capacity. Material authority does not imply territorial, military, religious or familial authority.
 
 ## Critical invariants
 
 - world truth != actor knowledge;
 - need != action;
-- kinship != affection != loyalty != household != political identity;
-- conception != birth;
-- co-residence != family;
-- inheritance != biological descent;
+- kinship != household != loyalty != political identity;
 - resource truth != access != possession != ownership != control != wealth;
-- wealth != inventory != food security != productive capacity;
-- ownership/right must remain temporal and historically reconstructible;
-- scarcity changes constraints and incentives but does not directly create revolts, trade, migration or policy;
-- family/house/dynasty must emerge from interacting biological, social, material, mnemonic and recognition processes;
-- detailed people/households remain adaptive refinements over aggregate population.
+- request != obligation;
+- compliance != consent;
+- dependency != loyalty;
+- coercion != legitimacy;
+- organization != institution != government != state;
+- authority is historical, relational and domain-specific;
+- economic dependency may become political power later but never automatically;
+- family/house/dynasty and state remain emergent categories;
+- no event is generated merely because it makes a better story.
 
 ## Next work toward the ultimate objective
 
 1. deterministic RNG substreams by actor/process/domain;
-2. real encounter/movement process for endogenous friendship, partnership, work and exchange networks;
-3. explicit parcel/cell ownership and contested possession/control distinct from legal/social right;
-4. storage, spoilage, transport capacity and infrastructure;
-5. credit contracts, debt networks, rent, tribute, taxation and labour obligations;
-6. personal/household land inheritance wired directly into the property registry;
-7. household fission/fusion, incorporation/adoption and emergent family self/outsider recognition;
-8. organizations (work groups, guilds, religious bodies, armed groups) emerging from repeated cooperation and resources;
-9. norms, sanctions, religion, identity, education/socialization and endogenous value formation;
-10. authority emerging from protection, extraction, dependency, resources, information and recognition;
-11. territorial control/claims/borders as derived spatial states;
-12. diplomacy and conflict using actor beliefs rather than omniscient truth;
-13. batch counterfactual simulation and trajectory analysis;
-14. inverse inference over hidden resources, information, beliefs and incentives;
-15. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical scenario analysis.
+2. spatial/social encounter process based on actual movement, workplaces, markets and institutions;
+3. cell/parcel ownership, possession and contested effective control;
+4. transport, storage, spoilage, roads, ports and market infrastructure;
+5. richer obligations: rent, tribute, taxation, labour service, protection and military duties;
+6. norms, sanctions and actor-specific recognition determining which obligations are considered valid;
+7. offices/roles with succession distinct from organizations and biological lines;
+8. organization fission, merger, competition, nesting and institutional memory;
+9. protection/extraction and material coercive capacity;
+10. emergent family/house recognition from descent + property + memory + names + roles + outsider recognition;
+11. spatial authority/control fields, territorial claims and borders as derived states;
+12. coalitions, diplomacy and conflict using imperfect actor beliefs;
+13. state detection/formation as a retrospective configuration, not a primitive constructor;
+14. batch counterfactual simulation and causal attribution;
+15. inverse inference over hidden resources, information, beliefs, incentives and institutions;
+16. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical analysis.
 
 ## Temporary naming warning
 
-The earlier social vertical slice still contains entities internally named `house`/`House-XX`. They are placeholders for local political authorities, **not genealogical houses**. They must be renamed/refactored before true emergent houses are introduced.
+The early social vertical slice still contains `house` / `House-XX` placeholder entities for local authority. They are **not genealogical houses** and must be removed/refactored before emergent houses are exposed as a first-class derived concept.
