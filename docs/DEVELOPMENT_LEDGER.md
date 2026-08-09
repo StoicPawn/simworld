@@ -171,11 +171,38 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - authority is domain-specific and historically derived;
 - economic dependency may become political power later, but never automatically.
 
-**Validation target:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
+**Validation:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
+
+**Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
 
 **Known limitations / next dependencies:**
 - obligations currently focus on grain credit in the integrated slice; rent, tribute, taxation, labour service and protection remain future uses of the generic registry;
 - organization formation still uses a simple cooperation-threshold/probability mechanism and needs richer recognition, narrative, norms and leadership processes;
 - coercive enforcement capacity is not yet materialized;
-- territorial control/claims are not yet connected to organizations/authority;
-- next bridge is explicit norms/rules, roles/offices, organizational competition, protection/extraction and spatial control from which political formations can emerge.
+- territorial control/claims are not yet connected to organizations/authority.
+
+---
+
+## 2026-08-09 — M9 Material disequilibrium, storage and local shocks
+
+**Intent:** create plausible asynchronous surplus/deficit conditions so exchange, credit, dependency and organization can emerge from material history instead of being forced by event quotas or lowered thresholds.
+
+**New primitives/processes:**
+- per-household `StorageProfile` with capacity, preservation and exposure;
+- grain spoilage and overflow loss;
+- heterogeneous `HouseholdDemandProfile` with age-sensitive food needs and reserve targets;
+- household-specific vulnerability to local material shocks;
+- local pest/crop loss, storage damage and tool breakage events that affect actual inventories;
+- explicit unmet household food need events after real stock consumption;
+- integrated disequilibrium run layered on top of obligations, organizations and authority.
+
+**New invariants:**
+- heterogeneous outcomes must arise from heterogeneous state/processes, not from a target count of historical events;
+- do not tune the simulator to produce a desired number of wars, trades, revolts, organizations or states;
+- storage and spoilage are material processes independent of later social interpretation;
+- two households in the same settlement may experience the same macro year differently;
+- shocks create opportunities/constraints, never prescribed behavioural responses.
+
+**Validation target:** tests cover physical stock loss, age-structured demand and integrated emergence of local material variation. CI runs a 30-year disequilibrium world after all lower layers.
+
+**Next dependency:** validate whether richer material heterogeneity actually activates exchange/credit/cooperation in integrated runs. If still dormant, improve the causal material model (transport, storage, production specialization, demand and encounters) rather than introducing event quotas. Once durable dependency/organization is visible, proceed toward norms, protection/extraction, offices and spatial control.
