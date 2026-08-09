@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 from random import Random
 
 from simworld.core.event import Event
@@ -23,9 +24,8 @@ class MaterialSimulationResult:
 class MaterialWorldSimulation(GenerationalWorldSimulation):
     """Adds ownership, household production, inventories and spatial exchange.
 
-    The layer intentionally models material constraints rather than prescribing social
-    outcomes. Scarcity changes feasible actions and incentives; it does not directly
-    create a revolt, migration, trade, or political response.
+    Scarcity changes feasible actions and incentives; it never directly prescribes a
+    revolt, migration, trade, or political response.
     """
 
     def __init__(self, config: FirstWorldConfig) -> None:
@@ -52,18 +52,12 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 kind="field_plot",
                 location=household.settlement_id,
                 productive_capacity=max(0.05, 0.45 + 1.7 * fertility),
-                attributes={
-                    "fertility": fertility,
-                    "x": cell.x,
-                    "y": cell.y,
-                },
+                attributes={"fertility": fertility, "x": cell.x, "y": cell.y},
             )
             self.property_registry.add_asset(field)
-            self.property_registry.grant(
-                PropertyRight(field.id, household.id, 1.0, started_at=0)
-            )
+            self.property_registry.grant(PropertyRight(field.id, household.id, 1.0, started_at=0))
 
-            inventory = Inventory(
+            self.inventories[household.id] = Inventory(
                 household.id,
                 {
                     "grain": self.material_rng.uniform(0.4, 1.8),
@@ -71,7 +65,6 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                     "tools": self.material_rng.uniform(0.25, 0.8),
                 },
             )
-            self.inventories[household.id] = inventory
             self.world.record_event(
                 Event(
                     kind="material_household_initialized",
@@ -193,19 +186,25 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 strongest = max(strongest, self.network.connection_strength(a, b, year))
         return strongest
 
-    def _spatial_exchange_factor(self, a_id: str, b_id: str) -> float:
-        a = self.households.households[a_id]
-        b = self.households.households[b_id]
-        if a.settlement_id == b.settlement_id:
+    @lru_cache(maxsize=None)
+    def _settlement_exchange_factor(self, a_settlement: str, b_settlement: str) -> float:
+        if a_settlement == b_settlement:
             return 1.0
+        first, second = sorted((a_settlement, b_settlement))
         path = self.generated.spatial_map.path(
-            self._cells[a.settlement_id],
-            self._cells[b.settlement_id],
+            self._cells[first],
+            self._cells[second],
             max_expansions=20_000,
         )
         if path is None:
             return 0.0
         return max(0.0, 1.0 - path.cost / 2_500_000.0)
+
+    def _spatial_exchange_factor(self, a_id: str, b_id: str) -> float:
+        a_settlement = self.households.households[a_id].settlement_id
+        b_settlement = self.households.households[b_id].settlement_id
+        first, second = sorted((a_settlement, b_settlement))
+        return self._settlement_exchange_factor(first, second)
 
     def _run_material_exchange(self, year: int) -> None:
         household_ids = [household.id for household in self.households.active_households()]
@@ -213,17 +212,26 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
         for index, a_id in enumerate(household_ids):
             a_inv = self.inventories[a_id]
             for b_id in household_ids[index + 1 :]:
+                b_inv = self.inventories[b_id]
+                complementary = (
+                    a_inv.amount("grain") < 0.55
+                    and a_inv.amount("timber") > 0.7
+                    and b_inv.amount("grain") > 1.0
+                ) or (
+                    b_inv.amount("grain") < 0.55
+                    and b_inv.amount("timber") > 0.7
+                    and a_inv.amount("grain") > 1.0
+                )
+                if not complementary:
+                    continue
                 spatial = self._spatial_exchange_factor(a_id, b_id)
                 if spatial <= 0.08:
                     continue
-                b_inv = self.inventories[b_id]
 
-                if a_inv.amount("grain") < 0.55 and a_inv.amount("timber") > 0.7 and b_inv.amount("grain") > 1.0:
+                if a_inv.amount("grain") < 0.55:
                     buyer_id, seller_id = a_id, b_id
-                elif b_inv.amount("grain") < 0.55 and b_inv.amount("timber") > 0.7 and a_inv.amount("grain") > 1.0:
-                    buyer_id, seller_id = b_id, a_id
                 else:
-                    continue
+                    buyer_id, seller_id = b_id, a_id
 
                 buyer = self.inventories[buyer_id]
                 seller = self.inventories[seller_id]
@@ -235,7 +243,13 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 social = self._household_connection(buyer_id, seller_id, year)
                 acceptance = max(
                     0.0,
-                    min(1.0, 0.46 + 0.27 * spatial + 0.18 * min(1.0, social) + self.material_rng.uniform(-0.12, 0.12)),
+                    min(
+                        1.0,
+                        0.46
+                        + 0.27 * spatial
+                        + 0.18 * min(1.0, social)
+                        + self.material_rng.uniform(-0.12, 0.12),
+                    ),
                 )
                 proposal = ExchangeProposal(
                     proposer_id=buyer_id,
