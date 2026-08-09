@@ -1,6 +1,6 @@
 project: simworld
-version: 4
-current_phase: first_real_world_plus_epistemic_foundation
+version: 5
+current_phase: generational_life_process_foundation
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -17,6 +17,11 @@ foundational_principles:
   perceived_learning_may_differ_from_causal_truth: true
   stories_are_information_objects_not_truth: true
   culture_is_emergent: true
+  biological_kinship_is_not_social_identity: true
+  household_is_not_kinship: true
+  conception_is_not_birth: true
+  inheritance_is_not_blood_only: true
+  family_house_dynasty_are_emergent: true
   no_canonical_historical_interpretation: true
 
 phases:
@@ -41,6 +46,7 @@ phases:
       - validation_pipeline
       - simulation_dispatch_skeleton
       - local_cloud_capability_routing
+      - ordered_development_ledger
 
   - id: phase_1_core_foundations
     status: planned
@@ -78,7 +84,7 @@ phases:
 
   - id: phase_3_physical_geography
     status: vertical_slice_implemented
-    capabilities:
+    implemented_capabilities:
       - generated_elevation
       - slope
       - land_water
@@ -100,23 +106,23 @@ phases:
       - hazards
 
   - id: phase_4_population
-    status: vertical_slice_implemented
-    capabilities:
+    status: in_progress
+    implemented_capabilities:
       - settlement_population
       - geography_constrained_settlement_sites
       - food_linked_demography
       - geography_constrained_migration
+      - materialized_persons
+      - biological_birth_death
     remaining_capabilities:
       - distributed_population_raster
-      - cohorts
-      - households
-      - births_deaths
-      - settlement_founding_abandonment
+      - demographic_cohorts
       - adaptive_person_materialization
+      - settlement_founding_abandonment
+      - migration_of_materialized_people_and_households
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
-    may_progress_in_parallel_with: [phase_1_core_foundations, phase_2_spatial_foundation]
     implemented_capabilities:
       - needs_as_pressures
       - probabilistic_beliefs
@@ -129,24 +135,56 @@ phases:
       - bounded_stochastic_action_choice
       - narrative_information_objects
       - narrative_transmission_and_mutation
-      - derived_culture_signal
-      - house_settlement_vertical_slice
+      - multiplex_social_network
+      - biological_kinship_graph
+      - derived_lineages
     remaining_capabilities:
       - causal_models_inside_agents
       - memory_retrieval_and_forgetting
       - richer_deception_strategy
-      - social_networks
       - identity_and_group_membership
       - norms_and_sanctions
-      - generations_and_role_succession
-      - competing_narrative_branches
       - institutional_memory
       - endogenous_value_formation
       - metacognition_and_confidence_calibration
 
+  - id: phase_4c_life_processes
+    status: in_progress
+    may_progress_in_parallel_with: [phase_1_core_foundations, phase_2_spatial_foundation, phase_4b_epistemic_social_foundation]
+    implemented_capabilities:
+      - household_registry
+      - household_resource_pool
+      - household_care_pressure
+      - household_stress_events
+      - pregnancy_state
+      - gestation_delay
+      - pregnancy_loss_or_live_birth
+      - relationship_strength_sentiment_trust_evolution
+      - probabilistic_separation
+      - multi_asset_estate
+      - competing_succession_claims
+      - divisible_contested_inheritance
+      - separate_wealth_debt_name_memory_transfers
+    remaining_capabilities:
+      - reconciliation_process
+      - spatial_social_encounter_process
+      - endogenous_partner_formation
+      - caregiving_events
+      - childhood_dependency_and_development
+      - education_and_socialization
+      - household_fission_fusion
+      - adoption_and_incorporation
+      - explicit_property_registry
+      - land_inheritance
+      - office_and_claim_inheritance
+      - wills_customs_law_and_coercive_succession
+      - family_self_recognition
+      - outsider_recognition
+      - emergent_house_detection
+
   - id: phase_5_social_economic
     status: planned
-    depends_on: [phase_3_physical_geography, phase_4_population]
+    depends_on: [phase_3_physical_geography, phase_4_population, phase_4c_life_processes]
     capabilities:
       - production
       - consumption
@@ -154,7 +192,8 @@ phases:
       - trade
       - wealth
       - organizations
-      - families_lineages
+      - property
+      - debt
       - institutions
       - infrastructure_growth
       - market_accessibility
@@ -240,6 +279,11 @@ constraints:
   perceived_reward_must_be_distinguishable_from_latent_effect: true
   narratives_must_not_replace_event_truth: true
   culture_must_not_be_unexplained_static_stereotype: true
+  kinship_must_not_imply_loyalty: true
+  household_must_not_imply_blood_relation: true
+  offspring_must_not_imply_romance: true
+  inheritance_must_not_be_single_heir_by_default: true
   avoid_heavyweight_object_per_planet_cell: true
   strategic_value_must_be_derived: true
+  material_changes_require_development_ledger_update: true
   automatic_merge_main: false
