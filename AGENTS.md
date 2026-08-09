@@ -1,6 +1,6 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/PRIMITIVE_MATRIX_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
@@ -24,7 +24,7 @@ DECISIONS / ACTIONS
 CHANGED WORLD STATE
 ```
 
-The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Read `docs/SPATIAL_FOUNDATION.md` before spatial/domain work, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` before modelling agents/communication/culture, and `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md` before families, reproduction, households, houses, dynasties, inheritance or social networks.
+The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Macro historical labels are not primitive causes. Read the foundation documents before domain work.
 
 ## Architectural invariants
 
@@ -66,6 +66,15 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 36. **Family/house/dynasty are emergent categories.** Never use biological descent alone as a primitive political unit. Derive them from descent plus social cohesion, property, memory, names, institutions and recognition when applicable.
 37. **Lineages can branch or dissolve.** Related branches may become separate institutions; unrelated people may be incorporated; kin can become enemies.
 38. **Kinship may influence information flow, never guarantee truth.** High family trust can preserve stories and falsehoods alike.
+39. **Seek prime causal matrices.** Before introducing a macro concept, decompose it into the smallest reusable lower-level state, constraints, capabilities, perceptions and interactions that can exist independently of the macro outcome.
+40. **Macro labels are observational by default.** War, alliance, feud, faction, dynasty, state, class, market, religion and similar labels should be derived views whenever the lower-level mechanics are sufficient.
+41. **Conflict is not a primitive war state.** Incompatible claims/interests, distrust, dependence, capabilities and repeated interactions may produce anything from avoidance to negotiation to violence.
+42. **Cooperation does not imply alliance.** One-off exchange or coordination must remain possible between rivals, enemies, relatives or strangers without creating a permanent alliance object.
+43. **Relations are domain-specific and multiplex.** Two actors can cooperate economically and be violently opposed territorially at the same time.
+44. **Macro classifiers must be causally inert.** Removing a `war_like`, `alliance_like` or similar classifier must not alter the simulated trajectory. Use underlying metrics/interactions for causal logic.
+45. **No hidden macro state machines.** Never let detecting `war` automatically generate battles, or detecting `alliance` automatically guarantee assistance.
+46. **The same primitive matrix must admit multiple outcomes.** Actor information, learning, networks, resources, spatial access and stochastic experience should prevent deterministic historical shortcuts.
+47. **Scale does not erase internal structure.** A macro actor such as a state or institution may itself be a network of people, offices, factions and resources; do not assume unitary preferences unless explicitly justified by aggregation.
 
 ## Development discipline
 
@@ -81,6 +90,8 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 - Spatial foundations must be established before deeply modelling population, economy, states, borders, trade or conflict.
 - Epistemic/social foundations must be used rather than bypassed when later political actors, families, institutions and cultures are added.
 - Never model houses/dynasties as unexplained containers if their membership can be derived from biological/social/economic/institutional relations.
+- Before adding a macro mechanic, apply the prime-matrix test in `docs/PRIMITIVE_MATRIX_FOUNDATION.md` and document why any irreducible macro primitive is necessary.
+- Do not branch simulation behavior on an emergent pattern label when its underlying state is available.
 
 ## Mandatory validation
 
