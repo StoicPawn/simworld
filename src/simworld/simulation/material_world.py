@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from random import Random
 
+from simworld.core.entity import Entity
 from simworld.core.event import Event
 from simworld.economy.exchange import ExchangeProposal, execute_exchange
 from simworld.economy.production import Inventory, ProductionContext, ProductionProcess, produce
@@ -44,6 +45,17 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
         if self.inventories:
             return
         for household in self.households.active_households():
+            if household.id not in self.world.entities:
+                self.world.add_entity(
+                    Entity(
+                        kind="household",
+                        name=f"Household-{household.id[-8:]}",
+                        created_at=household.formed_at,
+                        id=household.id,
+                        attributes={"settlement_id": household.settlement_id},
+                        tags={"household", "aggregate_social_unit", "material_actor"},
+                    )
+                )
             cell = self._cells[household.settlement_id]
             fertility = float(self.generated.fertility[cell.y, cell.x])
             timber = float(self.generated.timber[cell.y, cell.x])
@@ -58,8 +70,6 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 attributes={"fertility": fertility, "x": cell.x, "y": cell.y},
             )
             self.property_registry.add_asset(field)
-            # Early-world relation: the household occupies/uses/controls the plot.
-            # No universal legal ownership is asserted.
             for relation_kind, strength in (("possess", 1.0), ("use", 1.0), ("control", 0.85)):
                 self.property_registry.relate(
                     AssetRelation(
@@ -84,7 +94,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 Event(
                     kind="material_household_initialized",
                     time=0,
-                    participants=tuple(sorted(household.members)),
+                    participants=tuple(sorted(household.members)) + (household.id,),
                     locations=(household.settlement_id,),
                     impact=0.08,
                     payload={
@@ -165,10 +175,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
             household.food_stock = inventory.amount("grain")
             household.wealth = max(
                 0.0,
-                household.wealth
-                + 0.018 * timber_result.quantity
-                + 0.008 * grain_result.quantity
-                - 0.055 * shortage,
+                household.wealth + 0.018 * timber_result.quantity + 0.008 * grain_result.quantity - 0.055 * shortage,
             )
             if shortage > 0:
                 household.debt += 0.025 * shortage
@@ -177,7 +184,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 Event(
                     kind="material_production",
                     time=year,
-                    participants=tuple(sorted(living)),
+                    participants=tuple(sorted(living)) + (household.id,),
                     locations=(household.settlement_id,),
                     impact=0.08 + 0.08 * shortage,
                     payload={
@@ -230,13 +237,9 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
             for b_id in household_ids[index + 1 :]:
                 b_inv = self.inventories[b_id]
                 complementary = (
-                    a_inv.amount("grain") < 0.55
-                    and a_inv.amount("timber") > 0.7
-                    and b_inv.amount("grain") > 1.0
+                    a_inv.amount("grain") < 0.55 and a_inv.amount("timber") > 0.7 and b_inv.amount("grain") > 1.0
                 ) or (
-                    b_inv.amount("grain") < 0.55
-                    and b_inv.amount("timber") > 0.7
-                    and a_inv.amount("grain") > 1.0
+                    b_inv.amount("grain") < 0.55 and b_inv.amount("timber") > 0.7 and a_inv.amount("grain") > 1.0
                 )
                 if not complementary:
                     continue
@@ -259,13 +262,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 social = self._household_connection(buyer_id, seller_id, year)
                 acceptance = max(
                     0.0,
-                    min(
-                        1.0,
-                        0.46
-                        + 0.27 * spatial
-                        + 0.18 * min(1.0, social)
-                        + self.material_rng.uniform(-0.12, 0.12),
-                    ),
+                    min(1.0, 0.46 + 0.27 * spatial + 0.18 * min(1.0, social) + self.material_rng.uniform(-0.12, 0.12)),
                 )
                 proposal = ExchangeProposal(
                     proposer_id=buyer_id,
