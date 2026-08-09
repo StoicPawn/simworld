@@ -2,15 +2,16 @@
 
 ## Current phase
 
-**First real world + epistemic/cultural + generational social-network foundation active**
+**First real world + epistemic/cultural + generational social-network + primitive relational-matrix foundations active**
 
-The repository now has five connected foundations:
+The repository now has six connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
 3. spatial/geopolitical substrate;
 4. epistemic-social/cultural layer;
-5. biological generations + multiplex social networks.
+5. biological generations + multiplex social networks;
+6. prime relational matrices for emergent macro phenomena.
 
 ## Foundational architecture
 
@@ -25,149 +26,139 @@ OBSERVATION / COMMUNICATION
     ↓
 MEMORY / BELIEF / NEEDS
     ↓
-DECISION / ACTION
+INTERESTS / CLAIMS / CAPABILITIES / CONSTRAINTS
     ↓
-CONSEQUENCES
+RELATIONAL MATRICES
     ↓
-PERCEIVED LEARNING + SOCIAL MEMORY
+ELEMENTARY INTERACTIONS
+    ↓
+CONSEQUENCES / LEARNING / SOCIAL MEMORY
     ↓
 BIOLOGICAL GENERATIONS + SOCIAL NETWORK PROPAGATION
     ↓
-FUTURE ACTIONS / EMERGENT GROUPS / INSTITUTIONS
+PERSISTENT EMERGENT PATTERNS
+    ↓
+OPTIONAL HISTORICAL LABELS
 ```
 
-Read `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` and `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`.
+Macro historical labels are not primitive causes. Read `docs/PRIMITIVE_MATRIX_FOUNDATION.md`.
 
-## Implemented world substrate
+## Implemented substrate
 
-### Core
-- persistent entities;
-- immutable events;
-- concurrent timestamps;
-- append-only event history;
-- causal graph;
-- relevance/resolution;
-- seeded scheduling.
-
-### Space and first physical world
-- fine raster/chunk map;
+### Core and space
+- persistent entities and immutable events;
+- concurrent timestamps and causal graph;
+- relevance/adaptive resolution and seeded scheduling;
+- fine raster/chunk geography;
 - terrain-sensitive routing;
-- generated land/water, elevation, rainfall, temperature, fertility, timber, ore and habitability;
-- settlement location constrained by geography;
-- ore truth can exist before discovery.
+- generated elevation, water, climate baselines, fertility, timber, ore and habitability;
+- geography-constrained settlements and migration.
 
-### First historical dynamics
-- simultaneous local harvest histories;
-- food-linked demographic change;
-- geography-constrained migration;
-- migration joins previously separate causal histories;
-- reproducible long runs.
+### Epistemics, decisions and social memory
+- needs as pressures, not prescribed actions;
+- probabilistic beliefs and memory traces;
+- contextual trust;
+- messages that may be distorted or false;
+- later report verification;
+- perceived strategy learning separated from latent effects;
+- bounded stochastic choices;
+- narratives as first-class information objects with branching transmission and mutation.
 
-## Epistemic/social implementation
+### Biological generations and networks
+- biological persons with birth/death and parentage;
+- probabilistic reproduction;
+- kinship graph and lineage views;
+- multiplex temporal social graph;
+- friendship, rivalry, intimacy, parent-child, sibling and co-parent ties;
+- higher-order network paths;
+- lineage candidates derived retrospectively rather than hard-coded houses.
 
-### Needs
-`NeedState` represents pressures such as food security, stability, legitimacy and authority. Needs alter incentives but never directly invoke policies.
+Detailed persons remain compatible with aggregate population: individuals are materialized where causal relevance warrants it.
 
-### Knowledge and belief
-`EpistemicState` separates beliefs and memories from world truth. Actors update beliefs only through observations or messages available to them.
+## Prime causal matrix doctrine
 
-### Trust and communication
-`TrustProfile` is contextual. `Message` separates asserted content from simulator-side truth provenance. Reports can be distorted; receivers update beliefs using trust, not hidden truth.
+SimWorld now permanently applies this rule:
 
-### Learning and decision
-`StrategyLearner` stores perceived rewards separately from latent/modelled effects. `choose_action` uses bounded stochastic choice over feasible actions, so the same shortage need can lead to different policies or inaction.
+> Before adding a macro historical mechanism, seek the smallest reusable matrix of lower-level state, perceptions, constraints, capabilities and interactions that can generate it spontaneously.
 
-### Social memory
-`Narrative` and `SocialMemory` make stories first-class information objects linked to origin events. Narrative versions may branch, mutate and persist through trusted transmission. Culture is derived rather than assigned.
+The test applies not only to war and alliances but to families, houses, dynasties, factions, states, markets, classes, religions, cultures, rebellions and future macro concepts.
 
-## New biological/generational foundation
+The project must avoid infinite reductionism: a primitive is acceptable when it has independent causal meaning, is reusable across adjacent phenomena and does not presuppose the macro result being explained.
 
-### Biological persons
-`PersonRecord` stores birth/death and biological parentage separately from social identity. Parent, child, sibling, ancestor, descendant and shared-ancestor relationships are derived through `KinshipGraph`.
+## Primitive relational foundation now implemented
 
-### Reproduction
-`ReproductiveProfile` and `conception_probability` provide a probabilistic reproductive substrate. Intimacy or partnership creates opportunity, never a guaranteed birth. Probability may depend on biological capability, age, health, contact, resources, intent and later prevention/technology.
+### Interests and claims
+`Interest` stores actor preferences by domain/target. `Claim` stores perceived entitlement/control separately from objective truth.
 
-A birth creates:
-- biological parent links;
-- parent-child social ties;
-- sibling ties where applicable;
-- a co-parent relation between the two parents.
+### Relation matrix
+`RelationMatrix` derives domain-specific compatibility/incompatibility and combines them with trust, dependence, contact and uncertainty. `ActorRelationProfile` holds capabilities and constraints.
 
-It does **not** force romance, affection, marriage, co-residence, loyalty or cooperation.
+A single pair can simultaneously contain cooperative and conflicting dimensions. There is no global `enemy` or `ally` scalar replacing this state.
 
-### Multiplex social network
-`SocialGraph` and `SocialTie` support simultaneous time-dependent relations such as:
-- friendship;
-- rivalry;
-- romantic/intimate connection;
-- parent-child;
-- sibling;
-- co-parenting;
-- later care, debt, employment, patronage, political alliance and other domains.
+### Elementary interactions
+The initial low-level vocabulary includes:
+- communicate;
+- negotiate;
+- exchange;
+- coordinate;
+- withhold;
+- threaten;
+- obstruct;
+- seize;
+- attack;
+- avoid.
 
-Each tie can carry strength, sentiment, trust, dependence, visibility and temporal extent. First-, second- and higher-order network connections are queryable.
+Choice among feasible elementary interactions is bounded and stochastic. Relational pressure does not prescribe a response.
 
-### Emergent family/house concept
-`LineageView` is a derived view over biological descent. The simulation can identify lineage candidates retrospectively from descent size plus social cohesion, but does not declare a `House` from blood alone.
+### Conflict and cooperation
+Conflict is not synonymous with violence and is not a primitive `WAR` state. It may occur between any actor kinds, including two individuals. The same incompatibility can produce negotiation, avoidance, exchange, threat, coercion, violence or no meaningful action.
 
-Future family/house/dynasty formation must combine some subset of:
-- descent;
-- shared residence;
-- property;
-- inherited roles/claims;
-- names;
-- social cohesion;
-- memory/narratives;
-- self-recognition;
-- recognition by outsiders;
-- alliance/marriage networks.
+Cooperation can be one-off, repeated, domain-specific or simultaneous with hostility elsewhere. Repeated coordination can become alliance-like, but a single cooperative act never creates an alliance automatically.
 
-Branches of one biological lineage may split into different houses. Unrelated people may be incorporated into the same social/institutional family. Kin may become enemies.
+### Observational macro patterns
+`infer_patterns` can retrospectively recognize:
+- sustained cooperation;
+- competitive rivalry;
+- violent feud;
+- alliance-like interaction;
+- war-like interaction.
 
-## Integrated generational vertical slice
+These labels are causally inert views. Removing the pattern classifier must not change the underlying simulated trajectory. In particular:
+- detecting `war_like` must not generate battles;
+- detecting `alliance_like` must not guarantee assistance.
 
-The current generational runner materializes a small number of people per settlement and then permits:
-- heterogeneous romantic/intimate ties;
-- friendship and rivalry;
-- probabilistic births;
-- deaths;
-- derived siblings/ancestors/descendants;
-- co-parent relations without forced affection;
-- new local social connections;
-- networks-of-networks queries;
-- retrospective lineage candidates;
-- interaction with existing geography, food, politics, imperfect information, learning and narratives.
-
-Detailed persons are **not** intended to replace aggregate population. Planet-scale simulations must keep most people aggregated and materialize individuals/families only when causal relevance, requested observation or institutional role requires it.
+Future simulation logic should use underlying interaction history, capabilities, beliefs, logistics, networks and resources rather than macro labels whenever possible.
 
 ## Next work
 
 1. deterministic RNG substreams by actor/domain;
-2. relationship evolution: formation, decay, separation, reconciliation, caregiving and household co-residence;
-3. mate/partner meeting through spatial/social networks rather than initial pair seeding;
-4. pregnancy/gestation and infant/child dependency rather than instantaneous annual birth;
-5. household resource pools and care burdens;
-6. inheritance of property, debt, office, claims, names and stories as distinct processes;
-7. family branching, incorporation and explicit recognition mechanisms;
-8. richer memory retrieval/forgetting and intergenerational narrative transmission;
-9. internal causal models and mistaken causal theories;
-10. production, inventories and trade;
-11. norms, sanctions, religion, identities and culture emerging over generations;
-12. authority/state formation from networks, resources, institutions and recognition;
-13. diplomacy/conflict using actor beliefs rather than omniscient truth;
-14. counterfactual and inverse inference over hidden information/beliefs.
+2. relationship evolution: formation, decay, separation, reconciliation, caregiving and co-residence;
+3. pregnancy/gestation and child dependency;
+4. household resources, inheritance of property/debt/office/claims/names/stories;
+5. family branching, incorporation and recognition;
+6. perceived relation matrices: actors can misread interests, claims and capabilities;
+7. interaction memory feeding future trust, expectations and strategy learning;
+8. third-party mediation and multi-actor claim collisions;
+9. coalition formation/dissolution from social networks rather than faction flags;
+10. explicit commitments, treaties and oaths as causal information/institution objects without guaranteed compliance;
+11. mobilization, logistics, command and compliance as lower-level processes;
+12. escalation/de-escalation emerging without a war state machine;
+13. production, inventories and trade;
+14. norms, sanctions, religions, identities and cultures emerging over generations;
+15. authority/state formation from networks, resources, institutions and recognition;
+16. counterfactual and inverse inference over hidden information, beliefs and relational matrices.
 
 ## Architectural warnings
 
 - Never encode `problem -> correct action` as a historical law.
-- Never give political actors direct access to hidden world state.
+- Never give actors direct access to hidden world state.
 - Never equate speech, belief and reality.
 - Never equate immediate perceived success with true long-run success.
-- Never make a narrative replace event provenance.
+- Never make narrative replace event provenance.
 - Never assign culture as an unexplained static trope.
 - Never equate biological kinship with loyalty, affection or political identity.
 - Never make partnership deterministically produce children.
 - Never make offspring imply romance between parents.
-- Never make `House` or `Dynasty` a primitive biological truth.
+- Never make `House`, `Dynasty`, `Alliance`, `Faction` or `War` a magical primitive when lower-level matrices suffice.
+- Never let a macro classifier alter the trajectory it classifies.
 - Preserve many simultaneous histories and allow chains to remain isolated, branch or converge.
