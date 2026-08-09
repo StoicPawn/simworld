@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from random import Random
 
+from simworld.core.entity import Entity
 from simworld.core.event import Event
 from simworld.economy.storage import HouseholdDemandProfile, StorageProfile, age_stock
 from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
@@ -43,6 +44,17 @@ class DisequilibriumWorldSimulation(InstitutionalWorldSimulation):
         if self.storage_profiles:
             return
         for household in self.households.active_households():
+            if household.id not in self.world.entities:
+                self.world.add_entity(
+                    Entity(
+                        kind="household",
+                        name=f"Household-{household.id[-8:]}",
+                        created_at=household.formed_at,
+                        id=household.id,
+                        attributes={"settlement_id": household.settlement_id},
+                        tags={"household", "aggregate_social_unit"},
+                    )
+                )
             shelter = max(0.05, min(1.5, household.shelter_quality))
             capacity = self.disequilibrium_rng.uniform(0.75, 2.8) * (0.75 + 0.25 * shelter)
             preservation = max(
