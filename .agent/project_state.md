@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Material disequilibrium + institutional-emergence foundation active, with primitive property simplified into asset relations**
+**Material disequilibrium + asset-claim simplification + encounter-driven social foundation active**
 
-The repository now has ten connected foundations:
+The repository now has eleven connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -15,7 +15,8 @@ The repository now has ten connected foundations:
 7. assets, inventories, production/consumption and spatial exchange;
 8. obligations, cooperation, generic organizations and derived authority/legitimacy;
 9. household-level storage, spoilage, heterogeneous demand and local material shocks;
-10. pre-legal asset relations: possession, use, control, claim and observer-specific recognition.
+10. pre-legal asset relations: possession, use, control, claim and observer-specific recognition;
+11. encounter/mobility substrate: visits, shared-space encounters, cumulative exposure and encounter-driven relationship formation.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
@@ -28,44 +29,55 @@ PHYSICAL WORLD / ASSETS
     ↓
 POSSESSION / USE / CONTROL / CLAIMS
     ↓
-RECOGNITION (actor-specific)
-    ↓
 PRODUCTION / STORAGE / CONSUMPTION / SHOCKS
+    ↓
+MOVEMENT / PRESENCE / ENCOUNTERS
+    ↓
+SOCIAL EXPOSURE / RELATIONSHIPS / INFORMATION FLOW
     ↓
 SURPLUS / DEFICIT / EXCHANGE / OBLIGATIONS
     ↓
 EXPERIENCE / INFORMATION / BELIEF / DECISION
     ↓
-HOUSEHOLDS / RELATIONSHIPS / GENERATIONS
+HOUSEHOLDS / GENERATIONS / SUCCESSION
     ↓
 COOPERATION / ORGANIZATIONS
     ↓
 DERIVED AUTHORITY + LEGITIMACY
     ↓
-FUTURE INSTITUTIONS MAY DEFINE/ENFORCE FORMAL PROPERTY
-    ↓
-FUTURE TERRITORIAL POLITICS / STATES / CONFLICT
+FUTURE NORMS / OFFICES / CONTROL FIELDS / POLITICAL FORMATIONS
 ```
 
 ## Simplification rule
 
-SimWorld should prefer **small generic primitives plus derived historical structures** over separate bespoke systems for each era.
+SimWorld prefers **small generic primitives plus derived historical structures** over bespoke systems for each era.
 
-The world does not contain a universal legal fact called `property`. It contains assets and actor↔asset relations:
-- `possess`;
-- `use`;
-- `control`;
-- `claim`.
+Before introducing a primitive, ask whether the concept can instead be represented as:
+- state;
+- relation;
+- process;
+- observation/information;
+- derived view.
 
-Other actors may recognize a claim to different degrees. Later norms, offices or institutions may turn some combinations of claim + recognition + control + enforcement into what an observer calls formal property.
+Examples already applied:
+- property is derived from asset relations + recognition + institutions;
+- family/house/dynasty is derived from biological/social/material/mnemonic relations;
+- authority is derived from historical interaction, not assigned as a title;
+- a new social relation now requires encounter opportunity rather than spontaneous pairing.
 
-Documents are future information/evidence objects. A deed or registry entry is not globally authoritative by construction; its force depends on who recognizes its issuer and on effective institutions/enforcement.
+## Encounter foundation
 
-Read `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
+`Visit` records temporary movement between settlements. `Encounter` records shared-space contact between actors. `EncounterLedger` accumulates exposure for each pair.
+
+A visit does **not** imply a relationship. An encounter does **not** imply friendship, rivalry, exchange or romance. Accumulated exposure only creates an opportunity for a social tie to form probabilistically.
+
+Local encounters and travel contacts use the same substrate. Future work, markets, religious gatherings, military service, schools, offices and organizations should add encounter contexts rather than invent separate relationship-generation systems.
+
+Travel is constrained by the existing spatial accessibility layer. This begins replacing abstract random social pairing with causal contact opportunities.
 
 ## Current diagnostic principle
 
-Do not make the model complicated merely to produce visible history. If a high-level process stays dormant, first ask whether lower-level heterogeneity/opportunities are missing. Do not add event quotas or artificial narrative triggers.
+Do not make the model complicated merely to produce visible history. If a high-level process stays dormant, inspect whether lower-level opportunities, heterogeneity or contact processes are missing. Do not add event quotas or narrative triggers.
 
 ## Critical invariants
 
@@ -73,10 +85,11 @@ Do not make the model complicated merely to produce visible history. If a high-l
 - asset != property;
 - possession != use != control != claim;
 - claim != recognition;
-- recognition != effective control;
 - document != truth;
-- formal property requires institutional context;
 - need/shock != prescribed action;
+- visit != relationship;
+- encounter != relationship;
+- social tie formation requires a causal opportunity/contact path in detailed simulation;
 - kinship != household != loyalty != political identity;
 - request != obligation;
 - compliance != consent;
@@ -89,13 +102,13 @@ Do not make the model complicated merely to produce visible history. If a high-l
 
 ## Next work toward the ultimate objective
 
-1. validate M9/M10 across multiple seeds and ensure lower-level disequilibrium can activate exchange/credit without forced events;
+1. validate material disequilibrium and encounter-driven networks across multiple seeds;
 2. deterministic RNG substreams by actor/process/domain;
-3. movement/encounter process based on actual travel, work, markets and institutions;
-4. storage/transport infrastructure and transport loss;
-5. spatial possession/use/control/claims on cells/parcels using the same generic asset-relation model;
-6. actor/institution-specific recognition and dispute over claims;
-7. generic evidence/document objects only when communication/institutions need them;
+3. enrich movement with recurring destinations/activities while keeping encounter as the primitive contact mechanism;
+4. connect encounters to exchange, information transmission and relationship evolution more directly;
+5. storage/transport infrastructure and transport loss;
+6. spatial possession/use/control/claims on cells/parcels using the same generic asset-relation model;
+7. claim disputes, evidence objects and institution-specific recognition;
 8. richer obligations: rent, tribute, labour, protection and military duties;
 9. norms/sanctions, roles/offices and institutional memory;
 10. protection/extraction and coercive capacity;
