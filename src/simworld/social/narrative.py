@@ -29,11 +29,8 @@ class SocialMemory:
     """Branching social memory: different holders may carry different story versions."""
 
     narratives: dict[str, Narrative] = field(default_factory=dict)
+    held_by: dict[str, set[str]] = field(default_factory=dict)
     held_versions: dict[str, dict[str, int]] = field(default_factory=dict)
-
-    @property
-    def held_by(self) -> dict[str, set[str]]:
-        return {holder: set(versions) for holder, versions in self.held_versions.items()}
 
     def add(self, narrative: Narrative, holder_id: str, *, version_index: int = 0) -> None:
         if not narrative.versions:
@@ -41,17 +38,20 @@ class SocialMemory:
         if not 0 <= version_index < len(narrative.versions):
             raise IndexError("invalid narrative version index")
         self.narratives[narrative.id] = narrative
+        self.held_by.setdefault(holder_id, set()).add(narrative.id)
         self.held_versions.setdefault(holder_id, {})[narrative.id] = version_index
 
     def hold_version(self, holder_id: str, narrative_id: str, version_index: int) -> None:
         narrative = self.narratives[narrative_id]
         if not 0 <= version_index < len(narrative.versions):
             raise IndexError("invalid narrative version index")
+        self.held_by.setdefault(holder_id, set()).add(narrative_id)
         self.held_versions.setdefault(holder_id, {})[narrative_id] = version_index
 
     def version_for(self, holder_id: str, narrative_id: str) -> NarrativeVersion:
-        index = self.held_versions[holder_id][narrative_id]
-        return self.narratives[narrative_id].versions[index]
+        narrative = self.narratives[narrative_id]
+        index = self.held_versions.get(holder_id, {}).get(narrative_id, len(narrative.versions) - 1)
+        return narrative.versions[index]
 
     def transmit(
         self,
@@ -66,7 +66,7 @@ class SocialMemory:
     ) -> NarrativeVersion | None:
         """Transmit the teller's branch with trust-weighted acceptance and drift."""
         narrative = self.narratives[narrative_id]
-        parent_index = self.held_versions[teller_id][narrative_id]
+        parent_index = self.held_versions.get(teller_id, {}).get(narrative_id, len(narrative.versions) - 1)
         parent = narrative.versions[parent_index]
         if rng.random() > max(0.02, min(0.98, trust)):
             return None
@@ -87,6 +87,7 @@ class SocialMemory:
             parent_index=parent_index,
         )
         narrative.versions.append(version)
+        self.held_by.setdefault(receiver_id, set()).add(narrative_id)
         self.held_versions.setdefault(receiver_id, {})[narrative_id] = len(narrative.versions) - 1
         return version
 
@@ -96,10 +97,7 @@ class SocialMemory:
             return 0.0
         matches = 0
         for holder_id in holder_ids:
-            versions = self.held_versions.get(holder_id, {})
-            if any(
-                any(phrase in claim for claim in self.narratives[nid].versions[index].claims)
-                for nid, index in versions.items()
-            ):
+            ids = self.held_by.get(holder_id, set())
+            if any(any(phrase in claim for claim in self.version_for(holder_id, nid).claims) for nid in ids):
                 matches += 1
         return matches / len(holder_ids)
