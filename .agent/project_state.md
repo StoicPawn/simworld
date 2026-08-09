@@ -2,111 +2,151 @@
 
 ## Current phase
 
-**First real simulation vertical slice active**
+**First real world + epistemic/cultural foundation active**
 
-The domain-agnostic kernel, automation layer and first spatial kernel exist on parent branches. This branch connects them into the first end-to-end world simulation.
+The repository now has four connected foundations:
+
+1. causal/event kernel;
+2. remote automation;
+3. spatial/geopolitical substrate;
+4. first epistemic-social layer.
 
 ## Foundational architecture
-
-SimWorld is explicitly a **geopolitical, spatial-first simulator**.
 
 ```text
 TIME + SPACE
     ↓
-ENTITIES + EVENTS + PROCESSES
+OBJECTIVE WORLD
     ↓
-MANY OVERLAPPING HISTORIES
+EVENTS / EXPERIENCES
+    ↓
+OBSERVATION / COMMUNICATION
+    ↓
+MEMORY / BELIEF / NEEDS
+    ↓
+DECISION / ACTION
+    ↓
+CONSEQUENCES
+    ↓
+PERCEIVED LEARNING + SOCIAL MEMORY
+    ↓
+FUTURE ACTIONS
 ```
 
-Space is causal state, not decoration. Historical relevance controls resolution and presentation, never narrative destiny.
+This feedback loop is now part of the project's permanent architecture. Read `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`.
 
-## Implemented substrate
+## Implemented world substrate
 
-### Core history engine
-- generic persistent entities;
+### Core
+- persistent entities;
 - immutable events;
 - concurrent timestamps;
-- append-only history;
-- explicit causal links;
-- dynamic relevance;
-- seeded event-driven scheduling.
+- append-only event history;
+- causal graph;
+- relevance/resolution;
+- seeded scheduling.
 
-### Spatial engine
-- fine regular raster with `GridSpec`;
-- cell/chunk coordinates;
-- chunked lazy NumPy layers;
-- aligned raster layers;
-- movement cost and passability;
-- slope-sensitive least-cost routing;
-- barriers, passes and corridors emerging from geography;
-- bulk dense-array import/export for procedural generation and analysis.
-
-### First physical world generation
-- deterministic land/water generation from a seed;
-- continuous elevation;
-- slope-derived movement difficulty;
-- temperature baseline;
-- rainfall baseline;
-- fertility;
-- timber resource truth;
-- ore resource truth;
-- habitability;
-- coast-sensitive settlement suitability.
-
-### First human layer
-- settlements emerge from high-habitability cells rather than scripted coordinates;
-- settlement population is explicit mutable state;
-- actual ore can exist before any actor knows it;
-- each settlement has its own local event history.
+### Space and first physical world
+- fine raster/chunk map;
+- terrain-sensitive routing;
+- generated land/water, elevation, rainfall, temperature, fertility, timber, ore and habitability;
+- settlement location constrained by geography;
+- ore truth can exist before discovery.
 
 ### First historical dynamics
-For every simulated year and settlement:
-- a local harvest event occurs;
-- climate/production shocks vary locally;
-- harvest state causally drives demographic change;
-- population can grow or contract;
-- food pressure can trigger migration;
-- migration follows actual least-cost geography;
-- a migration event has both source and destination harvests as causes, allowing previously separate histories to converge;
-- ore can be discovered probabilistically without changing underlying resource truth.
+- simultaneous local harvest histories;
+- food-linked demographic change;
+- geography-constrained migration;
+- migration joins previously separate causal histories;
+- reproducible long runs.
 
-This is deliberately pre-state, pre-dynasty and pre-war. It is a vertical slice proving that geography can generate many simultaneous local histories and causal intersections without narrative scripting.
+## New epistemic/social implementation
 
-## First executable simulation
+### Needs
+`NeedState` represents pressures such as food security, stability, legitimacy and authority. Needs alter incentives but never directly invoke policies.
 
-Run locally:
+### Knowledge and belief
+`EpistemicState` separates beliefs and memories from world truth. Actors update beliefs only through observations or messages available to them.
 
-```bash
-python scripts/run_first_world.py --config configs/worlds/first_world.json --output runs/first-world
+### Trust
+`TrustProfile` is contextual. One source can be trusted differently for food, military, finance or other domains. Trust can update when later evidence allows a claim to be evaluated.
+
+### Communication
+`Message` separates asserted content from simulator-side truth provenance. Reports can be distorted by fear, grievance, limited honesty or noise. Receivers update beliefs using their trust, not hidden truth.
+
+### Learning
+`StrategyLearner` stores perceived rewards separately from latent/modelled effects. This permits actors to learn the wrong causal lesson.
+
+Example now possible in code:
+
+```text
+coercion
+-> visible stability rises
+-> house learns coercion works
+-> latent resentment rises
+-> future truthful reporting can worsen
 ```
 
-Or use GitHub Actions workflow **Run First Real World** from phone/PC.
+### Decision-making
+`choose_action` uses bounded stochastic choice over feasible actions. Similar needs can produce different policies because beliefs, resources, dispositions, past learning and randomness differ.
 
-Outputs include:
-- `map.svg` — generated physical map plus settlements;
-- `physical_layers.npz` — elevation, water, rainfall, temperature, fertility, timber, ore truth and habitability;
-- `events.jsonl` — append-only event history;
-- `settlements.json` — final settlement state;
-- `summary.json` and `README.md`.
+The first action menu includes field expansion, food procurement, reserve distribution, coercion, investigation and inaction. This is a vertical-slice menu, not a hard-coded mapping from shortage to solution.
 
-## Next objective after this vertical slice
+### Social memory
+`Narrative` and `SocialMemory` make stories first-class information objects linked to origin events. Narratives can have versions, confidence, emotional valence, transmission ancestry and mutation.
 
-1. deterministic RNG substreams by domain/region;
-2. persistent chunk serialization and checkpoints;
-3. proper hydrology: drainage, rivers and lakes;
-4. explicit soils/biomes and renewable resource stocks;
-5. background population distributed across cells, not only settlements;
-6. settlement founding/abandonment during simulation;
-7. local production, inventories and trade flows;
-8. roads/infrastructure emerging from repeated routes;
-9. groups/families/organizations;
-10. political authority and territorial control layered above geography.
+A ruling house and local population can form different memories of the same hardship. Repeated transmission can preserve or distort claims. Culture is intended to be derived from persistent distributions of such beliefs/narratives, not assigned as a stereotype.
+
+## Integrated social-world vertical slice
+
+Each settlement receives:
+- a local house/political actor;
+- a local representative;
+- contextual trust relations;
+- private epistemic state;
+- strategy learning state;
+- political needs.
+
+Each simulated year can now produce:
+- harvest and demographic events;
+- experienced shortage;
+- petitions/reports that may misstate reality;
+- house belief updates;
+- stochastic policy choice;
+- immediate political effects;
+- latent resentment effects;
+- later report verification and trust updating;
+- narrative formation;
+- narrative transmission and drift;
+- migration/discovery from the physical layer.
+
+The event graph therefore contains both material and informational causality.
+
+## Still deliberately incomplete
+
+The implementation is an architectural seed, not a full cognitive or political model. Next work should deepen:
+
+1. deterministic RNG substreams by actor/domain;
+2. typed relations and social networks;
+3. households, generations and role succession;
+4. richer memory retrieval/forgetting;
+5. internal causal models and mistaken causal theories;
+6. strategic deception and information networks;
+7. production, inventories and real trade;
+8. endogenous settlement founding/abandonment;
+9. institutional memory, norms and sanctions;
+10. competing narrative branches rather than a single latest-version view;
+11. endogenous identities, religions, ideologies and cultures;
+12. territorial authority and state formation;
+13. diplomacy/conflict using actor beliefs rather than omniscient state;
+14. counterfactual and inverse inference over hidden information/beliefs.
 
 ## Architectural warnings
 
-- Do not collapse the simulation into one chronological story.
-- Do not create events because they would be narratively interesting.
-- Do not treat political regions as primitive geography.
-- Do not assign permanent strategic importance when it can emerge from spatial state.
-- Keep world truth separate from actor knowledge.
-- Quiet areas must continue to evolve even when represented at lower resolution.
+- Never encode `problem -> correct action` as a historical law.
+- Never give political actors direct access to hidden world state.
+- Never equate what an actor says with what it believes.
+- Never equate immediate perceived success with true long-run success.
+- Never make a narrative replace event provenance.
+- Never assign culture as an unexplained static trope when it can emerge from transmission and institutions.
+- Preserve many simultaneous histories and allow chains to remain isolated, branch or converge.
