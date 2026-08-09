@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class SocialTie:
     source_id: str
     target_id: str
@@ -30,7 +30,6 @@ class SocialGraph:
         self.ties.append(tie)
 
     def end(self, tie: SocialTie, time: int) -> SocialTie:
-        """Close one tie without erasing its historical interval."""
         if time < tie.started_at:
             raise ValueError("tie cannot end before it starts")
         for index, existing in enumerate(self.ties):
