@@ -67,33 +67,80 @@ class PropertyRegistry:
         )
 
     def control_share(self, holder_id: str, asset_id: str, time: int) -> float:
-        return min(1.0, sum(r.share * r.confidence for r in self.holders(asset_id, time) if r.holder_id == holder_id))
+        return min(
+            1.0,
+            sum(
+                right.share * right.confidence
+                for right in self.holders(asset_id, time)
+                if right.holder_id == holder_id
+            ),
+        )
 
-    def transfer(self, *, asset_id: str, from_holder: str, to_holder: str, share: float, time: int, right_kind: str = "ownership") -> None:
+    def transfer(
+        self,
+        *,
+        asset_id: str,
+        from_holder: str,
+        to_holder: str,
+        share: float,
+        time: int,
+        right_kind: str = "ownership",
+    ) -> None:
         if share <= 0:
             raise ValueError("share must be positive")
-        available = sum(
-            r.share for r in self.holders(asset_id, time, right_kind)
-            if r.holder_id == from_holder
-        )
+        active_source = [
+            right
+            for right in self.rights
+            if right.asset_id == asset_id
+            and right.holder_id == from_holder
+            and right.right_kind == right_kind
+            and right.active_at(time)
+        ]
+        available = sum(right.share for right in active_source)
         if available + 1e-9 < share:
             raise ValueError("insufficient property share")
+
         remaining = share
-        updated: list[PropertyRight] = []
+        rebuilt: list[PropertyRight] = []
+        source_ids = {id(right) for right in active_source}
         for right in self.rights:
-            if (
-                remaining > 0
-                and right.asset_id == asset_id
-                and right.holder_id == from_holder
-                and right.right_kind == right_kind
-                and right.active_at(time)
-            ):
-                take = min(remaining, right.share)
-                updated.append(PropertyRight(right.asset_id, right.holder_id, right.share - take, right.right_kind, right.started_at, time, right.confidence)) if right.share - take > 1e-9 else updated.append(PropertyRight(right.asset_id, right.holder_id, right.share, right.right_kind, right.started_at, time, right.confidence))
-                if right.share - take > 1e-9:
-                    updated.append(PropertyRight(right.asset_id, right.holder_id, right.share - take, right.right_kind, time, None, right.confidence))
-                remaining -= take
-            else:
-                updated.append(right)
-        self.rights = updated
-        self.grant(PropertyRight(asset_id, to_holder, share, right_kind, time))
+            if id(right) not in source_ids or remaining <= 1e-12:
+                rebuilt.append(right)
+                continue
+
+            taken = min(remaining, right.share)
+            rebuilt.append(
+                PropertyRight(
+                    asset_id=right.asset_id,
+                    holder_id=right.holder_id,
+                    share=right.share,
+                    right_kind=right.right_kind,
+                    started_at=right.started_at,
+                    ended_at=time,
+                    confidence=right.confidence,
+                )
+            )
+            residual = right.share - taken
+            if residual > 1e-12:
+                rebuilt.append(
+                    PropertyRight(
+                        asset_id=right.asset_id,
+                        holder_id=right.holder_id,
+                        share=residual,
+                        right_kind=right.right_kind,
+                        started_at=time,
+                        confidence=right.confidence,
+                    )
+                )
+            remaining -= taken
+
+        self.rights = rebuilt
+        self.grant(
+            PropertyRight(
+                asset_id=asset_id,
+                holder_id=to_holder,
+                share=share,
+                right_kind=right_kind,
+                started_at=time,
+            )
+        )
