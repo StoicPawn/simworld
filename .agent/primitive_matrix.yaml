@@ -1,0 +1,65 @@
+version: 1
+principle: seek_prime_causal_matrices
+
+rules:
+  macro_labels_are_observational_by_default: true
+  macro_classifiers_are_causally_inert: true
+  same_primitive_matrix_must_allow_multiple_outcomes: true
+  relations_are_multiplex: true
+  relations_are_domain_specific: true
+  conflict_is_not_war: true
+  cooperation_is_not_alliance: true
+  one_off_coordination_does_not_imply_alliance: true
+  violence_does_not_require_macro_war_state: true
+  macro_actors_may_have_internal_networks: true
+  perceived_relation_matrix_may_differ_from_world_truth: true
+
+prime_matrix_test:
+  - can_macro_be_described_as_persistent_lower_level_pattern
+  - identify_state_that_exists_without_macro_outcome
+  - prefer_primitives_reusable_across_adjacent_phenomena
+  - reject_hidden_deterministic_shortcuts
+  - require_classifier_removal_to_leave_trajectory_unchanged
+  - require_multiple_outcomes_under_similar_primitive_conditions
+
+relational_dimensions:
+  - interests
+  - claims
+  - compatibility
+  - incompatibility
+  - trust
+  - dependence
+  - contact
+  - uncertainty
+  - capability
+  - constraints
+  - memory
+  - social_network_paths
+  - spatial_access
+  - actor_beliefs
+
+primitive_interactions:
+  - communicate
+  - negotiate
+  - exchange
+  - coordinate
+  - withhold
+  - threaten
+  - obstruct
+  - seize
+  - attack
+  - avoid
+
+observational_pattern_examples:
+  - sustained_cooperation
+  - competitive_rivalry
+  - violent_feud
+  - alliance_like
+  - war_like
+
+forbidden_shortcuts:
+  - at_war_implies_battle_generation
+  - alliance_implies_automatic_assistance
+  - enemy_boolean_replaces_relational_state
+  - conflict_implies_violence
+  - shared_kinship_implies_alignment
