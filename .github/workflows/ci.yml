@@ -49,3 +49,12 @@ jobs:
           --height 40
           --settlements 5
           --output /tmp/simworld-generational-world
+      - name: Material economy simulation
+        run: >-
+          python scripts/run_material_world.py
+          --seed 104729
+          --years 18
+          --width 50
+          --height 38
+          --settlements 5
+          --output /tmp/simworld-material-world
