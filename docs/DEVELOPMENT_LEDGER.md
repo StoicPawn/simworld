@@ -94,3 +94,44 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 **Validation target:** unit tests for household membership, relationship evolution, gestation delay, contested inheritance and integrated multi-year simulation.
 
 **Known limitation:** this remains a vertical slice; production, explicit ownership registries, law, institutions, marriage norms, child development, spatial encounter networks and fully endogenous political organizations are subsequent layers.
+
+---
+
+## 2026-08-09 — M7 Material economy, property and spatial exchange
+
+**Intent:** create the material substrate from which durable economic asymmetry and later political power can emerge without assigning economic castes, houses or rulers in advance.
+
+**New primitives:**
+- `Asset` as a real productive/material object;
+- temporal, partial, typed `PropertyRight`;
+- `PropertyRegistry` preserving historical ownership and transfers;
+- `Inventory` for actual stocks, distinct from abstract wealth;
+- generic `ProductionProcess` and environmental/labour context;
+- bilateral `ExchangeProposal`/`ExchangeResult`;
+- integrated household-level field assets, production, consumption, shortage, debt effects and barter.
+
+**Integrated processes:**
+- field productivity depends on local map fertility and household productive capacity;
+- labour depends on living materialized household members and health/age;
+- grain and timber production depend on climate, local resources, tools, debt/security pressure and heterogeneous continuous skills;
+- households consume real grain stocks rather than only reading an abstract food score;
+- complementary shortage/surplus can create exchange opportunities;
+- cross-settlement exchange is constrained by least-cost geography;
+- social connections can improve acceptance, but do not guarantee exchange;
+- rejected exchanges are preserved as historical events.
+
+**New invariants:**
+- resource truth != access != possession != ownership != control != wealth;
+- ownership is temporal and historically reconstructible;
+- scarcity alters constraints and incentives, never directly triggers a prescribed social/political outcome;
+- economic specialization should emerge from continuous heterogeneity, geography, learning and accumulated history rather than static labels;
+- wealth must not substitute for inventory, food security, productive capacity or strategic control.
+
+**Validation:** dedicated tests cover temporal partial property transfer, production sensitivity to material context, stock/acceptance-constrained exchange and an integrated material-world run. CI also executes the new material simulation.
+
+**Known limitations / next dependencies:**
+- current field assets are household-scale vertical-slice objects rather than full cell/parcel mosaics;
+- no transport inventories, spoilage, storage infrastructure, credit contracts, rent/tribute/tax, prices or organization-level production yet;
+- personal land inheritance is not yet wired into the property registry;
+- encounter formation remains simplified and must later arise from movement, markets, work, kinship and institutions;
+- next major bridge is from material networks and property concentration to explicit obligations, organizations, recognition and emergent authority.
