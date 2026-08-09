@@ -7,7 +7,7 @@ from random import Random
 from simworld.core.event import Event
 from simworld.economy.exchange import ExchangeProposal, execute_exchange
 from simworld.economy.production import Inventory, ProductionContext, ProductionProcess, produce
-from simworld.economy.property import Asset, PropertyRegistry, PropertyRight
+from simworld.economy.property import Asset, AssetRelation, PropertyRegistry
 from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
 from simworld.simulation.generational_world import GenerationalSimulationResult, GenerationalWorldSimulation
 from simworld.simulation.social_world import SocialSimulationResult
@@ -22,10 +22,13 @@ class MaterialSimulationResult:
 
 
 class MaterialWorldSimulation(GenerationalWorldSimulation):
-    """Adds ownership, household production, inventories and spatial exchange.
+    """Adds assets, possession/use, production, inventories and spatial exchange.
 
-    Scarcity changes feasible actions and incentives; it never directly prescribes a
-    revolt, migration, trade, or political response.
+    The material substrate is deliberately pre-legal. Households can occupy, use and
+    effectively control assets without a universal concept of ownership. Formal
+    property can later emerge from claims, recognition and enforcement institutions.
+    Scarcity changes feasible actions and incentives; it never prescribes a social or
+    political response.
     """
 
     def __init__(self, config: FirstWorldConfig) -> None:
@@ -55,7 +58,19 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                 attributes={"fertility": fertility, "x": cell.x, "y": cell.y},
             )
             self.property_registry.add_asset(field)
-            self.property_registry.grant(PropertyRight(field.id, household.id, 1.0, started_at=0))
+            # Early-world relation: the household occupies/uses/controls the plot.
+            # No universal legal ownership is asserted.
+            for relation_kind, strength in (("possess", 1.0), ("use", 1.0), ("control", 0.85)):
+                self.property_registry.relate(
+                    AssetRelation(
+                        asset_id=field.id,
+                        actor_id=household.id,
+                        strength=strength,
+                        kind=relation_kind,
+                        started_at=0,
+                        provenance="initial_occupation",
+                    )
+                )
 
             self.inventories[household.id] = Inventory(
                 household.id,
@@ -75,6 +90,7 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
                     payload={
                         "household_id": household.id,
                         "field_asset_id": field.id,
+                        "asset_relation": "occupation_use_control",
                         "farm_skill": round(farm_skill, 4),
                         "wood_skill": round(wood_skill, 4),
                     },
@@ -97,10 +113,10 @@ class MaterialWorldSimulation(GenerationalWorldSimulation):
 
     def _field_quality(self, household_id: str, year: int) -> float:
         qualities: list[float] = []
-        for right in self.property_registry.holdings(household_id, year):
-            asset = self.property_registry.assets[right.asset_id]
+        for relation in self.property_registry.relations_of(household_id, year, "use"):
+            asset = self.property_registry.assets[relation.asset_id]
             if asset.kind == "field_plot":
-                qualities.append(asset.productive_capacity * right.share)
+                qualities.append(asset.productive_capacity * relation.strength)
         return sum(qualities) if qualities else 0.0
 
     def _run_material_production(self, year: int, food_ratio: dict[str, float]) -> None:
