@@ -8,6 +8,7 @@ import numpy as np
 
 from simworld.core.entity import Entity
 from simworld.core.event import Event
+from simworld.core.randomness import RandomStreams
 from simworld.core.world import WorldState
 from simworld.geography import GeneratedWorld, generate_world
 from simworld.spatial import CellCoord, GridSpec
@@ -47,7 +48,11 @@ class FirstWorldSimulation:
 
     def __init__(self, config: FirstWorldConfig) -> None:
         self.config = config
+        # Legacy NumPy stream remains unchanged for this vertical slice. New processes
+        # should prefer semantic streams from ``random_streams`` so adding an unrelated
+        # module cannot perturb existing stochastic histories merely by consuming RNG.
         self.rng = np.random.default_rng(config.seed)
+        self.random_streams = RandomStreams(config.seed)
         spec = GridSpec(
             width=config.width,
             height=config.height,
@@ -148,13 +153,11 @@ class FirstWorldSimulation:
                 time=year,
                 participants=(entity_id,),
                 locations=(entity_id,),
-                impact=abs(1.0 - ratio) + 0.2,
+                impact=abs(1.0 - ratio),
                 payload={
-                    "population_before": population,
-                    "food_capacity": round(food, 3),
-                    "food_ratio": round(ratio, 5),
-                    "fertility": round(fertility, 5),
-                    "shock": round(climate_noise + rare_shock, 5),
+                    "food_ratio": ratio,
+                    "fertility": fertility,
+                    "production_factor": production_factor,
                 },
             )
             self.world.record_event(event)
@@ -164,13 +167,16 @@ class FirstWorldSimulation:
     def _run_demography(self, year: int, food_ratio: dict[str, float]) -> None:
         for entity_id in self.settlement_ids:
             entity = self.world.entities[entity_id]
-            before = int(entity.attributes["population"])
+            population = max(1, int(entity.attributes["population"]))
             ratio = food_ratio[entity_id]
-            growth_rate = float(np.clip(0.012 + 0.055 * (ratio - 1.0), -0.095, 0.032))
-            demographic_noise = float(self.rng.normal(0.0, 0.004))
-            after = max(25, int(round(before * (1.0 + growth_rate + demographic_noise))))
-            entity.attributes["population"] = after
-            entity.attributes["peak_population"] = max(int(entity.attributes["peak_population"]), after)
+            capacity = self._local_capacity(entity_id)
+            density_pressure = max(0.0, population / max(capacity, 1.0) - 0.75)
+            base_growth = 0.018 + float(self.rng.normal(0.0, 0.006))
+            food_effect = 0.035 * max(-1.0, min(0.8, ratio - 0.9))
+            growth_rate = max(-0.11, min(0.055, base_growth + food_effect - 0.035 * density_pressure))
+            next_population = max(20, int(round(population * (1.0 + growth_rate))))
+            entity.attributes["population"] = next_population
+            entity.attributes["peak_population"] = max(int(entity.attributes["peak_population"]), next_population)
             self.world.record_event(
                 Event(
                     kind="population_change",
@@ -178,56 +184,54 @@ class FirstWorldSimulation:
                     participants=(entity_id,),
                     locations=(entity_id,),
                     causes=(self._last_harvest[entity_id],),
-                    impact=abs(after - before) / max(1, before) + 0.1,
-                    payload={"before": before, "after": after, "growth_rate": round(growth_rate, 6)},
+                    impact=abs(next_population - population) / max(population, 1),
+                    payload={
+                        "before": population,
+                        "after": next_population,
+                        "growth_rate": growth_rate,
+                        "food_ratio": ratio,
+                    },
                 )
             )
 
-    def _best_destination(self, source_id: str, food_ratio: dict[str, float]) -> tuple[str, float] | None:
-        source = self._cells[source_id]
-        best: tuple[str, float] | None = None
-        for destination_id in self.settlement_ids:
-            if destination_id == source_id or food_ratio[destination_id] <= 1.03:
-                continue
-            path = self.generated.spatial_map.path(source, self._cells[destination_id], max_expansions=30_000)
-            if path is None:
-                continue
-            attractiveness = food_ratio[destination_id] - path.cost / 4_000_000.0
-            if best is None or attractiveness > best[1]:
-                best = (destination_id, attractiveness)
-        return best
-
     def _run_migration(self, year: int, food_ratio: dict[str, float]) -> None:
-        for source_id in self.settlement_ids:
-            if food_ratio[source_id] >= 0.88:
+        origins = sorted(self.settlement_ids, key=lambda entity_id: food_ratio[entity_id])
+        destinations = sorted(self.settlement_ids, key=lambda entity_id: food_ratio[entity_id], reverse=True)
+        for origin_id in origins:
+            origin_ratio = food_ratio[origin_id]
+            origin = self.world.entities[origin_id]
+            if origin_ratio >= 0.82 or int(origin.attributes["population"]) < 180:
                 continue
-            destination = self._best_destination(source_id, food_ratio)
-            if destination is None or destination[1] <= 0.7:
+            best: tuple[float, str] | None = None
+            for destination_id in destinations:
+                if destination_id == origin_id or food_ratio[destination_id] <= origin_ratio + 0.18:
+                    continue
+                path = self.generated.spatial_map.path(
+                    self._cells[origin_id],
+                    self._cells[destination_id],
+                    max_expansions=20_000,
+                )
+                if path is None:
+                    continue
+                attractiveness = food_ratio[destination_id] - 0.00000018 * path.cost
+                if best is None or attractiveness > best[0]:
+                    best = (attractiveness, destination_id)
+            if best is None:
                 continue
-            destination_id, _ = destination
-            source_entity = self.world.entities[source_id]
-            destination_entity = self.world.entities[destination_id]
-            source_population = int(source_entity.attributes["population"])
-            migrants = min(max(5, int(source_population * (0.018 + 0.045 * (0.88 - food_ratio[source_id])))), source_population // 8)
-            if migrants < 5:
-                continue
-            source_entity.attributes["population"] = source_population - migrants
-            destination_entity.attributes["population"] = int(destination_entity.attributes["population"]) + migrants
+            destination_id = best[1]
+            destination = self.world.entities[destination_id]
+            movers = max(1, int(int(origin.attributes["population"]) * min(0.035, 0.012 + 0.03 * (0.82 - origin_ratio))))
+            origin.attributes["population"] = max(20, int(origin.attributes["population"]) - movers)
+            destination.attributes["population"] = int(destination.attributes["population"]) + movers
             self.world.record_event(
                 Event(
                     kind="migration",
                     time=year,
-                    participants=(source_id, destination_id),
-                    locations=(source_id, destination_id),
-                    causes=(self._last_harvest[source_id], self._last_harvest[destination_id]),
-                    impact=migrants / max(1, source_population) + 0.35,
-                    payload={
-                        "people": migrants,
-                        "from": source_entity.name,
-                        "to": destination_entity.name,
-                        "source_food_ratio": round(food_ratio[source_id], 5),
-                        "destination_food_ratio": round(food_ratio[destination_id], 5),
-                    },
+                    participants=(origin_id, destination_id),
+                    locations=(origin_id, destination_id),
+                    causes=(self._last_harvest[origin_id], self._last_harvest[destination_id]),
+                    impact=movers / max(int(origin.attributes["population"]), 1),
+                    payload={"movers": movers, "origin_food": origin_ratio, "destination_food": food_ratio[destination_id]},
                 )
             )
 
@@ -237,8 +241,9 @@ class FirstWorldSimulation:
             if bool(entity.attributes["known_ore"]):
                 continue
             cell = self._cells[entity_id]
-            ore = float(self.generated.ore[cell.y, cell.x])
-            if self.rng.random() < 0.012 + 0.035 * ore:
+            ore_truth = float(self.generated.ore[cell.y, cell.x])
+            probability = min(0.22, 0.008 + 0.11 * ore_truth)
+            if self.rng.random() < probability:
                 entity.attributes["known_ore"] = True
                 self.world.record_event(
                     Event(
@@ -246,53 +251,33 @@ class FirstWorldSimulation:
                         time=year,
                         participants=(entity_id,),
                         locations=(entity_id,),
-                        impact=0.4 + ore,
-                        payload={"local_ore_signal": round(ore, 5)},
+                        impact=0.25 + ore_truth,
+                        payload={"ore_truth": ore_truth, "previously_known": False},
                     )
                 )
 
     def run(self) -> SimulationResult:
         self.initialize()
         for year in range(1, self.config.years + 1):
+            self.world.advance_to(year)
             food_ratio = self._run_harvests(year)
             self._run_demography(year, food_ratio)
             self._run_migration(year, food_ratio)
             self._run_discoveries(year)
-        return SimulationResult(
-            config=self.config,
-            generated=self.generated,
-            world=self.world,
-            settlement_ids=tuple(self.settlement_ids),
-        )
+        return SimulationResult(self.config, self.generated, self.world, tuple(self.settlement_ids))
 
 
-def write_svg_map(result: SimulationResult, path: Path, *, scale: int = 5) -> None:
-    """Write a dependency-free visual map of terrain and settlement outcomes."""
-    generated = result.generated
-    height, width = generated.water.shape
-    max_elevation = max(1.0, float(np.max(generated.elevation_m)))
-    parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width * scale}" height="{height * scale}" viewBox="0 0 {width} {height}">'
-    ]
-    for y in range(height):
-        for x in range(width):
-            if generated.water[y, x]:
-                color = "#5f91b8"
-            else:
-                fertility = float(generated.fertility[y, x])
-                elevation = max(0.0, float(generated.elevation_m[y, x])) / max_elevation
-                r = int(np.clip(154 - 55 * fertility + 65 * elevation, 70, 220))
-                g = int(np.clip(129 + 92 * fertility - 45 * elevation, 70, 220))
-                b = int(np.clip(76 + 48 * fertility + 38 * elevation, 55, 190))
-                color = f"#{r:02x}{g:02x}{b:02x}"
-            parts.append(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{color}"/>')
-
-    for entity_id in result.settlement_ids:
-        entity = result.world.entities[entity_id]
-        x = int(entity.attributes["x"])
-        y = int(entity.attributes["y"])
-        population = int(entity.attributes["population"])
-        radius = float(np.clip(0.8 + np.log10(max(10, population)) * 0.45, 1.0, 2.4))
-        parts.append(f'<circle cx="{x + 0.5}" cy="{y + 0.5}" r="{radius}" fill="#221c17" stroke="#f5efe6" stroke-width="0.25"/>')
-    parts.append("</svg>")
-    path.write_text("\n".join(parts), encoding="utf-8")
+def save_result(result: SimulationResult, output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    # Serialization remains deliberately minimal in this vertical slice.
+    np.savez_compressed(
+        output_dir / "physical_layers.npz",
+        elevation=result.generated.elevation,
+        water=result.generated.water,
+        rainfall=result.generated.rainfall,
+        temperature=result.generated.temperature,
+        fertility=result.generated.fertility,
+        timber=result.generated.timber,
+        ore=result.generated.ore,
+        habitability=result.generated.habitability,
+    )
