@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class SocialTie:
     source_id: str
     target_id: str
@@ -28,6 +28,16 @@ class SocialGraph:
         if tie.source_id == tie.target_id:
             raise ValueError("self ties are not supported")
         self.ties.append(tie)
+
+    def end(self, tie: SocialTie, time: int) -> SocialTie:
+        if time < tie.started_at:
+            raise ValueError("tie cannot end before it starts")
+        for index, existing in enumerate(self.ties):
+            if existing is tie:
+                closed = replace(existing, ended_at=time)
+                self.ties[index] = closed
+                return closed
+        raise ValueError("tie is not part of this graph")
 
     def active_ties(self, person_id: str, time: int, kind: str | None = None) -> tuple[SocialTie, ...]:
         return tuple(
