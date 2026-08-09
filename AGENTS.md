@@ -1,6 +1,6 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
@@ -24,7 +24,7 @@ DECISIONS / ACTIONS
 CHANGED WORLD STATE
 ```
 
-The map is causal state, not decoration. Actor knowledge is not world truth. Read `docs/SPATIAL_FOUNDATION.md` before spatial/domain work and `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` before modelling agents, communication, politics, families, institutions, culture, ideology, diplomacy or LLM decisions.
+The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Read `docs/SPATIAL_FOUNDATION.md` before spatial/domain work, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md` before modelling agents/communication/culture, and `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md` before families, reproduction, households, houses, dynasties, inheritance or social networks.
 
 ## Architectural invariants
 
@@ -58,6 +58,14 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Rea
 28. **Culture is emergent.** Do not assign unexplained cultural stereotypes. Derive cultural patterns from persistent beliefs, narratives, institutions, norms, incentives and social transmission.
 29. **No canonical interpretation of history.** The event store records modeled facts; meanings and causal interpretations can differ by actor or later historian.
 30. **Future LLM agents receive only legitimate actor information.** Never leak hidden world truth into an LLM context unless the modeled actor has access to it.
+31. **Biological kinship and social relationship are separate layers.** Blood does not imply affection, loyalty, co-residence, political alignment or shared identity.
+32. **Reproduction is probabilistic.** Intimacy or partnership changes opportunity; it must never directly call a guaranteed birth.
+33. **Birth creates parenthood, not romance.** Offspring establishes biological parent links and a co-parent relation, but not mandatory love, marriage, trust or cooperation.
+34. **Social graphs are multiplex and temporal.** Friendship, rivalry, intimacy, care, dependence, trust, employment, debt and political ties may coexist between the same actors and change over time.
+35. **Networks contain networks.** Higher-order connections must be queryable; friends-of-friends, in-laws, patrons, creditors and story-carriers may create causal pathways.
+36. **Family/house/dynasty are emergent categories.** Never use biological descent alone as a primitive political unit. Derive them from descent plus social cohesion, property, memory, names, institutions and recognition when applicable.
+37. **Lineages can branch or dissolve.** Related branches may become separate institutions; unrelated people may be incorporated; kin can become enemies.
+38. **Kinship may influence information flow, never guarantee truth.** High family trust can preserve stories and falsehoods alike.
 
 ## Development discipline
 
@@ -72,6 +80,7 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Rea
 - Do not implement future domains early just because they are interesting. Respect dependency order in `.agent/roadmap.yaml`.
 - Spatial foundations must be established before deeply modelling population, economy, states, borders, trade or conflict.
 - Epistemic/social foundations must be used rather than bypassed when later political actors, families, institutions and cultures are added.
+- Never model houses/dynasties as unexplained containers if their membership can be derived from biological/social/economic/institutional relations.
 
 ## Mandatory validation
 
