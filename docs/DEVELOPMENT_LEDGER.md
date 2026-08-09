@@ -101,41 +101,17 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** create the material substrate from which durable economic asymmetry and later political power can emerge without assigning economic castes, houses or rulers in advance.
 
-**New primitives:**
+**Historical note:** this milestone initially introduced `PropertyRight` as if a recognized ownership relation could be a primitive. M10 below supersedes that choice: modern/formal property is now derived from more elementary actor↔asset relations and recognition.
+
+**Other primitives/processes retained:**
 - `Asset` as a real productive/material object;
-- temporal, partial, typed `PropertyRight`;
-- `PropertyRegistry` preserving historical ownership and transfers;
 - `Inventory` for actual stocks, distinct from abstract wealth;
 - generic `ProductionProcess` and environmental/labour context;
 - bilateral `ExchangeProposal`/`ExchangeResult`;
-- integrated household-level field assets, production, consumption, shortage, debt effects and barter.
+- integrated household-level field assets, production, consumption, shortage, debt effects and barter;
+- spatial accessibility for repeated exchange cached by settlement pair.
 
-**Integrated processes:**
-- field productivity depends on local map fertility and household productive capacity;
-- labour depends on living materialized household members and health/age;
-- grain and timber production depend on climate, local resources, tools, debt/security pressure and heterogeneous continuous skills;
-- households consume real grain stocks rather than only reading an abstract food score;
-- complementary shortage/surplus can create exchange opportunities;
-- cross-settlement exchange is constrained by least-cost geography;
-- social connections can improve acceptance, but do not guarantee exchange;
-- rejected exchanges are preserved as historical events;
-- spatial accessibility for repeated exchange is cached by settlement pair to preserve causal logic while avoiding repeated pathfinding cost.
-
-**New invariants:**
-- resource truth != access != possession != ownership != control != wealth;
-- ownership is temporal and historically reconstructible;
-- scarcity alters constraints and incentives, never directly triggers a prescribed social/political outcome;
-- economic specialization should emerge from continuous heterogeneity, geography, learning and accumulated history rather than static labels;
-- wealth must not substitute for inventory, food security, productive capacity or strategic control.
-
-**Validation:** dedicated tests cover temporal partial property transfer, production sensitivity to material context, stock/acceptance-constrained exchange and an integrated material-world run. CI also executes the new material simulation.
-
-**Known limitations / next dependencies:**
-- current field assets are household-scale vertical-slice objects rather than full cell/parcel mosaics;
-- no transport inventories, spoilage, storage infrastructure, credit contracts, rent/tribute/tax, prices or organization-level production yet;
-- personal land inheritance is not yet wired into the property registry;
-- encounter formation remains simplified and must later arise from movement, markets, work, kinship and institutions;
-- next major bridge is from material networks and property concentration to explicit obligations, organizations, recognition and emergent authority.
+**Invariant retained:** scarcity alters constraints and incentives, never directly triggers a prescribed social/political outcome.
 
 ---
 
@@ -175,12 +151,6 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
 
-**Known limitations / next dependencies:**
-- obligations currently focus on grain credit in the integrated slice; rent, tribute, taxation, labour service and protection remain future uses of the generic registry;
-- organization formation still uses a simple cooperation-threshold/probability mechanism and needs richer recognition, narrative, norms and leadership processes;
-- coercive enforcement capacity is not yet materialized;
-- territorial control/claims are not yet connected to organizations/authority.
-
 ---
 
 ## 2026-08-09 — M9 Material disequilibrium, storage and local shocks
@@ -203,6 +173,32 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - two households in the same settlement may experience the same macro year differently;
 - shocks create opportunities/constraints, never prescribed behavioural responses.
 
-**Validation target:** tests cover physical stock loss, age-structured demand and integrated emergence of local material variation. CI runs a 30-year disequilibrium world after all lower layers.
+---
 
-**Next dependency:** validate whether richer material heterogeneity actually activates exchange/credit/cooperation in integrated runs. If still dormant, improve the causal material model (transport, storage, production specialization, demand and encounters) rather than introducing event quotas. Once durable dependency/organization is visible, proceed toward norms, protection/extraction, offices and spatial control.
+## 2026-08-09 — M10 Primitive simplification: asset relations before property
+
+**Intent:** reduce conceptual complexity and avoid projecting modern legal property backward into worlds that may not yet contain institutions capable of defining, recording or enforcing it.
+
+**Architectural change:**
+- `Asset` remains physical/material truth;
+- primitive `PropertyRight` is superseded by temporal `AssetRelation`;
+- minimal relation kinds are `possess`, `use`, `control`, and `claim`;
+- `Recognition` records that one actor accepts another actor's claim, independently of physical control;
+- formal/legal property becomes a future **derived view** over claims, recognition, control, norms and enforcement;
+- deeds, titles, cadastral records and contracts will later be information/evidence objects whose force depends on issuer recognition and institutional enforcement;
+- compatibility wrappers remain temporarily so prior vertical slices do not require a destructive rewrite.
+
+**Integrated change:** initial farming households now occupy, use and effectively control their field plots. The simulation no longer asserts that they own those plots under a universal legal regime. Production depends on `use`, not legal ownership.
+
+**New invariants:**
+- asset != property;
+- possession != use != control != claim;
+- claim != recognized claim;
+- recognized claim != effective control;
+- document != truth;
+- legal/formal property requires institutional context;
+- no universal property law is built into the kernel.
+
+**Scalability rationale:** the simulator keeps a small set of generic relations and lets historical institutions add meaning later. This is preferred to creating separate hard-coded systems for prehistoric possession, feudal tenure, customary property and modern title.
+
+**Reference:** `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
