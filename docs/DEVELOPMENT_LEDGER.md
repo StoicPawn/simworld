@@ -118,7 +118,8 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - complementary shortage/surplus can create exchange opportunities;
 - cross-settlement exchange is constrained by least-cost geography;
 - social connections can improve acceptance, but do not guarantee exchange;
-- rejected exchanges are preserved as historical events.
+- rejected exchanges are preserved as historical events;
+- spatial accessibility for repeated exchange is cached by settlement pair to preserve causal logic while avoiding repeated pathfinding cost.
 
 **New invariants:**
 - resource truth != access != possession != ownership != control != wealth;
@@ -135,3 +136,46 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - personal land inheritance is not yet wired into the property registry;
 - encounter formation remains simplified and must later arise from movement, markets, work, kinship and institutions;
 - next major bridge is from material networks and property concentration to explicit obligations, organizations, recognition and emergent authority.
+
+---
+
+## 2026-08-09 — M8 Obligations, organizations and derived authority
+
+**Intent:** bridge material/social interaction into durable institutional structure without declaring rulers, classes, houses, governments or states as primitive objects.
+
+**New primitives:**
+- general `Obligation` and `ObligationRegistry` for resource/labour/service duties with provenance, due time, fulfilment, debtor acceptance, external recognition and enforceability;
+- `CooperationLedger` accumulating repeated successful/failed interaction;
+- generic `Organization`, `Membership` and `OrganizationRegistry`;
+- `AuthorityObservation`, `AuthoritySignal` and `AuthorityIndex` separating effective authority from legitimacy.
+
+**Integrated processes:**
+- severe household grain shortage may generate a credit request rather than an automatic policy response;
+- possible creditors are constrained by actual surplus, spatial access, social connection and previous cooperation;
+- accepted credit moves real grain and creates an explicit obligation;
+- repayment, partial repayment and default become historical events;
+- repeated successful interaction can reinforce cooperation while failed interaction can weaken it;
+- connected cooperation networks may probabilistically form a generic organization;
+- organizations can pool voluntary grain contributions and redistribute aid;
+- authority signals emerge from observed compliance, dependency, recognition, provision and coercion;
+- organization-level authority can grow in the resource-coordination domain through repeated contribution/provision without making the organization a government.
+
+**New invariants:**
+- request != obligation;
+- obligation != financial debt only;
+- compliance != consent;
+- dependency != loyalty;
+- coercion != legitimacy;
+- organization != institution != government != state;
+- effective authority and legitimacy are separate signals;
+- authority is domain-specific and historically derived;
+- economic dependency may become political power later, but never automatically.
+
+**Validation target:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
+
+**Known limitations / next dependencies:**
+- obligations currently focus on grain credit in the integrated slice; rent, tribute, taxation, labour service and protection remain future uses of the generic registry;
+- organization formation still uses a simple cooperation-threshold/probability mechanism and needs richer recognition, narrative, norms and leadership processes;
+- coercive enforcement capacity is not yet materialized;
+- territorial control/claims are not yet connected to organizations/authority;
+- next bridge is explicit norms/rules, roles/offices, organizational competition, protection/extraction and spatial control from which political formations can emerge.
