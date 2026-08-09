@@ -1,6 +1,6 @@
 project: simworld
-version: 9
-current_phase: material_disequilibrium_and_asset_claims
+version: 10
+current_phase: encounter_driven_social_foundation
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -29,6 +29,9 @@ foundational_principles:
   formal_property_is_derived_from_institutions: true
   inventory_is_not_wealth: true
   scarcity_is_not_prescribed_action: true
+  social_connections_require_opportunity: true
+  visits_are_not_relationships: true
+  encounters_are_not_relationships: true
   obligation_is_not_consent: true
   dependency_is_not_loyalty: true
   organization_is_not_state: true
@@ -64,18 +67,18 @@ phases:
 
   - id: phase_4_population
     status: in_progress
-    implemented_capabilities: [settlement_population, geography_constrained_settlement_sites, food_linked_demography, geography_constrained_migration, materialized_persons, biological_birth_death]
-    remaining_capabilities: [distributed_population_raster, demographic_cohorts, adaptive_person_materialization, settlement_founding_abandonment, migration_of_materialized_people_and_households]
+    implemented_capabilities: [settlement_population, geography_constrained_settlement_sites, food_linked_demography, geography_constrained_migration, materialized_persons, biological_birth_death, temporary_person_visits]
+    remaining_capabilities: [distributed_population_raster, demographic_cohorts, adaptive_person_materialization, settlement_founding_abandonment, migration_of_materialized_people_and_households, persistent_person_movement]
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
-    implemented_capabilities: [needs_as_pressures, probabilistic_beliefs, memory_traces, contextual_trust, messages_and_distortion, later_message_accuracy_evaluation, perceived_strategy_learning, latent_effect_separation, bounded_stochastic_action_choice, narrative_information_objects, narrative_transmission_and_mutation, multiplex_social_network, biological_kinship_graph, derived_lineages]
-    remaining_capabilities: [causal_models_inside_agents, memory_retrieval_and_forgetting, richer_deception_strategy, identity_and_group_membership, norms_and_sanctions, institutional_memory, endogenous_value_formation, metacognition_and_confidence_calibration]
+    implemented_capabilities: [needs_as_pressures, probabilistic_beliefs, memory_traces, contextual_trust, messages_and_distortion, later_message_accuracy_evaluation, perceived_strategy_learning, latent_effect_separation, bounded_stochastic_action_choice, narrative_information_objects, narrative_transmission_and_mutation, multiplex_social_network, biological_kinship_graph, derived_lineages, encounter_ledger, cumulative_pair_exposure, encounter_driven_social_tie_formation]
+    remaining_capabilities: [causal_models_inside_agents, memory_retrieval_and_forgetting, richer_deception_strategy, identity_and_group_membership, norms_and_sanctions, institutional_memory, endogenous_value_formation, metacognition_and_confidence_calibration, encounter_driven_information_transmission]
 
   - id: phase_4c_life_processes
     status: in_progress
-    implemented_capabilities: [household_registry, household_resource_pool, household_care_pressure, household_stress_events, pregnancy_state, gestation_delay, pregnancy_loss_or_live_birth, relationship_strength_sentiment_trust_evolution, probabilistic_separation, multi_asset_estate, competing_succession_claims, divisible_contested_inheritance, separate_wealth_debt_name_memory_transfers]
-    remaining_capabilities: [reconciliation_process, spatial_social_encounter_process, endogenous_partner_formation, caregiving_events, childhood_dependency_and_development, education_and_socialization, household_fission_fusion, adoption_and_incorporation, land_inheritance, office_and_claim_inheritance, wills_customs_law_and_coercive_succession, family_self_recognition, outsider_recognition, emergent_house_detection]
+    implemented_capabilities: [household_registry, household_resource_pool, household_care_pressure, household_stress_events, pregnancy_state, gestation_delay, pregnancy_loss_or_live_birth, relationship_strength_sentiment_trust_evolution, probabilistic_separation, multi_asset_estate, competing_succession_claims, divisible_contested_inheritance, separate_wealth_debt_name_memory_transfers, spatial_social_encounter_process]
+    remaining_capabilities: [reconciliation_process, endogenous_partner_formation, caregiving_events, childhood_dependency_and_development, education_and_socialization, household_fission_fusion, adoption_and_incorporation, land_inheritance, office_and_claim_inheritance, wills_customs_law_and_coercive_succession, family_self_recognition, outsider_recognition, emergent_house_detection, encounter_informed_relationship_evolution]
 
   - id: phase_5_social_economic
     status: in_progress
@@ -109,6 +112,7 @@ phases:
       - institution_defined_property_views
       - transport_capacity_and_transport_loss
       - roads_ports_market_infrastructure
+      - encounter_driven_exchange_opportunities
       - richer_credit_contracts
       - debt_networks
       - rent_tribute_tax
@@ -168,6 +172,9 @@ constraints:
   recognition_must_not_imply_control: true
   documents_must_not_be_global_truth: true
   formal_property_requires_institutional_context: true
+  visit_must_not_imply_relationship: true
+  encounter_must_not_imply_relationship: true
+  detailed_social_ties_require_contact_opportunity: true
   wealth_must_not_replace_inventory_or_food_security: true
   scarcity_must_not_directly_trigger_policy_or_revolt: true
   compliance_must_not_imply_consent: true
