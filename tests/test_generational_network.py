@@ -76,6 +76,7 @@ def test_birth_creates_biological_and_co_parent_relations_without_forcing_romanc
     sim.initialize()
     settlement = sim.settlement_ids[0]
     mother, father, _ = sim._active_reproductive_pairs(0)[0]
+    sim.world.advance_to(1)
     child = sim._birth(1, mother, father, settlement)
 
     assert set(sim.kinship.parents(child)) == {mother, father}
