@@ -2,16 +2,17 @@
 
 ## Current phase
 
-**First real world + epistemic/cultural + generational + household/inheritance process foundation active**
+**First real world + epistemic/cultural + generational + household/inheritance + material economy foundation active**
 
-The repository now has six connected foundations:
+The repository now has seven connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
 3. spatial/geopolitical substrate;
 4. epistemic-social/cultural layer;
 5. biological generations + multiplex social networks;
-6. household, gestation, relationship evolution and inheritance processes.
+6. household, gestation, relationship evolution and inheritance processes;
+7. explicit assets/property, inventories, household production/consumption and spatially constrained exchange.
 
 Every material milestone must also be recorded chronologically in `docs/DEVELOPMENT_LEDGER.md`.
 
@@ -21,6 +22,10 @@ Every material milestone must also be recorded chronologically in `docs/DEVELOPM
 TIME + SPACE
     ↓
 OBJECTIVE PHYSICAL / SOCIAL WORLD
+    ↓
+RESOURCES / ASSETS / RIGHTS / INVENTORIES
+    ↓
+PRODUCTION / CONSUMPTION / EXCHANGE / OBLIGATIONS
     ↓
 EVENTS + EXPERIENCES
     ↓
@@ -38,56 +43,45 @@ PERCEIVED LEARNING + SOCIAL MEMORY
     ↓
 BIOLOGICAL GENERATIONS + SUCCESSION
     ↓
-EMERGENT GROUPS / INSTITUTIONS / POLITICS
+EMERGENT GROUPS / ORGANIZATIONS / AUTHORITY
+    ↓
+TERRITORIAL POLITICS / STATES / CONFLICT
 ```
 
 ## Implemented substrate
 
-### Core and space
+### Core and geography
 - persistent entities and immutable events;
 - concurrent timestamps, causal graph, relevance/resolution and seeded scheduling;
-- fine raster/chunk map, aligned layers and terrain-sensitive routing;
+- fine raster/chunk map, aligned layers and terrain-sensitive least-cost routing;
 - generated land/water, elevation, rainfall, temperature, fertility, timber, ore and habitability;
 - settlement sites constrained by geography;
 - hidden resource truth can exist before actor discovery.
 
-### Material history
-- local harvests and demography;
-- geography-constrained migration;
-- simultaneous local histories that may remain isolated or converge;
-- reproducible runs.
-
-### Epistemic/cultural layer
-- needs as pressures, never policies;
-- beliefs and memory separate from world truth;
-- contextual trust and distorted communication;
-- perceived learning separate from latent effects;
-- bounded stochastic action choice;
+### Population, social and epistemic processes
+- local harvests, demography and geography-constrained migration;
+- biological persons, kinship, births/deaths and multiplex social ties;
+- households independent of blood;
+- pregnancy/gestation, relationship evolution and contested succession;
+- needs as pressures, beliefs/memory separate from truth, contextual trust and distorted communication;
+- perceived learning distinct from latent effect;
 - branching narrative objects and transmission.
 
-### Biological/social layer
-- biological persons and kinship graph;
-- probabilistic reproductive opportunities;
-- births/deaths and ancestor/descendant/sibling relations;
-- multiplex temporal social ties;
-- higher-order social-network queries;
-- lineages as derived views, not primitive houses.
+### Material economy foundation
 
-### New life-process layer
+#### Assets / rights
+`Asset`, `PropertyRight` and `PropertyRegistry` represent material things and historically reconstructible partial rights. Ownership/control is no longer reducible to a scalar wealth field.
 
-#### Households
-`Household` and `HouseholdRegistry` represent co-residence/resource-sharing units independently of kinship. Members can move between households. Households carry food stock, wealth, debt, shelter quality and care capacity. Household stress can become a historical event.
+#### Inventories
+`Inventory` holds actual quantities such as grain, timber and tools. Material availability is therefore distinct from wealth, status or belief about availability.
 
-#### Gestation
-Conception now creates a `Pregnancy` state with a due time. Birth happens only after gestation resolves. Pregnancy may resolve as live birth or pregnancy loss. Partnership/intimacy still does not guarantee conception.
+#### Production / consumption
+`ProductionProcess` combines labour with land quality, climate, tools, security and other inputs. Household output varies continuously with geography and circumstances; households are not assigned fixed economic castes. Living household members generate labour capacity. Real grain stocks are consumed; shortages may raise debt/stress but never directly prescribe a political action.
 
-#### Relationship evolution
-Existing romantic/intimate/friendship ties can change in sentiment, trust, strength and dependence from repeated interaction, cooperation, stress, betrayal signals and separation pressure. Relationships can end; no relationship label is permanent.
+#### Spatial exchange
+Households with complementary stocks may attempt barter. Same-settlement contact is easiest; cross-settlement exchange depends on least-cost spatial accessibility. Existing social connection can affect acceptance without determining it. Rejected exchanges are also historical events.
 
-#### Inheritance / succession
-Death can open an `Estate`. Wealth, debt, name usage and memory custody are distinct items. Candidate successors receive competing claims based on several independent inputs: biological relatedness, dependence, social relationship, expressed preference, norms and power. Divisible assets may split; different items may pass to different people; contested outcomes are explicit.
-
-This is intentionally not a universal inheritance law. Future institutions, wills, customs, coercion and legal systems can alter claim weights and resolution.
+Read `docs/MATERIAL_ECONOMY_FOUNDATION.md`.
 
 ## Critical invariants
 
@@ -95,29 +89,32 @@ This is intentionally not a universal inheritance law. Future institutions, will
 - need != action;
 - kinship != affection != loyalty != household != political identity;
 - conception != birth;
-- offspring != romance;
 - co-residence != family;
 - inheritance != biological descent;
-- a single death can generate different successors for wealth, debt, name, office, claims or memory;
-- relationship labels are temporal states, not immutable essences;
+- resource truth != access != possession != ownership != control != wealth;
+- wealth != inventory != food security != productive capacity;
+- ownership/right must remain temporal and historically reconstructible;
+- scarcity changes constraints and incentives but does not directly create revolts, trade, migration or policy;
 - family/house/dynasty must emerge from interacting biological, social, material, mnemonic and recognition processes;
-- detailed persons remain an adaptive refinement over aggregate population.
+- detailed people/households remain adaptive refinements over aggregate population.
 
 ## Next work toward the ultimate objective
 
 1. deterministic RNG substreams by actor/process/domain;
-2. spatial/social encounter process for endogenous partner, friendship and rivalry formation;
-3. child dependency, caregiving, education and socialization;
-4. explicit ownership/property registry and household production/consumption;
-5. inheritance of land, offices, claims, debts, names and narrative custody against real registries;
-6. household fission/fusion, adoption/incorporation and family recognition;
-7. memory retrieval/forgetting and intergenerational narrative transfer through actual kin/social networks;
-8. norms, sanctions, religion, identity and endogenous value formation;
-9. organizations and authority emerging from networks/resources/recognition;
-10. territorial control, diplomacy and conflict using actor beliefs rather than omniscient truth;
-11. batch counterfactual simulation and trajectory analysis;
-12. inverse inference over hidden resources, information, beliefs and incentives;
-13. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical scenario analysis.
+2. real encounter/movement process for endogenous friendship, partnership, work and exchange networks;
+3. explicit parcel/cell ownership and contested possession/control distinct from legal/social right;
+4. storage, spoilage, transport capacity and infrastructure;
+5. credit contracts, debt networks, rent, tribute, taxation and labour obligations;
+6. personal/household land inheritance wired directly into the property registry;
+7. household fission/fusion, incorporation/adoption and emergent family self/outsider recognition;
+8. organizations (work groups, guilds, religious bodies, armed groups) emerging from repeated cooperation and resources;
+9. norms, sanctions, religion, identity, education/socialization and endogenous value formation;
+10. authority emerging from protection, extraction, dependency, resources, information and recognition;
+11. territorial control/claims/borders as derived spatial states;
+12. diplomacy and conflict using actor beliefs rather than omniscient truth;
+13. batch counterfactual simulation and trajectory analysis;
+14. inverse inference over hidden resources, information, beliefs and incentives;
+15. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical scenario analysis.
 
 ## Temporary naming warning
 
