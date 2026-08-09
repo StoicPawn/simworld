@@ -41,6 +41,7 @@ def main() -> None:
     for person_id in result.person_ids:
         entity = world.entities[person_id]
         record = result.kinship.people[person_id]
+        household = result.households.household_of(person_id)
         people.append(
             {
                 "id": person_id,
@@ -51,6 +52,10 @@ def main() -> None:
                 "father_id": record.father_id,
                 "settlement_id": entity.attributes["settlement_id"],
                 "alive": entity.attributes["alive"],
+                "household_id": household.id if household else None,
+                "personal_wealth": entity.attributes.get("personal_wealth", 0.0),
+                "personal_debt": entity.attributes.get("personal_debt", 0.0),
+                "name_claim": entity.attributes.get("name_claim"),
             }
         )
     (out / "people.json").write_text(json.dumps(people, indent=2), encoding="utf-8")
@@ -70,9 +75,49 @@ def main() -> None:
         for tie in result.network.ties
     ]
     (out / "social_ties.json").write_text(json.dumps(ties, indent=2), encoding="utf-8")
-    (out / "lineages.json").write_text(
-        json.dumps(result.lineage_candidates, indent=2), encoding="utf-8"
-    )
+
+    households = [
+        {
+            "id": household.id,
+            "settlement_id": household.settlement_id,
+            "founded_at": household.founded_at,
+            "members": sorted(household.members),
+            "food_stock": household.food_stock,
+            "wealth": household.wealth,
+            "debt": household.debt,
+            "care_capacity": household.care_capacity,
+        }
+        for household in result.households.households.values()
+    ]
+    (out / "households.json").write_text(json.dumps(households, indent=2), encoding="utf-8")
+
+    pregnancies = [
+        {
+            "id": pregnancy.id,
+            "gestational_parent_id": pregnancy.gestational_parent_id,
+            "other_parent_id": pregnancy.other_parent_id,
+            "conceived_at": pregnancy.conceived_at,
+            "due_at": pregnancy.due_at,
+            "active": pregnancy.active,
+            "outcome": pregnancy.outcome,
+        }
+        for pregnancy in result.pregnancies.pregnancies.values()
+    ]
+    (out / "pregnancies.json").write_text(json.dumps(pregnancies, indent=2), encoding="utf-8")
+
+    transfers = [
+        {
+            "item_key": transfer.item_key,
+            "from_id": transfer.from_id,
+            "to_id": transfer.to_id,
+            "share": transfer.share,
+            "contested": transfer.contested,
+            "winning_score": transfer.winning_score,
+        }
+        for transfer in result.inheritance_transfers
+    ]
+    (out / "inheritance.json").write_text(json.dumps(transfers, indent=2), encoding="utf-8")
+    (out / "lineages.json").write_text(json.dumps(result.lineage_candidates, indent=2), encoding="utf-8")
 
     serialized_events = [
         {
@@ -99,10 +144,17 @@ def main() -> None:
         "people": len(result.person_ids),
         "births": births,
         "deaths": deaths,
+        "conceptions": event_types.get("conception", 0),
+        "pregnancy_losses": event_types.get("pregnancy_loss", 0),
         "events": len(world.events),
         "event_types": dict(sorted(event_types.items())),
         "social_ties": len(result.network.ties),
         "tie_types": dict(sorted(tie_types.items())),
+        "relationship_separations": event_types.get("relationship_separated", 0),
+        "households": len(result.households.active_households()),
+        "household_stress_events": event_types.get("household_stress", 0),
+        "inheritance_transfers": len(result.inheritance_transfers),
+        "contested_inheritance_transfers": sum(t.contested for t in result.inheritance_transfers),
         "lineage_candidates": len(result.lineage_candidates),
         "narratives": len(result.social.social_memory.narratives),
     }
