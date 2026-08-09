@@ -8,6 +8,7 @@ import numpy as np
 
 from simworld.core.entity import Entity
 from simworld.core.event import Event
+from simworld.core.randomness import RandomStreams
 from simworld.core.world import WorldState
 from simworld.geography import GeneratedWorld, generate_world
 from simworld.spatial import CellCoord, GridSpec
@@ -48,6 +49,7 @@ class FirstWorldSimulation:
     def __init__(self, config: FirstWorldConfig) -> None:
         self.config = config
         self.rng = np.random.default_rng(config.seed)
+        self.random_streams = RandomStreams(config.seed)
         spec = GridSpec(
             width=config.width,
             height=config.height,

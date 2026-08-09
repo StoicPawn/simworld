@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from random import Random
-
 from simworld.core.event import Event
 from simworld.simulation.disequilibrium_world import DisequilibriumWorldSimulation
 from simworld.simulation.first_world import FirstWorldConfig
@@ -14,7 +12,7 @@ class EncounterWorldSimulation(DisequilibriumWorldSimulation):
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
-        self.encounter_rng = Random(config.seed ^ 0xEAC017)
+        self.encounter_rng = self.random_streams.stream("social", "encounters")
         self.encounters = EncounterLedger()
 
     def _eligible(self, settlement_id: str, year: int) -> list[str]:
