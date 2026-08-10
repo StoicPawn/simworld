@@ -1,6 +1,6 @@
 project: simworld
-version: 15
-current_phase: keyed_rng_substreams
+version: 16
+current_phase: adaptive_population_accounting
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -10,7 +10,9 @@ foundational_principles:
   terrain_roles_are_emergent: true
   population_precedes_settlements: true
   one_authoritative_aggregate_population_state: true
-  aggregate_population_is_distinct_from_materialized_people: true
+  total_population_includes_all_resolution_levels: true
+  materialized_population_is_reserved_representation: true
+  resolution_change_is_not_demographic_change: true
   compatibility_summaries_are_not_causal_state: true
   deterministic_semantic_replay: true
   technical_ids_must_be_causally_inert: true
@@ -105,11 +107,18 @@ phases:
       - year_keyed_population_rng
       - household_keyed_residence_rng
       - person_keyed_microgeography_rng
-    remaining_capabilities:
       - adaptive_materialization_accounting
+      - reserved_population_raster
+      - population_refinement_ledger
+      - unresolved_only_aggregate_demography
+      - detailed_birth_death_population_accounting
+      - detailed_residence_population_transfer
+    remaining_capabilities:
       - demographic_cohorts
-      - adaptive_person_materialization
-      - adaptive_person_dematerialization
+      - cohort_aware_refinement
+      - cohort_aware_dematerialization
+      - relevance_driven_person_materialization
+      - relevance_driven_person_dematerialization
       - bootstrap_settlement_population_removal
       - bootstrap_settlement_entity_removal
       - derived_population_summaries_for_actual_places_regions
@@ -171,12 +180,17 @@ constraints:
   adaptive_resolution_must_not_shift_unrelated_random_outcomes: true
   technical_identifiers_must_not_affect_causality: true
   unordered_iteration_must_not_assign_random_draws: true
-  exactly_one_authoritative_aggregate_population_state: true
+  exactly_one_authoritative_population_truth: true
+  total_population_must_equal_unresolved_plus_materialized: true
+  materialization_must_not_change_headcount: true
+  dematerialization_must_not_change_headcount: true
+  aggregate_demography_must_exclude_reserved_people: true
+  detailed_birth_death_must_change_population_once: true
+  detailed_movement_must_transfer_population_spatially: true
   compatibility_population_summaries_must_not_feed_demography: true
   reporting_partition_must_not_imply_region_border_or_territory: true
   aggregate_population_must_not_imply_settlement: true
   population_hotspot_must_not_create_settlement: true
-  materialization_must_not_be_separate_population_truth: true
   demographic_state_must_advance_once_per_time_step: true
   actor_information_must_not_leak_world_truth: true
   needs_must_not_call_prescribed_actions: true
