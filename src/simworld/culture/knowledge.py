@@ -55,6 +55,14 @@ class KnowledgeLedger:
         state.clamp()
         self.by_actor.setdefault(actor_id, {})[state.unit_id] = state
 
+    def forget(self, actor_id: str, unit_id: str) -> None:
+        units = self.by_actor.get(actor_id)
+        if units is None:
+            return
+        units.pop(unit_id, None)
+        if not units:
+            self.by_actor.pop(actor_id, None)
+
     def mastery(self, actor_id: str, unit_id: str) -> float:
         state = self.get(actor_id, unit_id)
         return 0.0 if state is None else state.mastery
@@ -134,4 +142,41 @@ def transmit_knowledge(
         acquired_at=time,
         source_id=source_id,
         generation=generation + 1,
+    )
+
+
+def decay_knowledge(
+    unit: KnowledgeUnit,
+    state: KnowledgeState,
+    *,
+    practice: float,
+    social_reinforcement: float,
+    record_support: float,
+    elapsed: float = 1.0,
+) -> KnowledgeState | None:
+    """Decay unused knowledge without imposing inevitable loss.
+
+    Practice, repeated social reinforcement and external records preserve knowledge.
+    If mastery falls below a tiny threshold the detailed actor no longer carries the
+    unit. This allows locally discovered techniques to disappear historically.
+    """
+
+    practice = min(1.0, max(0.0, practice))
+    social_reinforcement = min(1.0, max(0.0, social_reinforcement))
+    record_support = min(1.0, max(0.0, record_support))
+    elapsed = max(0.0, elapsed)
+    retention = 0.50 * practice + 0.30 * social_reinforcement + 0.20 * record_support
+    base_decay = 0.035 + 0.055 * unit.complexity
+    decay = base_decay * (1.0 - 0.86 * retention) * elapsed
+    mastery = max(0.0, state.mastery - decay)
+    confidence = max(0.0, state.confidence - 0.65 * decay)
+    if mastery < 0.015:
+        return None
+    return KnowledgeState(
+        unit_id=state.unit_id,
+        mastery=mastery,
+        confidence=confidence,
+        acquired_at=state.acquired_at,
+        source_id=state.source_id,
+        generation=state.generation,
     )
