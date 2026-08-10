@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Deterministic semantic replay + authoritative terrain-distributed demography + emergent residential nuclei active**
+**Adaptive-resolution-safe stochastic foundation + deterministic replay + authoritative terrain-distributed demography active**
 
-The repository now has fifteen connected foundations:
+The repository now has sixteen connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -20,16 +20,20 @@ The repository now has fifteen connected foundations:
 12. persistent household residence, relocation/site improvement and derived residential nuclei;
 13. settlement-independent aggregate population raster and household placement;
 14. authoritative raster demography with legacy settlement populations reduced to derived compatibility summaries;
-15. deterministic semantic replay independent of opaque technical identifiers and unordered traversal.
+15. deterministic semantic replay independent of opaque technical identifiers and unordered traversal;
+16. stable keyed RNG substreams isolating stochastic consumption by causal scope.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
 ## Current architecture
 
 ```text
-ROOT SEED + DETERMINISTIC CAUSAL ORDER
+ROOT SEED
     ↓
-TIME + FINE SPACE
+STABLE KEYED RNG NAMESPACES
+(domain / process / actor / place / time)
+    ↓
+DETERMINISTIC CAUSAL ORDER + TIME + FINE SPACE
     ↓
 TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
     ↓
@@ -54,17 +58,20 @@ COOPERATION / ORGANIZATIONS / AUTHORITY
 FUTURE HIGHER-ORDER STRUCTURES
 ```
 
-## M15 deterministic semantic replay
+## M16 keyed random substreams
 
-The same seed, configuration and code now reproduce the same normalized semantic history in the current authoritative-demography vertical slice. Structural actor IDs that previously depended on UUID generation are deterministic where their order can affect simulation behaviour, and unordered graph traversal has been normalized.
+`SeedStreams` derives reproducible Python and NumPy generators from the root seed plus semantic keys using a stable BLAKE2 derivation. Random consumption in one scope does not advance another scope.
 
-The replay regression compares world state, event sequence, demographic raster and emergent residential nuclei. Opaque identifiers that are still causally inert are canonicalized in the fingerprint instead of being mistaken for historical differences.
+The current high-resolution spatial/demographic path is already migrated: aggregate demography is keyed by year; residence decisions by household/year; local movement/activity by person/year/location; encounters by cell/year/pair. This means future adaptive refinement can add large amounts of local stochastic computation without mechanically perturbing quiet distant regions.
 
-This is semantic replay, not yet byte-for-byte persistence identity. The next requirement is stronger isolation of random consumption: stable keyed RNG substreams must ensure that refining one actor, process or region cannot perturb unrelated history elsewhere.
+This does not make regions causally independent. Effects can still propagate through movement, trade, information, conflict and other world state. The invariant only removes accidental coupling through a shared RNG cursor.
 
 ## Critical invariants
 
 - same seed + same configuration + same code => same semantic history;
+- unrelated stochastic scopes must not advance each other's random state;
+- stable semantic keys, never Python `hash()` or memory address, determine substreams;
+- local refinement may affect distant history only through explicit causal propagation;
 - technical identifier values must not influence causal outcomes;
 - unordered iteration must not determine random draw ownership;
 - one authoritative aggregate demographic state;
@@ -95,9 +102,9 @@ This is semantic replay, not yet byte-for-byte persistence identity. The next re
 
 ## Next work toward the ultimate objective
 
-1. stable deterministic RNG substreams keyed by root seed + domain/process/actor/spatial identity;
-2. adaptive materialization accounting: reserve people from cells/cohorts when creating detailed persons/households and return compatible aggregate state when detail is collapsed;
-3. demographic cohorts so aggregate births/deaths/age structure and detailed life histories reconcile;
+1. adaptive materialization accounting: reserve population from authoritative cells when creating detailed people/households and release compatible population when collapsing detail;
+2. demographic cohorts so aggregate births/deaths/age structure and detailed life histories reconcile;
+3. relevance-driven refinement/dematerialization policy that changes resolution but not causal likelihood;
 4. long-range household/person migration that moves authoritative population along terrain-constrained routes;
 5. household fission/fusion and settlement abandonment/growth from residence history;
 6. exchange/credit from actual co-presence and transport routes;

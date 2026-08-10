@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import numpy as np
-
 from simworld.core.event import Event
 from simworld.population import PopulationField, build_population_field
 from simworld.simulation.emergent_settlement_world import (
@@ -24,16 +22,11 @@ class DistributedPopulationSimulationResult:
 
 
 class DistributedPopulationWorldSimulation(EmergentSettlementWorldSimulation):
-    """Background population distributed over terrain, with people as refinements.
-
-    Legacy settlement populations remain temporarily for lower-layer compatibility, but
-    they no longer determine where materialized households reside. The raster field is
-    the first settlement-independent demographic substrate.
-    """
+    """Background population distributed over terrain, with people as refinements."""
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
-        self.population_rng = np.random.default_rng(config.seed ^ 0xD3A06A11)
+        self.population_streams = self.seed_streams.scoped("population")
         self.population_field: PopulationField | None = None
         self.initial_background_population = 0.0
         self.bootstrap_home_overlap = 0
@@ -49,19 +42,22 @@ class DistributedPopulationWorldSimulation(EmergentSettlementWorldSimulation):
         self.population_field = build_population_field(
             self.generated,
             total_population=max(1.0, total),
-            rng=self.population_rng,
+            rng=self.population_streams.numpy("initialize", "field"),
         )
         self.initial_background_population = self.population_field.total_population
 
         households = sorted(self.households.active_households(), key=lambda household: household.id)
-        sampled = self.population_field.sample_cells(len(households), self.population_rng)
+        sampled = self.population_field.sample_cells(
+            len(households),
+            self.population_streams.numpy("initialize", "household_homes"),
+        )
         bootstrap_cells = {(cell.x, cell.y) for cell in self._cells.values()}
         overlap = 0
         for household, cell in zip(households, sampled, strict=True):
             self.household_home_cells[household.id] = cell
             if (cell.x, cell.y) in bootstrap_cells:
                 overlap += 1
-            for person_id in household.members:
+            for person_id in sorted(household.members):
                 self.person_cells[person_id] = cell
         self.bootstrap_home_overlap = overlap
 
@@ -87,8 +83,6 @@ class DistributedPopulationWorldSimulation(EmergentSettlementWorldSimulation):
         capacity = self.population_field.capacity_at(cell)
         suitability = float(self.population_field.suitability[cell.y, cell.x])
         density = background / max(capacity, 1e-9)
-        # Some population can create encounter/opportunity benefits; crowding eventually
-        # offsets them. This remains a small term beside physical/material affordances.
         agglomeration = min(1.0, background / max(1.0, self.initial_background_population * 0.003))
         crowding_penalty = max(0.0, density - 0.82)
         return score + 0.055 * suitability + 0.035 * agglomeration - 0.05 * crowding_penalty
@@ -97,7 +91,7 @@ class DistributedPopulationWorldSimulation(EmergentSettlementWorldSimulation):
         if self.population_field is None:
             return
         before = self.population_field.total_population
-        self.population_field.step(self.population_rng)
+        self.population_field.step(self.population_streams.numpy("demography", year))
         after = self.population_field.total_population
         self.world.record_event(
             Event(

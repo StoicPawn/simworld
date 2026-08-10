@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from random import Random
 
 from simworld.core.event import Event
+from simworld.core.randomness import SeedStreams
 from simworld.simulation.first_world import FirstWorldConfig
 from simworld.simulation.microgeography_world import MicrogeographySimulationResult, MicrogeographyWorldSimulation
 from simworld.spatial import CellCoord
@@ -31,7 +31,8 @@ class EmergentSettlementWorldSimulation(MicrogeographyWorldSimulation):
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
-        self.residence_rng = Random(config.seed ^ 0x5E771E01)
+        self.seed_streams = SeedStreams(config.seed)
+        self.residence_streams = self.seed_streams.scoped("residence")
         self.household_home_cells: dict[str, CellCoord] = {}
         self.residence_shifts = 0
         self.construction_events = 0
@@ -89,7 +90,8 @@ class EmergentSettlementWorldSimulation(MicrogeographyWorldSimulation):
         if not living:
             return
         move_probability = min(0.62, 0.08 + 2.6 * (best_score - current_score))
-        if self.residence_rng.random() >= move_probability:
+        move_rng = self.residence_streams.python(household_id, year, "move")
+        if move_rng.random() >= move_probability:
             return
 
         self.household_home_cells[household_id] = best
@@ -139,10 +141,11 @@ class EmergentSettlementWorldSimulation(MicrogeographyWorldSimulation):
             + 0.012 * min(8.0, state.residence)
             + 0.018 * min(4.0, food),
         )
-        if self.residence_rng.random() >= build_probability:
+        build_rng = self.residence_streams.python(household_id, year, "construct")
+        if build_rng.random() >= build_probability:
             return
 
-        amount = self.residence_rng.uniform(0.12, 0.42)
+        amount = build_rng.uniform(0.12, 0.42)
         self.activity.record(home, time=year, actor_id=household_id, kind="construct", amount=amount)
         household.shelter_quality = min(1.5, household.shelter_quality + 0.015 * amount)
         self.construction_events += 1
@@ -162,7 +165,7 @@ class EmergentSettlementWorldSimulation(MicrogeographyWorldSimulation):
         )
 
     def _run_residence_process(self, year: int) -> None:
-        for household in self.households.active_households():
+        for household in sorted(self.households.active_households(), key=lambda item: item.id):
             if household.id not in self.household_home_cells:
                 self.household_home_cells[household.id] = self._cells[household.settlement_id]
             self._maybe_relocate_household(household.id, year)
@@ -171,12 +174,12 @@ class EmergentSettlementWorldSimulation(MicrogeographyWorldSimulation):
     def _run_microgeography(self, year: int) -> None:
         # Annual activity is treated as excursions from a persistent residence anchor.
         # This prevents random-walk drift from becoming accidental migration.
-        for household in self.households.active_households():
+        for household in sorted(self.households.active_households(), key=lambda item: item.id):
             home = self.household_home_cells.get(household.id)
             if home is None:
                 home = self._cells[household.settlement_id]
                 self.household_home_cells[household.id] = home
-            for person_id in household.members:
+            for person_id in sorted(household.members):
                 if self._alive(person_id):
                     self.person_cells[person_id] = home
         super()._run_microgeography(year)

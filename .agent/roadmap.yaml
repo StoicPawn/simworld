@@ -1,6 +1,6 @@
 project: simworld
-version: 14
-current_phase: deterministic_semantic_replay
+version: 15
+current_phase: keyed_rng_substreams
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -14,6 +14,8 @@ foundational_principles:
   compatibility_summaries_are_not_causal_state: true
   deterministic_semantic_replay: true
   technical_ids_must_be_causally_inert: true
+  unrelated_random_scopes_are_isolated: true
+  adaptive_resolution_must_not_perturb_unrelated_rng: true
   place_types_are_derived_views: true
   settlements_are_derived_when_possible: true
   residence_is_not_settlement: true
@@ -61,13 +63,13 @@ phases:
 
   - id: phase_1_core_foundations
     status: in_progress
-    implemented_capabilities: [deterministic_structural_ids, deterministic_graph_traversal, same_seed_semantic_replay_regression]
-    remaining_capabilities: [stable_keyed_rng_substreams, typed_relations, state_delta_reducers, serialization, experiment_metadata, byte_exact_replay_when_required]
+    implemented_capabilities: [deterministic_structural_ids, deterministic_graph_traversal, same_seed_semantic_replay_regression, stable_keyed_rng_substreams, scoped_python_rng, scoped_numpy_rng]
+    remaining_capabilities: [typed_relations, state_delta_reducers, serialization, experiment_metadata, byte_exact_replay_when_required]
 
   - id: phase_2_spatial_foundation
     status: in_progress
-    implemented_capabilities: [planar_coordinate_grid, raster_grid_abstraction, lazy_chunk_allocation, aligned_spatial_layers, neighbourhood_queries, distance_utilities, movement_cost_surface, elevation_slope_movement_penalty, passability_layer, least_cost_routing_a_star, sparse_cell_activity_ledger, derived_place_views, derived_residential_nucleus_clustering]
-    remaining_capabilities: [coordinate_reference_system, real_world_georeferencing, chunk_persistence, spatial_serialization, region_views_over_cells, sparse_spatial_indexes, multi_resolution_tiles, deterministic_spatial_rng_substreams, long_range_individual_route_execution]
+    implemented_capabilities: [planar_coordinate_grid, raster_grid_abstraction, lazy_chunk_allocation, aligned_spatial_layers, neighbourhood_queries, distance_utilities, movement_cost_surface, elevation_slope_movement_penalty, passability_layer, least_cost_routing_a_star, sparse_cell_activity_ledger, derived_place_views, derived_residential_nucleus_clustering, keyed_microgeography_rng]
+    remaining_capabilities: [coordinate_reference_system, real_world_georeferencing, chunk_persistence, spatial_serialization, region_views_over_cells, sparse_spatial_indexes, multi_resolution_tiles, long_range_individual_route_execution]
 
   - id: phase_3_physical_geography
     status: in_progress
@@ -100,6 +102,9 @@ phases:
       - derived_legacy_population_summaries
       - single_demographic_clock
       - legacy_settlement_migration_disabled_in_authoritative_slice
+      - year_keyed_population_rng
+      - household_keyed_residence_rng
+      - person_keyed_microgeography_rng
     remaining_capabilities:
       - adaptive_materialization_accounting
       - demographic_cohorts
@@ -162,6 +167,8 @@ constraints:
   quiet_regions_continue_evolving: true
   support_simultaneous_events: true
   same_seed_same_code_same_config_must_replay_semantically: true
+  unrelated_rng_scopes_must_not_share_cursor: true
+  adaptive_resolution_must_not_shift_unrelated_random_outcomes: true
   technical_identifiers_must_not_affect_causality: true
   unordered_iteration_must_not_assign_random_draws: true
   exactly_one_authoritative_aggregate_population_state: true

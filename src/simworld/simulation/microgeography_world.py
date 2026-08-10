@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import exp, hypot, log1p
-from random import Random
 
 from simworld.core.event import Event
+from simworld.core.randomness import SeedStreams
 from simworld.simulation.disequilibrium_world import DisequilibriumSimulationResult, DisequilibriumWorldSimulation
 from simworld.simulation.first_world import FirstWorldConfig
 from simworld.social.network import SocialTie
@@ -22,23 +22,19 @@ class MicrogeographySimulationResult:
 
 
 class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
-    """Individual local movement and co-presence over continuous physical affordances.
-
-    Markets, villages and political centres are deliberately absent as primitives.
-    Cells accumulate use; higher-level place concepts are retrospective views over that
-    history. The sparse ledger means socially irrelevant cells stay cheap.
-    """
+    """Individual local movement and co-presence over continuous physical affordances."""
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
-        self.micro_rng = Random(config.seed ^ 0x51A7E011)
+        self.seed_streams = SeedStreams(config.seed)
+        self.micro_streams = self.seed_streams.scoped("microgeography")
         self.activity = CellActivityLedger()
         self.person_cells: dict[str, CellCoord] = {}
         self.encounters = 0
 
     def initialize(self) -> None:
         super().initialize()
-        for person_id in self.person_ids:
+        for person_id in sorted(self.person_ids):
             if person_id in self.person_cells:
                 continue
             entity = self.world.entities[person_id]
@@ -77,7 +73,7 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
         general = 0.62 * habitability + 0.23 * fresh + 0.15 * shore_food
         return gathering, cultivation, general
 
-    def _choose_destination(self, person_id: str, origin: CellCoord) -> CellCoord:
+    def _choose_destination(self, person_id: str, origin: CellCoord, year: int) -> CellCoord:
         candidates = self._candidate_cells(origin)
         scores: list[float] = []
         for cell in candidates:
@@ -90,7 +86,8 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
             scores.append(score)
         maximum = max(scores)
         weights = [exp(4.0 * (score - maximum)) for score in scores]
-        return self.micro_rng.choices(candidates, weights=weights, k=1)[0]
+        rng = self.micro_streams.python("movement", person_id, year, origin.x, origin.y)
+        return rng.choices(candidates, weights=weights, k=1)[0]
 
     def _perform_local_activity(self, person_id: str, cell: CellCoord, year: int) -> None:
         gathering, cultivation, general = self._cell_affordances(cell)
@@ -103,7 +100,8 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
         gather_weight = max(0.02, gathering)
         cultivate_weight = max(0.02, cultivation)
         observe_weight = max(0.08, 0.36 + 0.25 * general)
-        choice = self.micro_rng.choices(
+        rng = self.micro_streams.python("activity", person_id, year, cell.x, cell.y)
+        choice = rng.choices(
             ("gather", "cultivate", "visit"),
             weights=(gather_weight, cultivate_weight, observe_weight),
             k=1,
@@ -114,7 +112,7 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
         if choice in {"gather", "cultivate"}:
             health = float(entity.attributes.get("health", 1.0))
             potential = gathering if choice == "gather" else cultivation
-            yield_amount = max(0.0, potential * health * self.micro_rng.uniform(0.035, 0.11))
+            yield_amount = max(0.0, potential * health * rng.uniform(0.035, 0.11))
             inventory = self.inventories.get(household.id)
             if inventory is not None and yield_amount > 0:
                 inventory.add("grain", yield_amount)
@@ -129,8 +127,14 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
             for index, a in enumerate(unique):
                 for b in unique[index + 1 :]:
                     pairs.append((a, b))
-            self.micro_rng.shuffle(pairs)
+            # Rank candidate pairs by a cell/year/pair-specific draw rather than
+            # consuming one shared shuffle stream. Extra detail in another cell cannot
+            # perturb this cell's encounter selection.
+            pairs.sort(
+                key=lambda pair: self.micro_streams.seed("pair-rank", year, x, y, pair[0], pair[1])
+            )
             for a, b in pairs[:2]:
+                rng = self.micro_streams.python("encounter", year, x, y, a, b)
                 connection = self.network.connection_strength(a, b, year)
                 household_a = self.households.household_of(a)
                 household_b = self.households.household_of(b)
@@ -139,7 +143,7 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
                 scarcity = max(0.0, 0.7 - min(food_a, food_b))
                 hostile_probability = max(0.01, min(0.42, 0.045 + 0.22 * scarcity - 0.08 * min(1.0, connection)))
                 friendly_probability = max(0.10, min(0.82, 0.48 + 0.18 * min(1.0, connection) - 0.18 * scarcity))
-                draw = self.micro_rng.random()
+                draw = rng.random()
                 if draw < hostile_probability:
                     outcome = "hostile"
                     self.activity.record(CellCoord(x, y), time=year, actor_id=a, kind="conflict", amount=1.0)
@@ -149,10 +153,10 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
                                 a,
                                 b,
                                 "rivalry",
-                                self.micro_rng.uniform(0.12, 0.38),
+                                rng.uniform(0.12, 0.38),
                                 year,
-                                sentiment=self.micro_rng.uniform(-0.7, -0.2),
-                                trust=self.micro_rng.uniform(0.0, 0.25),
+                                sentiment=rng.uniform(-0.7, -0.2),
+                                trust=rng.uniform(0.0, 0.25),
                             )
                         )
                 elif draw < hostile_probability + friendly_probability:
@@ -163,10 +167,10 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
                                 a,
                                 b,
                                 "friendship",
-                                self.micro_rng.uniform(0.10, 0.34),
+                                rng.uniform(0.10, 0.34),
                                 year,
-                                sentiment=self.micro_rng.uniform(0.1, 0.55),
-                                trust=self.micro_rng.uniform(0.18, 0.48),
+                                sentiment=rng.uniform(0.1, 0.55),
+                                trust=rng.uniform(0.18, 0.48),
                             )
                         )
                 else:
@@ -187,7 +191,7 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
 
     def _run_microgeography(self, year: int) -> None:
         co_presence: dict[tuple[int, int], list[str]] = {}
-        for person_id in tuple(self.person_ids):
+        for person_id in sorted(self.person_ids):
             if not self._alive(person_id):
                 continue
             entity = self.world.entities[person_id]
@@ -195,7 +199,7 @@ class MicrogeographyWorldSimulation(DisequilibriumWorldSimulation):
             if age < 8:
                 continue
             origin = self._ensure_person_cell(person_id)
-            destination = self._choose_destination(person_id, origin)
+            destination = self._choose_destination(person_id, origin, year)
             self.person_cells[person_id] = destination
             self._perform_local_activity(person_id, destination, year)
             co_presence.setdefault((destination.x, destination.y), []).append(person_id)
