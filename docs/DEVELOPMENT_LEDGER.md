@@ -182,6 +182,32 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Scalability/complexity rationale:** one demographic truth removes synchronization logic and prevents later state/settlement abstractions from silently becoming alternative population stores.
 
-**Validation target:** corrupting a legacy population summary must not alter the field and resynchronization must overwrite it; field growth occurs once per year; derived summaries approximately cover field total; legacy migration no longer mutates demographic state; full lower-layer CI plus dedicated authoritative-demography run.
+**Validation:** corrupting a legacy population summary cannot alter the field; field growth occurs once per year; derived summaries cover field total up to rounding; legacy migration no longer mutates demographic state; full lower-layer CI plus dedicated authoritative-demography run passed.
 
-**Next dependency:** adaptive materialization/dematerialization must explicitly reserve/release people from the authoritative field, so detailed individuals become true refinements of aggregate population rather than a parallel population universe.
+**Reference:** `docs/AUTHORITATIVE_POPULATION_FIELD.md`.
+
+---
+
+## 2026-08-10 — M15 Deterministic semantic replay foundation
+
+**Intent:** ensure adaptive resolution cannot perturb unrelated history merely because technical identifiers or container iteration order change. Same root seed must reproduce the same simulated causal history before large-scale materialization/dematerialization is introduced.
+
+**Changes:**
+- deterministic context-local identifiers for structural actors whose identity can affect iteration/order;
+- deterministic settlement, household and organization identifiers in the current vertical slice;
+- deterministic graph traversal where unordered sets previously could alter processing order;
+- replay fingerprint that canonicalizes remaining opaque technical identifiers by first appearance and compares world state, event sequence, demographic raster and emergent nuclei;
+- regression test requires equal semantic fingerprints for equal seeds and unequal fingerprints for distinct seeds.
+
+**New invariants:**
+- same seed + same configuration + same code must produce the same semantic history;
+- UUID/token value must not influence causal decisions;
+- unordered container traversal must not choose who consumes a random draw;
+- technical identifiers may remain opaque only when they are causally inert;
+- byte-for-byte persistence identity is a separate, stricter future target from semantic replay.
+
+**Validation:** complete authoritative-demography world executed twice in one process with the same seed produced identical normalized fingerprints; a different seed diverged; full CI passed.
+
+**Next dependency:** introduce stable keyed RNG substreams by domain/process/actor/spatial key so refining one actor or region consumes randomness only from its own stream and cannot perturb unrelated processes. Only then should adaptive aggregate↔individual materialization become widespread.
+
+**Reference:** `docs/DETERMINISTIC_REPLAY_FOUNDATION.md`.
