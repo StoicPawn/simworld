@@ -8,17 +8,19 @@ Language, religion, ethnicity, technological eras and cultural identities must n
 
 ## Shared cultural substrate
 
-The generic substrate is:
+The generic substrate now begins with:
 
 - actor-specific knowledge;
 - partial mastery and confidence;
 - learning by observation/teaching;
 - imperfect transmission;
-- mutation/drift;
-- forgetting/loss (planned next);
-- contact-driven convergence;
-- isolation-driven divergence;
-- prestige, institutions and identity resistance (future pressures over the same mechanism).
+- drift and future mutation;
+- forgetting/loss through knowledge decay;
+- preservation through practice, social reinforcement and future records;
+- contact-driven convention convergence;
+- isolation-driven convention divergence;
+- retrospective compatibility clustering with no causal force;
+- prestige, institutions and richer identity resistance as future pressures over the same mechanism.
 
 A transmitted unit does not declare itself to be linguistic, religious or technological. Domain-specific views interpret clusters later.
 
@@ -30,7 +32,7 @@ Future language state should be built from many transmitted conventions. Mutual 
 
 Therefore a valid simulation may contain one broad mutually intelligible convention network, or many hundreds/thousands of linguistic clusters. No target count is calibrated.
 
-A future `LanguageView` must be reporting/analysis only unless speakers themselves institutionalize names/norms around it.
+The generic `ConventionState` / `cluster_conventions()` foundation already allows convergence, divergence and retrospective cluster detection without declaring those clusters to be languages. A future `LanguageView` must remain reporting/analysis only unless speakers themselves institutionalize names/norms around it.
 
 ## Religion
 
@@ -66,7 +68,11 @@ An affordance is a data-defined possible capability with requirements such as:
 
 Meeting requirements only makes discovery possible; it never guarantees it.
 
-There is no chronological tech tree. Multiple affordances can be discovered independently, in different orders, repeatedly in different regions, or never discovered during a run. Knowledge can remain local or disappear if transmission fails.
+There is no chronological tech tree. Multiple affordances can be discovered independently, in different orders, repeatedly in different regions, or never discovered during a run. Knowledge can remain local or disappear if transmission/practice fails.
+
+`AffordanceCatalog` loads these possibilities from data instead of domain-specific historical branching code. The initial foundation catalog is deliberately small and low-level; its purpose is to test the architecture, not to encode a canonical human technology sequence.
+
+`attempt_innovation()` changes only the discovering actor's `KnowledgeLedger`. There is no civilization-wide `technology_level` or automatic global unlock. Diffusion must occur later through actual transmission/contact mechanisms.
 
 High-level labels such as `agriculture`, `metallurgy`, `oceanic_navigation` or `industrialization` should eventually be derived configurations of many lower-level capabilities, not one unlock event.
 
@@ -82,6 +88,19 @@ Observed macroscopic patterns arise from competing local forces:
 - loss: death, forgetting, disrupted networks, environmental/material change, institutional collapse.
 
 These forces may create temporary attractors, but nothing is immutable.
+
+## Current implementation boundary
+
+M19 provides the generic mechanics and a small data-driven technology possibility catalog. It does **not yet** connect those mechanics to the complete world loop. The next integration work is:
+
+1. detailed people's activities generate experience/capability traces;
+2. local physical state supplies real material/environment affordance requirements;
+3. innovation attempts create explicit historical events and actor-local knowledge;
+4. real encounters/relationships allow teaching and diffusion;
+5. parent-child socialization carries knowledge/conventions across generations;
+6. death, loss of practice and institutional collapse can remove knowledge;
+7. unresolved/background population receives aggregate cultural state so quiet regions still evolve;
+8. domain-specific derived views interpret convention/belief/capability clusters as languages, religions or technological traditions only when justified.
 
 ## Core rule
 
