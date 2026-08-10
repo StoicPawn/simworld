@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Microgeography + emergent residential nuclei + material/institutional foundations active**
+**Distributed background population + emergent residential nuclei + material/institutional foundations active**
 
-The repository now has twelve connected foundations:
+The repository now has thirteen connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -17,7 +17,8 @@ The repository now has twelve connected foundations:
 9. household storage, spoilage, heterogeneous demand and local material shocks;
 10. pre-legal asset relations: possession, use, control, claim and recognition;
 11. terrain-derived hydrology, cell-level resources, local movement/co-presence and sparse place history;
-12. persistent household residence, relocation/site improvement and derived residential nuclei.
+12. persistent household residence, relocation/site improvement and derived residential nuclei;
+13. settlement-independent aggregate population raster with local demographic evolution and household materialization sampling.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
@@ -28,13 +29,13 @@ TIME + FINE SPACE
     ↓
 TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
     ↓
-INDIVIDUALS + HOUSEHOLDS
+DISTRIBUTED BACKGROUND POPULATION FIELD
+    ↓
+SELECTIVE PERSON / HOUSEHOLD MATERIALIZATION
     ↓
 RESIDENCE ↔ LOCAL EXCURSIONS / USE / ENCOUNTERS
     ↓
 SPARSE CELL HISTORY
-    ↓
-RESIDENCE / PRODUCTION / EXCHANGE / CONFLICT / CONSTRUCTION SIGNALS
     ↓
 DERIVED PLACE VIEWS + RESIDENTIAL NUCLEI
     ↓
@@ -47,19 +48,23 @@ COOPERATION / ORGANIZATIONS / AUTHORITY
 FUTURE: NAMED SETTLEMENTS / MARKETS / HOUSES / STATES AS EMERGENT STRUCTURES
 ```
 
-## M12 residence and settlement de-hardcoding
+## M13 distributed population
 
-A household now has a persistent residential anchor that is distinct from an individual's short-range activity location. Annual micro-activity is treated as an excursion from that anchor, so random walk drift is not mistaken for migration.
+`PopulationField` is the first demographic state that does not require settlements. Each cell stores aggregate population, local capacity and terrain-derived suitability. Initial density depends on habitability, fertility, freshwater, coastal food and timber plus bounded micro-variation.
 
-Households can probabilistically shift residence toward nearby cells that offer persistently better physical/material opportunities. Residence and generic site improvement are recorded in the existing sparse cell ledger.
+Background population evolves through density-dependent local growth and limited neighbour redistribution. Quiet cells therefore continue demographic evolution without creating one entity per person.
 
-`SettlementNucleusView` clusters adjacent residentially used cells and summarizes actors, persistence, residence, production, exchange, construction and conflict. It is a retrospective projection only: it does not create a village/town/city object and cannot itself affect causal probability.
+Materialized households are now sampled from the background field rather than being forced to occupy the legacy settlement cells. This decouples detailed social history from the bootstrap settlement geometry while preserving compatibility with older layers.
 
-Bootstrap `settlement` entities still exist because older vertical slices need them for initial aggregate population and founder placement. They are now explicitly compatibility coordinates, not proof that a social settlement already exists.
+The old settlement population totals still exist temporarily and therefore are not yet the authoritative demographic state. This duplication is explicitly transitional: the raster must become authoritative before the bootstrap settlement layer can be removed.
 
 ## Critical invariants
 
-- world truth != actor knowledge;
+- population != settlement;
+- density hotspot != settlement;
+- aggregate population != materialized people;
+- materialization is refinement, not a separate source of people;
+- quiet regions continue evolving at aggregate resolution;
 - terrain label != historical role;
 - place != place type;
 - residence != settlement;
@@ -81,9 +86,9 @@ Bootstrap `settlement` entities still exist because older vertical slices need t
 
 ## Next work toward the ultimate objective
 
-1. validate M12 across seeds and inspect whether nuclei relocate/concentrate around terrain affordances without being predetermined;
-2. remove bootstrap settlements from initial population placement: use a distributed population field over habitable terrain;
-3. adaptive person/household materialization around causally relevant cells and nuclei;
+1. validate M13 across seeds and confirm detailed household homes/nuclei are no longer structurally tied to bootstrap settlement cells;
+2. make `PopulationField` the authoritative aggregate demographic state and turn old settlement population totals into derived summaries;
+3. adaptive person/household materialization and de-materialization around causally relevant cells/nuclei;
 4. household fission/fusion, abandonment and true migration over route networks;
 5. connect exchange/credit to actual co-presence and transport routes;
 6. cell/area possession/use/control/claims using generic asset relations;
