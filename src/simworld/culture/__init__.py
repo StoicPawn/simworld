@@ -5,6 +5,9 @@ intended to be derived from lower-level transmitted knowledge, conventions, beli
 skills and capabilities rather than created as primitive historical objects.
 """
 
+from simworld.culture.catalog import AffordanceCatalog
+from simworld.culture.conventions import ConventionClusterView, ConventionState, cluster_conventions, evolve_convention
+from simworld.culture.innovation import InnovationResult, attempt_innovation
 from simworld.culture.knowledge import (
     KnowledgeLedger,
     KnowledgeState,
@@ -21,11 +24,18 @@ from simworld.culture.technology import (
 
 __all__ = [
     "Affordance",
+    "AffordanceCatalog",
+    "ConventionClusterView",
+    "ConventionState",
     "InnovationContext",
+    "InnovationResult",
     "KnowledgeLedger",
     "KnowledgeState",
     "KnowledgeUnit",
+    "attempt_innovation",
+    "cluster_conventions",
     "decay_knowledge",
+    "evolve_convention",
     "innovation_occurs",
     "innovation_probability",
     "transmit_knowledge",
