@@ -1,7 +1,10 @@
+from pathlib import Path
 from random import Random
 
+from simworld.culture.catalog import AffordanceCatalog
 from simworld.culture.conventions import ConventionState, cluster_conventions, evolve_convention
-from simworld.culture.knowledge import KnowledgeState, KnowledgeUnit, decay_knowledge, transmit_knowledge
+from simworld.culture.innovation import attempt_innovation
+from simworld.culture.knowledge import KnowledgeLedger, KnowledgeState, KnowledgeUnit, decay_knowledge, transmit_knowledge
 from simworld.culture.technology import Affordance, InnovationContext, innovation_probability
 
 
@@ -39,6 +42,43 @@ def test_possible_technology_is_not_guaranteed_discovery() -> None:
     )
     probability = innovation_probability(affordance, context)
     assert 0.0 < probability < 0.1
+
+
+def test_affordance_catalog_is_data_driven() -> None:
+    catalog = AffordanceCatalog.from_json(Path("configs/affordances/foundation.json"))
+    assert catalog.version == 1
+    assert "controlled_heat_processing" in catalog.affordances
+    assert catalog.get("metal_ore_reduction").required_materials == frozenset(
+        {"metal_bearing_ore", "combustible_fuel"}
+    )
+
+
+def test_innovation_creates_actor_local_not_global_knowledge() -> None:
+    affordance = Affordance(
+        id="simple_observed_process",
+        required_materials=frozenset({"material"}),
+        complexity=0.0,
+        observability=1.0,
+    )
+    context = InnovationContext(
+        materials=frozenset({"material"}),
+        capabilities={},
+        environment={},
+        experience=1.0,
+        experimentation=1.0,
+        population_contact=1.0,
+        problem_pressure=1.0,
+    )
+    ledger = KnowledgeLedger()
+    discovered = None
+    for seed in range(100):
+        result = attempt_innovation("actor-a", affordance, context, ledger, time=4, rng=Random(seed))
+        if result.discovered:
+            discovered = result
+            break
+    assert discovered is not None
+    assert ledger.mastery("actor-a", affordance.id) > 0.0
+    assert ledger.mastery("actor-b", affordance.id) == 0.0
 
 
 def test_knowledge_transmission_can_fail_or_be_partial() -> None:
