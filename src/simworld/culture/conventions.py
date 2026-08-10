@@ -25,6 +25,14 @@ class ConventionState:
         return max(0.0, min(1.0, 1.0 - self.distance(other)))
 
 
+@dataclass(frozen=True, slots=True)
+class ConventionClusterView:
+    """Retrospective cluster only; it has no causal force in the simulation."""
+
+    members: tuple[str, ...]
+    mean_internal_compatibility: float
+
+
 def evolve_convention(
     current: ConventionState,
     *,
@@ -57,3 +65,46 @@ def evolve_convention(
         noise = rng.uniform(-drift, drift) * (1.0 - 0.55 * contact)
         values.append(min(1.0, max(0.0, value + pull + noise)))
     return ConventionState(tuple(values))
+
+
+def cluster_conventions(
+    states: dict[str, ConventionState],
+    *,
+    compatibility_threshold: float,
+) -> tuple[ConventionClusterView, ...]:
+    """Derive connected compatibility clusters without creating world entities.
+
+    This deliberately uses a simple connected-component view. Future language or
+    ritual analyses can define domain-specific similarity metrics while preserving
+    the invariant that the detected cluster is an analyst view, not a causal object.
+    """
+
+    threshold = min(1.0, max(0.0, compatibility_threshold))
+    remaining = set(states)
+    clusters: list[ConventionClusterView] = []
+    while remaining:
+        root = min(remaining)
+        component = {root}
+        frontier = [root]
+        remaining.remove(root)
+        while frontier:
+            actor = frontier.pop()
+            neighbours = [
+                other
+                for other in sorted(remaining)
+                if states[actor].compatibility(states[other]) >= threshold
+            ]
+            for other in neighbours:
+                remaining.remove(other)
+                component.add(other)
+                frontier.append(other)
+
+        members = tuple(sorted(component))
+        compatibilities: list[float] = []
+        for index, a in enumerate(members):
+            for b in members[index + 1 :]:
+                compatibilities.append(states[a].compatibility(states[b]))
+        mean = 1.0 if not compatibilities else sum(compatibilities) / len(compatibilities)
+        clusters.append(ConventionClusterView(members, mean))
+
+    return tuple(sorted(clusters, key=lambda cluster: (-len(cluster.members), cluster.members)))
