@@ -44,13 +44,14 @@ def test_possible_technology_is_not_guaranteed_discovery() -> None:
     assert 0.0 < probability < 0.1
 
 
-def test_affordance_catalog_is_data_driven() -> None:
+def test_affordance_catalog_is_data_driven_and_every_entry_has_effects() -> None:
     catalog = AffordanceCatalog.from_json(Path("configs/affordances/foundation.json"))
-    assert catalog.version == 1
+    assert catalog.version == 2
     assert "controlled_heat_processing" in catalog.affordances
     assert catalog.get("metal_ore_reduction").required_materials == frozenset(
         {"metal_bearing_ore", "combustible_fuel"}
     )
+    assert all(affordance.effects for affordance in catalog.affordances.values())
 
 
 def test_innovation_creates_actor_local_not_global_knowledge() -> None:

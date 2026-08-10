@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "affordances": [
     {
       "id": "controlled_heat_processing",
@@ -7,40 +7,72 @@
       "required_capabilities": {},
       "min_environment": {},
       "complexity": 0.18,
-      "observability": 0.82
+      "observability": 0.82,
+      "effects": [
+        {"channel": "heat_process_reliability", "operation": "multiply", "magnitude": 0.35}
+      ]
     },
     {
       "id": "durable_fired_clay",
       "required_materials": ["clay_like_material", "combustible_fuel"],
-      "required_capabilities": {
-        "controlled_heat_processing": 0.35
-      },
+      "required_capabilities": {"controlled_heat_processing": 0.35},
       "min_environment": {},
       "complexity": 0.34,
-      "observability": 0.72
+      "observability": 0.72,
+      "effects": [
+        {"channel": "storage_preservation", "operation": "multiply", "magnitude": 0.22},
+        {"channel": "record_medium_durability", "operation": "add", "magnitude": 0.18}
+      ]
     },
     {
       "id": "managed_water_channel",
       "required_materials": [],
-      "required_capabilities": {
-        "earth_moving": 0.25,
-        "water_flow_observation": 0.25
-      },
-      "min_environment": {
-        "accessible_surface_water": 0.25
-      },
+      "required_capabilities": {"earth_moving": 0.25, "water_flow_observation": 0.25},
+      "min_environment": {"accessible_surface_water": 0.25},
       "complexity": 0.42,
-      "observability": 0.68
+      "observability": 0.68,
+      "effects": [
+        {"channel": "cultivation_output", "operation": "multiply", "magnitude": 0.28, "required_context": {"water_available": 0.25}},
+        {"channel": "drought_resilience", "operation": "add", "magnitude": 0.24, "required_context": {"water_available": 0.25}}
+      ]
     },
     {
       "id": "metal_ore_reduction",
       "required_materials": ["metal_bearing_ore", "combustible_fuel"],
-      "required_capabilities": {
-        "controlled_heat_processing": 0.72
-      },
+      "required_capabilities": {"controlled_heat_processing": 0.72},
       "min_environment": {},
       "complexity": 0.78,
-      "observability": 0.31
+      "observability": 0.31,
+      "effects": [
+        {"channel": "metal_material_availability", "operation": "add", "magnitude": 0.75}
+      ]
+    },
+    {
+      "id": "worked_iron_tools",
+      "required_materials": ["iron_bearing_material", "combustible_fuel"],
+      "required_capabilities": {"metal_ore_reduction": 0.62, "controlled_heat_processing": 0.78},
+      "min_environment": {},
+      "complexity": 0.82,
+      "observability": 0.34,
+      "effects": [
+        {"channel": "cultivation_output", "operation": "multiply", "magnitude": 0.20, "required_context": {"iron_equipment_available": 0.25}},
+        {"channel": "construction_productivity", "operation": "multiply", "magnitude": 0.22, "required_context": {"iron_equipment_available": 0.25}},
+        {"channel": "combat_effectiveness", "operation": "multiply", "magnitude": 0.30, "required_context": {"iron_equipment_available": 0.25}}
+      ]
+    },
+    {
+      "id": "durable_symbolic_recording",
+      "required_materials": ["markable_medium"],
+      "required_capabilities": {"shared_symbolic_convention": 0.55},
+      "min_environment": {},
+      "complexity": 0.70,
+      "observability": 0.43,
+      "effects": [
+        {"channel": "record_creation", "operation": "add", "magnitude": 1.0, "required_context": {"marking_material_available": 0.25}},
+        {"channel": "record_persistence", "operation": "multiply", "magnitude": 0.85, "required_context": {"record_created": 1.0}},
+        {"channel": "transmission_fidelity", "operation": "multiply", "magnitude": 0.45, "required_context": {"record_used": 1.0}},
+        {"channel": "claim_credibility", "operation": "multiply", "magnitude": 0.28, "activation_chance": 0.65, "required_context": {"record_available": 1.0, "reader_accepts_medium": 0.25}}
+      ]
     }
   ]
 }

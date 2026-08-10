@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from random import Random
 
+from simworld.culture.effects import EffectSpec
+
 
 @dataclass(frozen=True, slots=True)
 class Affordance:
@@ -10,6 +12,10 @@ class Affordance:
 
     Requirements describe what must already be physically/cognitively available for
     experimentation to have a meaningful chance. They do not prescribe discovery.
+
+    `effects` exposes generic causal channels.  It never means a capability grants a
+    global civilization bonus: only an actor/group that actually knows and applies
+    the capability can make those channels available to the relevant process.
     """
 
     id: str
@@ -18,6 +24,7 @@ class Affordance:
     min_environment: dict[str, float] = field(default_factory=dict)
     complexity: float = 0.5
     observability: float = 0.5
+    effects: tuple[EffectSpec, ...] = ()
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.complexity <= 1.0:

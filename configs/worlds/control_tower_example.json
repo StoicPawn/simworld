@@ -1,0 +1,38 @@
+{
+  "simulation": {
+    "root_seed": 104729,
+    "years": 250,
+    "resolution_mode": "adaptive",
+    "event_recording": "causal"
+  },
+  "map": {
+    "source": "procedural",
+    "width": 192,
+    "height": 144,
+    "cell_size_km": 2.5,
+    "seed": 88123
+  },
+  "population": [
+    {"count": 1200, "x": 42, "y": 61, "radius_cells": 8, "label": "western founders"},
+    {"count": 650, "x": 118, "y": 82, "radius_cells": 5, "label": "river founders"}
+  ],
+  "resources": [
+    {"layer": "ore_truth", "value": 0.8, "x": 131, "y": 54, "radius_cells": 4},
+    {"layer": "fertility", "value": 0.88, "x": 48, "y": 66, "radius_cells": 10}
+  ],
+  "technology": {
+    "catalog_paths": ["configs/affordances/foundation.json"],
+    "disabled": [],
+    "initially_known": {},
+    "innovation_rate_multiplier": 1.0
+  },
+  "parameters": {
+    "climate_variability": 1.0,
+    "social_transmission_intensity": 1.0,
+    "institutional_emergence_enabled": true
+  },
+  "metadata": {
+    "name": "Control Tower example",
+    "purpose": "Demonstrate configuration without prescribing history"
+  }
+}
