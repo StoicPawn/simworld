@@ -104,6 +104,8 @@ def test_record_can_reduce_mutation_and_sometimes_raise_acceptance_without_certi
         },
         rng=Random(3),
     )
+    assert channels["transmission_fidelity"] > 1.0
+
     received = memory.transmit(
         "story-2",
         teller_id="scribe",
@@ -117,4 +119,5 @@ def test_record_can_reduce_mutation_and_sometimes_raise_acceptance_without_certi
         credibility_multiplier=channels.get("claim_credibility", 1.0),
     )
     assert received is not None
-    assert received.claims == ("claim-x",)
+    assert received.parent_index == record.version_index
+    assert memory.records["record-2"].narrative_id == "story-2"
