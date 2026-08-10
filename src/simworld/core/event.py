@@ -3,11 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Mapping
-from uuid import uuid4
+
+from simworld.core.ids import next_id
 
 
 def new_event_id() -> str:
-    return f"evt_{uuid4().hex}"
+    return next_id("evt")
 
 
 @dataclass(frozen=True, slots=True)
