@@ -57,18 +57,22 @@ The unresolved population is no longer only scalar headcount. It carries age-ban
 
 The new cultural substrate deliberately does **not** create `Language`, `Religion`, `Ethnicity`, `Agriculture`, `Metallurgy` or a chronological tech tree as primitive world objects.
 
-It introduces:
+It now includes:
 
 - sparse actor-specific `KnowledgeUnit` / `KnowledgeState`;
 - partial mastery and confidence;
 - imperfect knowledge transmission controlled by trust, communication fit, exposure, complexity and demonstrability;
 - knowledge decay/loss moderated by practice, social reinforcement and records;
 - generic continuous `ConventionState` with contact-driven convergence and isolation-driven drift;
+- non-causal `ConventionClusterView` for retrospective clustering;
 - data-defined technical `Affordance` objects;
+- `AffordanceCatalog` loaded from JSON rather than domain-specific code branches;
+- an initial deliberately small low-level catalog at `configs/affordances/foundation.json`;
 - technical opportunity checks based on actual materials, prior capabilities and environment;
 - bounded innovation probability from opportunity + experience + experimentation + contact/problem pressure;
 - zero discovery probability when hard prerequisites are absent;
-- no guarantee of discovery even when all prerequisites exist.
+- no guarantee of discovery even when all prerequisites exist;
+- `attempt_innovation()` which creates/improves knowledge only for the discovering actor rather than changing a global technology level.
 
 Technology therefore uses a deliberately bounded compromise: SimWorld does not simulate full chemistry/biology/physics, but it also does not script historical unlock sequences. The possibility space is data-defined; history chooses whether, where, when and by whom a capability is discovered, spread, modified or lost.
 
@@ -93,6 +97,7 @@ High-level technologies are derived capability configurations. A technique may b
 - hard-code laws/constraints/opportunity spaces, not historical outcomes;
 - no chronological tech tree in the causal kernel;
 - meeting technological prerequisites does not guarantee discovery;
+- discovery changes actor knowledge, never a universal civilization tech level;
 - technology can be lost when carriers/practice/transmission disappear;
 - knowledge != truth;
 - knowledge possessed by one actor != knowledge possessed by society;
@@ -122,8 +127,8 @@ High-level technologies are derived capability configurations. A technique may b
 2. relevance-driven automatic resolution changes using keyed RNG without perturbing unrelated history;
 3. integrate `KnowledgeLedger` with detailed people, encounters, parent/child socialization and household practice;
 4. give material activities experience traces so repeated gathering, cultivation, heat use, construction etc. create real capability experience;
-5. add data files for a small initial affordance vocabulary expressed as generic capabilities rather than historical eras;
-6. innovation events that create actor knowledge only when local physical/cognitive prerequisites are present;
+5. bind low-level affordance requirements to actual world materials/environment rather than placeholder capability names;
+6. emit innovation/history events when actor-local discovery occurs in the integrated world;
 7. transmission across actual social/spatial contact and intergenerational teaching;
 8. background/aggregate cultural summaries for unresolved population so quiet regions can culturally evolve without materializing every person;
 9. generic convention bundles and mutual-comprehension metrics; derive language clusters only as views;
