@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "affordances": [
+    {
+      "id": "controlled_heat_processing",
+      "required_materials": ["combustible_fuel"],
+      "required_capabilities": {},
+      "min_environment": {},
+      "complexity": 0.18,
+      "observability": 0.82
+    },
+    {
+      "id": "durable_fired_clay",
+      "required_materials": ["clay_like_material", "combustible_fuel"],
+      "required_capabilities": {
+        "controlled_heat_processing": 0.35
+      },
+      "min_environment": {},
+      "complexity": 0.34,
+      "observability": 0.72
+    },
+    {
+      "id": "managed_water_channel",
+      "required_materials": [],
+      "required_capabilities": {
+        "earth_moving": 0.25,
+        "water_flow_observation": 0.25
+      },
+      "min_environment": {
+        "accessible_surface_water": 0.25
+      },
+      "complexity": 0.42,
+      "observability": 0.68
+    },
+    {
+      "id": "metal_ore_reduction",
+      "required_materials": ["metal_bearing_ore", "combustible_fuel"],
+      "required_capabilities": {
+        "controlled_heat_processing": 0.72
+      },
+      "min_environment": {},
+      "complexity": 0.78,
+      "observability": 0.31
+    }
+  ]
+}
