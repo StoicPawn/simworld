@@ -1,18 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from uuid import uuid4
-
-
-def new_household_id() -> str:
-    return f"hh_{uuid4().hex}"
 
 
 @dataclass(slots=True)
 class Household:
     settlement_id: str
     founded_at: int
-    id: str = field(default_factory=new_household_id)
+    id: str
     members: set[str] = field(default_factory=set)
     food_stock: float = 1.0
     wealth: float = 1.0
@@ -23,7 +18,6 @@ class Household:
 
     @property
     def formed_at(self) -> int:
-        """Semantic alias used when a household is materialized as a world entity."""
         return self.founded_at
 
     def add_member(self, person_id: str) -> None:
@@ -44,9 +38,15 @@ class Household:
 class HouseholdRegistry:
     households: dict[str, Household] = field(default_factory=dict)
     membership: dict[str, str] = field(default_factory=dict)
+    _next_id: int = 1
 
     def create(self, settlement_id: str, founded_at: int, members: tuple[str, ...] = ()) -> Household:
-        household = Household(settlement_id=settlement_id, founded_at=founded_at)
+        household = Household(
+            settlement_id=settlement_id,
+            founded_at=founded_at,
+            id=f"hh_{self._next_id:08d}",
+        )
+        self._next_id += 1
         self.households[household.id] = household
         for person_id in members:
             self.move(person_id, household.id)

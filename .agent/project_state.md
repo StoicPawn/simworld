@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Authoritative terrain-distributed demography + emergent residential nuclei + material/institutional foundations active**
+**Deterministic semantic replay + authoritative terrain-distributed demography + emergent residential nuclei active**
 
-The repository now has fourteen connected foundations:
+The repository now has fifteen connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -19,13 +19,16 @@ The repository now has fourteen connected foundations:
 11. terrain-derived hydrology, cell-level resources, local movement/co-presence and sparse place history;
 12. persistent household residence, relocation/site improvement and derived residential nuclei;
 13. settlement-independent aggregate population raster and household placement;
-14. authoritative raster demography with legacy settlement populations reduced to derived compatibility summaries.
+14. authoritative raster demography with legacy settlement populations reduced to derived compatibility summaries;
+15. deterministic semantic replay independent of opaque technical identifiers and unordered traversal.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
 ## Current architecture
 
 ```text
+ROOT SEED + DETERMINISTIC CAUSAL ORDER
+    ↓
 TIME + FINE SPACE
     ↓
 TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
@@ -51,22 +54,25 @@ COOPERATION / ORGANIZATIONS / AUTHORITY
 FUTURE HIGHER-ORDER STRUCTURES
 ```
 
-## M14 single demographic truth
+## M15 deterministic semantic replay
 
-`PopulationField` is the sole authoritative aggregate demographic state in the newest vertical slice. Old `settlement.population` values are overwritten from reporting-only summaries and never advance population independently.
+The same seed, configuration and code now reproduce the same normalized semantic history in the current authoritative-demography vertical slice. Structural actor IDs that previously depended on UUID generation are deterministic where their order can affect simulation behaviour, and unordered graph traversal has been normalized.
 
-The compatibility partition assigns land cells to the nearest old bootstrap anchor only so legacy social processes can receive local summaries. It is not a region, border or territory and has no causal force.
+The replay regression compares world state, event sequence, demographic raster and emergent residential nuclei. Opaque identifiers that are still causally inert are canonicalized in the fingerprint instead of being mistaken for historical differences.
 
-Population advances exactly once per year on the raster. The previous background-population hook is disabled in this layer to prevent double stepping. Old settlement-to-settlement migration is disabled because changing summary values would create a second population truth; future long-range migration must transfer population directly on the field along feasible routes.
+This is semantic replay, not yet byte-for-byte persistence identity. The next requirement is stronger isolation of random consumption: stable keyed RNG substreams must ensure that refining one actor, process or region cannot perturb unrelated history elsewhere.
 
 ## Critical invariants
 
+- same seed + same configuration + same code => same semantic history;
+- technical identifier values must not influence causal outcomes;
+- unordered iteration must not determine random draw ownership;
 - one authoritative aggregate demographic state;
 - population != settlement;
 - density hotspot != settlement;
 - reporting partition != region/border/territory;
 - legacy settlement population is a projection, not state;
-- materialized people must eventually reserve/release aggregate population rather than create a parallel population universe;
+- materialized people must reserve/release aggregate population rather than create a parallel population universe;
 - quiet regions continue evolving at aggregate resolution;
 - terrain label != historical role;
 - place != place type;
@@ -89,8 +95,8 @@ Population advances exactly once per year on the raster. The previous background
 
 ## Next work toward the ultimate objective
 
-1. adaptive materialization accounting: reserve people from cells/cohorts when creating detailed persons/households and return compatible aggregate state when detail is collapsed;
-2. deterministic RNG substreams before adaptive resolution becomes widespread;
+1. stable deterministic RNG substreams keyed by root seed + domain/process/actor/spatial identity;
+2. adaptive materialization accounting: reserve people from cells/cohorts when creating detailed persons/households and return compatible aggregate state when detail is collapsed;
 3. demographic cohorts so aggregate births/deaths/age structure and detailed life histories reconcile;
 4. long-range household/person migration that moves authoritative population along terrain-constrained routes;
 5. household fission/fusion and settlement abandonment/growth from residence history;

@@ -1,6 +1,6 @@
 project: simworld
-version: 13
-current_phase: authoritative_aggregate_population
+version: 14
+current_phase: deterministic_semantic_replay
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -12,6 +12,8 @@ foundational_principles:
   one_authoritative_aggregate_population_state: true
   aggregate_population_is_distinct_from_materialized_people: true
   compatibility_summaries_are_not_causal_state: true
+  deterministic_semantic_replay: true
+  technical_ids_must_be_causally_inert: true
   place_types_are_derived_views: true
   settlements_are_derived_when_possible: true
   residence_is_not_settlement: true
@@ -58,8 +60,9 @@ phases:
     capabilities: [permanent_agent_rules, remote_workflow_dispatch, bounded_agent_loop, validation_pipeline, simulation_dispatch_skeleton, local_cloud_capability_routing, ordered_development_ledger]
 
   - id: phase_1_core_foundations
-    status: planned
-    capabilities: [typed_relations, state_delta_reducers, deterministic_rng_substreams, serialization, experiment_metadata]
+    status: in_progress
+    implemented_capabilities: [deterministic_structural_ids, deterministic_graph_traversal, same_seed_semantic_replay_regression]
+    remaining_capabilities: [stable_keyed_rng_substreams, typed_relations, state_delta_reducers, serialization, experiment_metadata, byte_exact_replay_when_required]
 
   - id: phase_2_spatial_foundation
     status: in_progress
@@ -158,6 +161,9 @@ constraints:
   relevance_must_not_create_causality: true
   quiet_regions_continue_evolving: true
   support_simultaneous_events: true
+  same_seed_same_code_same_config_must_replay_semantically: true
+  technical_identifiers_must_not_affect_causality: true
+  unordered_iteration_must_not_assign_random_draws: true
   exactly_one_authoritative_aggregate_population_state: true
   compatibility_population_summaries_must_not_feed_demography: true
   reporting_partition_must_not_imply_region_border_or_territory: true

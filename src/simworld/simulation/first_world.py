@@ -8,6 +8,7 @@ import numpy as np
 
 from simworld.core.entity import Entity
 from simworld.core.event import Event
+from simworld.core.ids import reset_id_scope
 from simworld.core.world import WorldState
 from simworld.geography import GeneratedWorld, generate_world
 from simworld.spatial import CellCoord, GridSpec
@@ -38,12 +39,7 @@ class SimulationResult:
 
 
 class FirstWorldSimulation:
-    """First vertical slice where physical geography creates demographic history.
-
-    This is intentionally pre-state and pre-dynasty. It proves the causal pipeline:
-    physical map -> settlement -> local production -> demographic pressure -> movement ->
-    intersecting event histories.
-    """
+    """First vertical slice where physical geography creates demographic history."""
 
     def __init__(self, config: FirstWorldConfig) -> None:
         self.config = config
@@ -77,6 +73,7 @@ class FirstWorldSimulation:
     def initialize(self) -> None:
         if self.settlement_ids:
             return
+        reset_id_scope()
         selected: list[CellCoord] = []
         min_spacing = max(4.0, min(self.config.width, self.config.height) / max(4.0, self.config.settlements**0.5 * 2.2))
 
@@ -90,6 +87,7 @@ class FirstWorldSimulation:
                 kind="settlement",
                 name=f"Settlement-{index:02d}",
                 created_at=0,
+                id=f"settlement_{index:04d}",
                 attributes={
                     "x": cell.x,
                     "y": cell.y,
@@ -267,7 +265,6 @@ class FirstWorldSimulation:
 
 
 def write_svg_map(result: SimulationResult, path: Path, *, scale: int = 5) -> None:
-    """Write a dependency-free visual map of terrain and settlement outcomes."""
     generated = result.generated
     height, width = generated.water.shape
     max_elevation = max(1.0, float(np.max(generated.elevation_m)))

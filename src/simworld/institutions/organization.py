@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from uuid import uuid4
+
+from simworld.core.ids import next_id
 
 
 def new_organization_id() -> str:
-    return f"org_{uuid4().hex}"
+    return next_id("org")
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,13 +79,13 @@ class CooperationLedger:
         for key, score in self.scores.items():
             if score < min_edge_score:
                 continue
-            a, b = tuple(key)
+            a, b = sorted(key)
             adjacency.setdefault(a, set()).add(b)
             adjacency.setdefault(b, set()).add(a)
 
         seen: set[str] = set()
         components: list[frozenset[str]] = []
-        for node in adjacency:
+        for node in sorted(adjacency):
             if node in seen:
                 continue
             stack = [node]
@@ -95,7 +96,8 @@ class CooperationLedger:
                     continue
                 seen.add(current)
                 component.add(current)
-                stack.extend(adjacency.get(current, set()) - seen)
+                neighbours = sorted(adjacency.get(current, set()) - seen, reverse=True)
+                stack.extend(neighbours)
             if len(component) >= min_members:
                 components.append(frozenset(component))
         components.sort(key=lambda c: (-len(c), tuple(sorted(c))))
