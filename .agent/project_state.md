@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Material disequilibrium + institutional-emergence foundation active, with primitive property simplified into asset relations**
+**Microgeography + material disequilibrium + institutional emergence active**
 
-The repository now has ten connected foundations:
+The repository now has eleven connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -14,107 +14,101 @@ The repository now has ten connected foundations:
 6. household, gestation, relationship evolution and inheritance;
 7. assets, inventories, production/consumption and spatial exchange;
 8. obligations, cooperation, generic organizations and derived authority/legitimacy;
-9. household-level storage, spoilage, heterogeneous demand and local material shocks;
-10. pre-legal asset relations: possession, use, control, claim and observer-specific recognition.
+9. household storage, spoilage, heterogeneous demand and local material shocks;
+10. pre-legal asset relations: possession, use, control, claim and recognition;
+11. terrain-derived hydrology, cell-level resources, individual local movement/co-presence and sparse emergent-place history.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
 ## Current architecture
 
 ```text
-TIME + SPACE
+TIME + FINE SPACE
     ↓
-PHYSICAL WORLD / ASSETS
+TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
     ↓
-POSSESSION / USE / CONTROL / CLAIMS
+INDIVIDUAL + HOUSEHOLD LOCATION / MOVEMENT / USE
     ↓
-RECOGNITION (actor-specific)
+CO-PRESENCE / ENCOUNTER / PRODUCTION / CONFLICT
     ↓
-PRODUCTION / STORAGE / CONSUMPTION / SHOCKS
+SPARSE CELL HISTORY
     ↓
-SURPLUS / DEFICIT / EXCHANGE / OBLIGATIONS
+DERIVED PLACE VIEWS
     ↓
-EXPERIENCE / INFORMATION / BELIEF / DECISION
+ASSETS / CLAIMS / INVENTORIES / OBLIGATIONS
     ↓
-HOUSEHOLDS / RELATIONSHIPS / GENERATIONS
+MEMORY / BELIEF / RELATIONSHIPS / GENERATIONS
     ↓
-COOPERATION / ORGANIZATIONS
+COOPERATION / ORGANIZATIONS / AUTHORITY
     ↓
-DERIVED AUTHORITY + LEGITIMACY
-    ↓
-FUTURE INSTITUTIONS MAY DEFINE/ENFORCE FORMAL PROPERTY
-    ↓
-FUTURE TERRITORIAL POLITICS / STATES / CONFLICT
+FUTURE: EMERGENT SETTLEMENTS / MARKETS / HOUSES / STATES
 ```
 
-## Simplification rule
+## Microgeography foundation
 
-SimWorld should prefer **small generic primitives plus derived historical structures** over separate bespoke systems for each era.
+Physical geography now includes continuous `river_strength`, nearby `freshwater_access` and spatially patchy `coastal_food`. These are physical affordances, not labels such as river town, port or good fishing beach.
 
-The world does not contain a universal legal fact called `property`. It contains assets and actor↔asset relations:
-- `possess`;
-- `use`;
-- `control`;
-- `claim`.
+`CellActivityLedger` is sparse. Only used cells acquire social history. It tracks channels such as visits, gathering, cultivation, exchange, conflict and construction. `PlaceView` is derived from accumulated history and does not itself cause events.
 
-Other actors may recognize a claim to different degrees. Later norms, offices or institutions may turn some combinations of claim + recognition + control + enforcement into what an observer calls formal property.
+Materialized individuals now have local cell positions in the microgeography vertical slice. Short-range movement is influenced by physical affordances and familiarity. Co-presence creates encounter opportunities; friendly/neutral/hostile outcomes may modify the multiplex social network.
 
-Documents are future information/evidence objects. A deed or registry entry is not globally authoritative by construction; its force depends on who recognizes its issuer and on effective institutions/enforcement.
+## Complexity rule
 
-Read `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
+Prefer **small generic primitives + derived historical structures**.
 
-## Current diagnostic principle
+Do not add `Market`, `Village`, `House`, `NobleFamily`, `State`, `Port` or similar concepts merely because an observer could name a configuration that way. First ask whether the phenomenon can be reconstructed from physical state, actors, relations, repeated activity, memory, recognition and institutions.
 
-Do not make the model complicated merely to produce visible history. If a high-level process stays dormant, first ask whether lower-level heterogeneity/opportunities are missing. Do not add event quotas or artificial narrative triggers.
+Formal property remains derived from possession/use/control/claim/recognition plus later norms/enforcement. Documents are evidence/information, not truth.
 
 ## Critical invariants
 
 - world truth != actor knowledge;
+- terrain label != historical role;
+- place != place type;
 - asset != property;
 - possession != use != control != claim;
-- claim != recognition;
-- recognition != effective control;
+- claim != recognition != enforcement;
 - document != truth;
-- formal property requires institutional context;
+- movement != guaranteed interaction;
+- co-presence != friendship/conflict;
 - need/shock != prescribed action;
 - kinship != household != loyalty != political identity;
-- request != obligation;
-- compliance != consent;
-- dependency != loyalty;
-- coercion != legitimacy;
 - organization != state;
-- authority is historical, relational and domain-specific;
+- authority != legitimacy;
 - never tune event quotas to obtain a desired storyline;
+- social state over the planet-scale map must stay sparse/adaptive;
 - prefer derived concepts over hard-coded historical categories.
+
+## Important transitional limitation
+
+The current vertical slices still seed coarse `settlement` entities before individual history. This is now the largest conceptual mismatch with the ultimate micro→macro objective. The next population/spatial refactor should allow residence clusters and settlements to arise from repeated household/person location, infrastructure and activity, while unresolved background population remains aggregate.
 
 ## Next work toward the ultimate objective
 
-1. validate M9/M10 across multiple seeds and ensure lower-level disequilibrium can activate exchange/credit without forced events;
-2. deterministic RNG substreams by actor/process/domain;
-3. movement/encounter process based on actual travel, work, markets and institutions;
-4. storage/transport infrastructure and transport loss;
-5. spatial possession/use/control/claims on cells/parcels using the same generic asset-relation model;
-6. actor/institution-specific recognition and dispute over claims;
-7. generic evidence/document objects only when communication/institutions need them;
-8. richer obligations: rent, tribute, labour, protection and military duties;
-9. norms/sanctions, roles/offices and institutional memory;
-10. protection/extraction and coercive capacity;
-11. organization competition/fission/merger and emergent family/house recognition;
-12. spatial authority/control fields, territorial claims and borders as derived states;
-13. coalitions, diplomacy and conflict under imperfect beliefs;
-14. state detection as a retrospective configuration, not a primitive constructor;
-15. counterfactuals and inverse inference;
-16. real-world geospatial ingestion/calibration for uncertainty-aware geopolitical analysis.
+1. validate M11 and compare whether high-activity cells correlate with physical affordances without being predetermined by them;
+2. de-hardcode settlements into derived residence/activity clusters with adaptive materialization;
+3. household relocation, persistent dwellings/site improvements and abandonment;
+4. individual movement over longer paths, not only local excursions;
+5. connect exchange/credit opportunities to actual co-presence and routes;
+6. cell/area possession/use/control/claims using generic asset relations;
+7. deterministic RNG substreams by actor/process/domain;
+8. richer ecology/resources and terrain dynamics: drainage networks, flood/drought, soils, renewable stocks;
+9. norms, sanctions, offices, evidence/documents and dispute resolution only as organizations acquire those capabilities;
+10. emergent family/house recognition from people + genealogy + memory + resources + names + outsider recognition;
+11. organization competition/protection/extraction and spatial authority;
+12. territorial claims/borders and state detection as derived configurations;
+13. diplomacy/conflict under imperfect beliefs;
+14. counterfactuals, inverse inference and real-world calibration.
 
 ## Complexity budget
 
-Before adding a new primitive, ask:
-1. Can this be represented as a state, relation, process, observation or derived view over existing primitives?
-2. Does the concept exist independently of the institution/era being simulated?
-3. Will adding it reduce or increase the number of special-case rules later?
+Before adding a primitive, ask:
+1. Can it be state, relation, process, observation or derived view over existing primitives?
+2. Does it exist independently of the era/institution being simulated?
+3. Does it eliminate special cases rather than create them?
 
-Prefer not to add it when the answers point toward a derived view.
+If not, keep it derived.
 
 ## Temporary naming warning
 
-The early social vertical slice still contains `house` / `House-XX` placeholder entities for local authority. They are **not genealogical houses** and must be removed/refactored before emergent houses are exposed as a first-class derived concept.
+The early social vertical slice still contains `house` / `House-XX` placeholders for local authority. They are not genealogical houses and must be refactored before emergent houses are exposed as a first-class derived concept.
