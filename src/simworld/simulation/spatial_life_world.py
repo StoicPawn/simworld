@@ -6,7 +6,11 @@ from random import Random
 
 from simworld.core.event import Event
 from simworld.simulation.disequilibrium_world import DisequilibriumSimulationResult, DisequilibriumWorldSimulation
-from simworld.simulation.first_world import FirstWorldConfig
+from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
+from simworld.simulation.generational_world import GenerationalSimulationResult
+from simworld.simulation.institutional_world import InstitutionalSimulationResult
+from simworld.simulation.material_world import MaterialSimulationResult
+from simworld.simulation.social_world import SocialSimulationResult
 from simworld.social.network import SocialTie
 from simworld.spatial.grid import CellCoord
 from simworld.spatial.presence import PresenceLedger
@@ -46,6 +50,12 @@ class SpatialLifeWorldSimulation(DisequilibriumWorldSimulation):
             settlement_id = str(self.world.entities[person_id].attributes["settlement_id"])
             self.presence.place(person_id, self._cells[settlement_id])
 
+    def _ensure_presence(self, person_id: str) -> None:
+        if person_id in self.presence.positions:
+            return
+        settlement_id = str(self.world.entities[person_id].attributes["settlement_id"])
+        self.presence.place(person_id, self._cells[settlement_id])
+
     def _cell_attractiveness(self, person_id: str, cell: CellCoord) -> float:
         layers = self.generated.spatial_map.layers
         if not bool(layers.get("passable", cell)):
@@ -73,7 +83,7 @@ class SpatialLifeWorldSimulation(DisequilibriumWorldSimulation):
         if not scored:
             return current
         scored.sort(key=lambda item: item[0], reverse=True)
-        # Bounded stochastic choice: usually prefer good cells, never perfect optimization.
+        # Bounded stochastic choice: good cells are attractive, but actors do not optimize perfectly.
         shortlist = scored[: min(4, len(scored))]
         weights = [max(0.03, score - shortlist[-1][0] + 0.08) for score, _ in shortlist]
         return self.spatial_life_rng.choices([cell for _, cell in shortlist], weights=weights, k=1)[0]
@@ -82,11 +92,13 @@ class SpatialLifeWorldSimulation(DisequilibriumWorldSimulation):
         for person_id in tuple(self.person_ids):
             if not self._alive(person_id):
                 continue
+            self._ensure_presence(person_id)
             entity = self.world.entities[person_id]
             age = year - int(entity.attributes["birth_time"])
             if age < 7:
+                self.presence.record_visit(person_id, self.presence.positions[person_id])
                 continue
-            # Most people make a local excursion; some remain where they are.
+            # Most adults and older children make a local excursion; some remain in place.
             if self.spatial_life_rng.random() > min(0.92, 0.48 + 0.012 * min(age, 35)):
                 self.presence.record_visit(person_id, self.presence.positions[person_id])
                 continue
@@ -191,14 +203,6 @@ class SpatialLifeWorldSimulation(DisequilibriumWorldSimulation):
             self._run_spatial_encounters(year)
             self._evolve_social_network(year)
             self._transmit_memory(year)
-
-        base_result = super().run if False else None  # keeps composition explicit; no second run
-        from simworld.simulation.first_world import SimulationResult
-        from simworld.simulation.social_world import SocialSimulationResult
-        from simworld.simulation.generational_world import GenerationalSimulationResult
-        from simworld.simulation.material_world import MaterialSimulationResult
-        from simworld.simulation.institutional_world import InstitutionalSimulationResult
-        from simworld.simulation.disequilibrium_world import DisequilibriumSimulationResult
 
         base = SimulationResult(self.config, self.generated, self.world, tuple(self.settlement_ids))
         social = SocialSimulationResult(base, tuple(self.house_ids), tuple(self.representative_ids), self.social_memory)
