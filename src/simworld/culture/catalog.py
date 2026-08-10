@@ -49,6 +49,10 @@ class AffordanceCatalog:
                 )
                 for effect in raw_effects
             )
+            if not effects:
+                raise ValueError(
+                    f"configured technical affordance {item.get('id')!r} has no causal effects"
+                )
             affordance = Affordance(
                 id=str(item["id"]),
                 required_materials=frozenset(str(value) for value in item.get("required_materials", [])),
