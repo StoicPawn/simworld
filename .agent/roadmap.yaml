@@ -1,6 +1,6 @@
 project: simworld
-version: 17
-current_phase: cultural_knowledge_and_affordances
+version: 18
+current_phase: control_tower_and_technology_effects
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -41,8 +41,13 @@ foundational_principles:
   technology_uses_affordance_space_not_chronological_tree: true
   technological_prerequisites_enable_opportunity_not_outcome: true
   technology_may_be_local_lost_or_independently_rediscovered: true
+  every_configured_technology_must_expose_causal_effects: true
+  technology_effects_are_actor_local_contextual_and_mastery_scaled: true
+  writing_records_information_not_truth: true
   hardcode_constraints_and_possibilities_not_history: true
   cultural_convergence_and_divergence_are_competing_processes: true
+  control_tower_is_declarative_configuration_not_causal_state: true
+  world_configuration_selects_initial_conditions_and_possibility_spaces_not_outcomes: true
   biological_kinship_is_not_social_identity: true
   household_is_not_kinship: true
   conception_is_not_birth: true
@@ -73,6 +78,32 @@ phases:
   - id: phase_0_automation
     status: implemented
     capabilities: [permanent_agent_rules, remote_workflow_dispatch, bounded_agent_loop, validation_pipeline, simulation_dispatch_skeleton, local_cloud_capability_routing, ordered_development_ledger]
+
+  - id: phase_0b_control_tower
+    status: foundation_started
+    implemented_capabilities:
+      - validated_world_blueprint
+      - configurable_root_seed_and_horizon
+      - configurable_map_source_dimensions_resolution_and_seed
+      - configurable_population_seeds
+      - configurable_resource_overrides
+      - configurable_technology_catalogs
+      - technology_enable_disable_filters
+      - configurable_initial_knowledge
+      - generic_parameter_namespace
+      - portable_json_world_definition
+    next_capabilities:
+      - schema_versioning_and_migrations
+      - full_world_factory_integration
+      - map_file_and_real_world_ingestion
+      - configurable_species_and_biology
+      - configurable_climate_and_hazard_regimes
+      - configurable_module_switches
+      - validated_parameter_registry
+      - UI_control_tower
+      - batch_experiment_blueprints
+      - counterfactual_intervention_overlays
+      - run_manifest_and_exact_configuration_snapshot
 
   - id: phase_1_core_foundations
     status: in_progress
@@ -133,8 +164,8 @@ phases:
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
-    implemented_capabilities: [needs_as_pressures, probabilistic_beliefs, memory_traces, contextual_trust, messages_and_distortion, later_message_accuracy_evaluation, perceived_strategy_learning, latent_effect_separation, bounded_stochastic_action_choice, narrative_information_objects, narrative_transmission_and_mutation, multiplex_social_network, biological_kinship_graph, derived_lineages, copresence_seeded_friendship_rivalry]
-    remaining_capabilities: [causal_models_inside_agents, memory_retrieval_and_forgetting, richer_deception_strategy, identity_and_group_membership, norms_and_sanctions, institutional_memory, endogenous_value_formation, metacognition_and_confidence_calibration]
+    implemented_capabilities: [needs_as_pressures, probabilistic_beliefs, memory_traces, contextual_trust, messages_and_distortion, later_message_accuracy_evaluation, perceived_strategy_learning, latent_effect_separation, bounded_stochastic_action_choice, narrative_information_objects, narrative_transmission_and_mutation, multiplex_social_network, biological_kinship_graph, derived_lineages, copresence_seeded_friendship_rivalry, materialized_narrative_records, record_supported_narrative_transmission]
+    remaining_capabilities: [causal_models_inside_agents, memory_retrieval_and_forgetting, richer_deception_strategy, identity_and_group_membership, norms_and_sanctions, institutional_memory, endogenous_value_formation, metacognition_and_confidence_calibration, record_provenance_and_forgery]
 
   - id: phase_4c_life_processes
     status: in_progress
@@ -172,6 +203,12 @@ phases:
       - initial_low_level_affordance_catalog
       - actor_local_innovation_attempt
       - innovation_creates_actor_knowledge_not_global_unlock
+      - generic_technology_effect_channels
+      - contextual_probabilistic_effect_activation
+      - mastery_scaled_actor_effect_resolution
+      - catalog_validation_requires_causal_effects
+      - writing_record_creation_and_persistence_channels
+      - iron_equipment_combat_production_channels
     next_capabilities:
       - integrate_knowledge_with_materialized_people
       - experience_traces_from_real_activities
@@ -197,7 +234,8 @@ phases:
       - capability_bundle_views_for_agriculture_metallurgy_navigation_industry
       - technology_diffusion_over_social_spatial_networks
       - technology_loss_after_carrier_network_collapse
-    forbidden_shortcuts: [primitive_language_assignment, primitive_religion_assignment, primitive_ethnicity_from_phenotype, chronological_tech_tree_unlocks, automatic_progress, target_number_of_languages, target_number_of_religions, guaranteed_technology_discovery]
+      - wire_effect_channels_into_all_relevant_domain_equations
+    forbidden_shortcuts: [primitive_language_assignment, primitive_religion_assignment, primitive_ethnicity_from_phenotype, chronological_tech_tree_unlocks, automatic_progress, target_number_of_languages, target_number_of_religions, guaranteed_technology_discovery, global_technology_bonus]
 
   - id: phase_5_social_economic
     status: in_progress
@@ -222,7 +260,7 @@ phases:
 
   - id: phase_8_experiments
     status: planned
-    capabilities: [batch_simulation, counterfactuals, sensitivity_analysis, trajectory_comparison, causal_attribution, epistemic_counterfactuals, narrative_path_dependence_analysis, cultural_fragmentation_convergence_analysis, innovation_diffusion_loss_analysis]
+    capabilities: [batch_simulation, counterfactuals, sensitivity_analysis, trajectory_comparison, causal_attribution, epistemic_counterfactuals, narrative_path_dependence_analysis, cultural_fragmentation_convergence_analysis, innovation_diffusion_loss_analysis, control_tower_parameter_sweeps]
 
   - id: phase_9_inverse_inference
     status: planned
@@ -269,10 +307,16 @@ constraints:
   biological_ancestry_must_not_equal_social_identity: true
   technical_affordance_must_not_equal_discovery: true
   discovered_technique_must_not_equal_society_wide_adoption: true
+  every_configured_technical_affordance_must_expose_causal_effects: true
+  technology_effects_require_actor_knowledge_and_context: true
+  technology_effects_must_not_be_global_civilization_bonuses: true
+  written_record_must_not_imply_truth: true
   no_automatic_technological_progress: true
   no_chronological_tech_tree_in_kernel: true
   no_target_cultural_cluster_counts: true
   derived_cultural_views_must_not_create_causality: true
+  control_tower_configuration_must_not_prescribe_historical_outcomes: true
+  control_tower_run_configuration_must_be_snapshotable_and_reproducible: true
   kinship_must_not_imply_loyalty: true
   household_must_not_imply_blood_relation: true
   offspring_must_not_imply_romance: true
