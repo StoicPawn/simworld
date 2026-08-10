@@ -89,29 +89,15 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - the same death may produce multiple incompatible succession outcomes across property, debt, office, name and narrative custody;
 - relationship state must evolve through accumulated interaction rather than static labels.
 
-**Integration target:** generational vertical slice and event store.
-
-**Validation target:** unit tests for household membership, relationship evolution, gestation delay, contested inheritance and integrated multi-year simulation.
-
-**Known limitation:** this remains a vertical slice; production, explicit ownership registries, law, institutions, marriage norms, child development, spatial encounter networks and fully endogenous political organizations are subsequent layers.
-
 ---
 
-## 2026-08-09 — M7 Material economy, property and spatial exchange
+## 2026-08-09 — M7 Material economy and spatial exchange
 
 **Intent:** create the material substrate from which durable economic asymmetry and later political power can emerge without assigning economic castes, houses or rulers in advance.
 
-**Historical note:** this milestone initially introduced `PropertyRight` as if a recognized ownership relation could be a primitive. M10 below supersedes that choice: modern/formal property is now derived from more elementary actor↔asset relations and recognition.
+**Historical note:** this milestone initially introduced `PropertyRight`; M10 supersedes that choice with more elementary asset relations.
 
-**Other primitives/processes retained:**
-- `Asset` as a real productive/material object;
-- `Inventory` for actual stocks, distinct from abstract wealth;
-- generic `ProductionProcess` and environmental/labour context;
-- bilateral `ExchangeProposal`/`ExchangeResult`;
-- integrated household-level field assets, production, consumption, shortage, debt effects and barter;
-- spatial accessibility for repeated exchange cached by settlement pair.
-
-**Invariant retained:** scarcity alters constraints and incentives, never directly triggers a prescribed social/political outcome.
+**Retained processes:** assets, inventories, production, consumption, shortage, barter and geography-constrained exchange.
 
 ---
 
@@ -119,86 +105,57 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** bridge material/social interaction into durable institutional structure without declaring rulers, classes, houses, governments or states as primitive objects.
 
-**New primitives:**
-- general `Obligation` and `ObligationRegistry` for resource/labour/service duties with provenance, due time, fulfilment, debtor acceptance, external recognition and enforceability;
-- `CooperationLedger` accumulating repeated successful/failed interaction;
-- generic `Organization`, `Membership` and `OrganizationRegistry`;
-- `AuthorityObservation`, `AuthoritySignal` and `AuthorityIndex` separating effective authority from legitimacy.
+**Primitives/processes:** general obligations, cooperation ledger, generic organizations and authority signals separated into compliance, dependency, recognition, provision and coercion.
 
-**Integrated processes:**
-- severe household grain shortage may generate a credit request rather than an automatic policy response;
-- possible creditors are constrained by actual surplus, spatial access, social connection and previous cooperation;
-- accepted credit moves real grain and creates an explicit obligation;
-- repayment, partial repayment and default become historical events;
-- repeated successful interaction can reinforce cooperation while failed interaction can weaken it;
-- connected cooperation networks may probabilistically form a generic organization;
-- organizations can pool voluntary grain contributions and redistribute aid;
-- authority signals emerge from observed compliance, dependency, recognition, provision and coercion;
-- organization-level authority can grow in the resource-coordination domain through repeated contribution/provision without making the organization a government.
-
-**New invariants:**
-- request != obligation;
-- obligation != financial debt only;
-- compliance != consent;
-- dependency != loyalty;
-- coercion != legitimacy;
-- organization != institution != government != state;
-- effective authority and legitimacy are separate signals;
-- authority is domain-specific and historically derived;
-- economic dependency may become political power later, but never automatically.
-
-**Validation:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
-
-**Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
+**Invariant:** effective authority != legitimacy; organization != state.
 
 ---
 
 ## 2026-08-09 — M9 Material disequilibrium, storage and local shocks
 
-**Intent:** create plausible asynchronous surplus/deficit conditions so exchange, credit, dependency and organization can emerge from material history instead of being forced by event quotas or lowered thresholds.
+**Intent:** create plausible asynchronous surplus/deficit conditions so exchange, credit, dependency and organization can emerge from material history instead of event quotas.
 
-**New primitives/processes:**
-- per-household `StorageProfile` with capacity, preservation and exposure;
-- grain spoilage and overflow loss;
-- heterogeneous `HouseholdDemandProfile` with age-sensitive food needs and reserve targets;
-- household-specific vulnerability to local material shocks;
-- local pest/crop loss, storage damage and tool breakage events that affect actual inventories;
-- explicit unmet household food need events after real stock consumption;
-- integrated disequilibrium run layered on top of obligations, organizations and authority.
+**Processes:** household storage profiles, spoilage, heterogeneous demand, local crop/storage/tool shocks and explicit unmet food need.
 
-**New invariants:**
-- heterogeneous outcomes must arise from heterogeneous state/processes, not from a target count of historical events;
-- do not tune the simulator to produce a desired number of wars, trades, revolts, organizations or states;
-- storage and spoilage are material processes independent of later social interpretation;
-- two households in the same settlement may experience the same macro year differently;
-- shocks create opportunities/constraints, never prescribed behavioural responses.
+**Invariant:** do not tune for target numbers of trades, revolts, organizations, wars or states.
 
 ---
 
 ## 2026-08-09 — M10 Primitive simplification: asset relations before property
 
-**Intent:** reduce conceptual complexity and avoid projecting modern legal property backward into worlds that may not yet contain institutions capable of defining, recording or enforcing it.
+**Intent:** avoid projecting modern legal property backward into worlds without institutions capable of defining or enforcing it.
 
-**Architectural change:**
-- `Asset` remains physical/material truth;
-- primitive `PropertyRight` is superseded by temporal `AssetRelation`;
-- minimal relation kinds are `possess`, `use`, `control`, and `claim`;
-- `Recognition` records that one actor accepts another actor's claim, independently of physical control;
-- formal/legal property becomes a future **derived view** over claims, recognition, control, norms and enforcement;
-- deeds, titles, cadastral records and contracts will later be information/evidence objects whose force depends on issuer recognition and institutional enforcement;
-- compatibility wrappers remain temporarily so prior vertical slices do not require a destructive rewrite.
+**Architecture:** `Asset` + temporal `AssetRelation` (`possess`, `use`, `control`, `claim`) + observer-specific `Recognition`. Formal property is a future derived view over claims, recognition, control, norms and enforcement. Documents will be evidence/information objects, not world truth.
 
-**Integrated change:** initial farming households now occupy, use and effectively control their field plots. The simulation no longer asserts that they own those plots under a universal legal regime. Production depends on `use`, not legal ownership.
-
-**New invariants:**
-- asset != property;
-- possession != use != control != claim;
-- claim != recognized claim;
-- recognized claim != effective control;
-- document != truth;
-- legal/formal property requires institutional context;
-- no universal property law is built into the kernel.
-
-**Scalability rationale:** the simulator keeps a small set of generic relations and lets historical institutions add meaning later. This is preferred to creating separate hard-coded systems for prehistoric possession, feudal tenure, customary property and modern title.
+**Invariant:** asset != possession != use != control != claim != recognized claim != legal property.
 
 **Reference:** `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
+
+---
+
+## 2026-08-10 — M11 Individual spatial presence, movement and emergent places
+
+**Intent:** make micro-geography causally visible at the individual level so important places can arise from repeated human activity instead of being declared as markets, centres, squares, ports or strategic sites.
+
+**New primitive:** `PresenceLedger`, storing current materialized-person position plus historical visit, unique-visitor, encounter and productive-use counts per cell.
+
+**New processes:**
+- materialized individuals begin at actual settlement cells;
+- people make bounded stochastic local movements over passable neighbouring cells;
+- destination attractiveness depends on physical fertility, timber, habitability, movement cost, accumulated familiarity and individual stochastic variation;
+- newborns and later-materialized individuals acquire spatial presence lazily when needed;
+- co-presence in the same cell creates explicit `spatial_encounter` events;
+- previously unconnected people may form acquaintance or rivalry ties after real co-presence;
+- productive asset use contributes to the history of the specific cell where the asset exists;
+- `site_intensity` is a derived analytical signal from activity history only.
+
+**New invariants:**
+- place importance != permanent map flag;
+- co-presence precedes encounter-derived social contact;
+- `market`, `centre`, `harbour`, `village`, `sacred place` and similar labels should be derived views unless a later institution explicitly names them;
+- site intensity may guide observation/refinement but must not itself cause future visits;
+- micro-geographic differences are allowed to compound historically through repeated use and familiarity.
+
+**Validation target:** tests require actual movement, co-presence events and emergence of active cells without creating any market/centre primitive. CI runs a dedicated spatial-life vertical slice and reports the most active cells with their visit/visitor/encounter/use decomposition.
+
+**Next dependencies:** persistent multi-step travel, route learning, temporary vs habitual residence, work/foraging tasks tied to material needs, cell-level resource extraction/depletion, infrastructure built by repeated use, and retrospective settlement/market/route views.
