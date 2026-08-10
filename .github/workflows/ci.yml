@@ -53,3 +53,6 @@ jobs:
       - name: Adaptive population accounting simulation
         run: >-
           python scripts/run_refined_population_world.py --seed 104729 --years 24 --width 48 --height 36 --settlements 5 --output /tmp/simworld-refined-population-world
+      - name: Demographic cohort simulation
+        run: >-
+          python scripts/run_cohort_population_world.py --seed 104729 --years 24 --width 48 --height 36 --settlements 5 --output /tmp/simworld-cohort-population-world
