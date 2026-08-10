@@ -172,15 +172,7 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - inherited background-population stepping is disabled to prevent a second demographic clock;
 - old settlement-to-settlement migration is disabled because mutating summary values would create a second population truth; future long-range migration must transfer population directly on the raster/route substrate.
 
-**New invariants:**
-- `PopulationField` is authoritative aggregate demography;
-- compatibility summaries cannot feed population back into the field;
-- reporting partition != region != border != territory;
-- legacy settlement population is projection, not state;
-- demographic change occurs once per simulation time step;
-- future migration must conserve/transfer authoritative field population rather than modify labels or summaries.
-
-**Scalability/complexity rationale:** one demographic truth removes synchronization logic and prevents later state/settlement abstractions from silently becoming alternative population stores.
+**New invariants:** `PopulationField` is authoritative aggregate demography; compatibility summaries cannot feed population back into the field; reporting partition != region != border != territory; legacy settlement population is projection, not state; demographic change occurs once per simulation time step.
 
 **Validation:** corrupting a legacy population summary cannot alter the field; field growth occurs once per year; derived summaries cover field total up to rounding; legacy migration no longer mutates demographic state; full lower-layer CI plus dedicated authoritative-demography run passed.
 
@@ -192,22 +184,28 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** ensure adaptive resolution cannot perturb unrelated history merely because technical identifiers or container iteration order change. Same root seed must reproduce the same simulated causal history before large-scale materialization/dematerialization is introduced.
 
-**Changes:**
-- deterministic context-local identifiers for structural actors whose identity can affect iteration/order;
-- deterministic settlement, household and organization identifiers in the current vertical slice;
-- deterministic graph traversal where unordered sets previously could alter processing order;
-- replay fingerprint that canonicalizes remaining opaque technical identifiers by first appearance and compares world state, event sequence, demographic raster and emergent nuclei;
-- regression test requires equal semantic fingerprints for equal seeds and unequal fingerprints for distinct seeds.
+**Changes:** deterministic context-local identifiers for structural actors; deterministic settlement, household and organization identifiers; deterministic graph traversal; replay fingerprint over world state, event sequence, demographic raster and emergent nuclei.
 
-**New invariants:**
-- same seed + same configuration + same code must produce the same semantic history;
-- UUID/token value must not influence causal decisions;
-- unordered container traversal must not choose who consumes a random draw;
-- technical identifiers may remain opaque only when they are causally inert;
-- byte-for-byte persistence identity is a separate, stricter future target from semantic replay.
+**New invariants:** same seed + same configuration + same code must produce the same semantic history; UUID/token value must not influence causal decisions; unordered container traversal must not choose who consumes a random draw; technical identifiers may remain opaque only when causally inert.
 
 **Validation:** complete authoritative-demography world executed twice in one process with the same seed produced identical normalized fingerprints; a different seed diverged; full CI passed.
 
-**Next dependency:** introduce stable keyed RNG substreams by domain/process/actor/spatial key so refining one actor or region consumes randomness only from its own stream and cannot perturb unrelated processes. Only then should adaptive aggregate↔individual materialization become widespread.
-
 **Reference:** `docs/DETERMINISTIC_REPLAY_FOUNDATION.md`.
+
+---
+
+## 2026-08-10 — M16 Stable keyed RNG substreams
+
+**Intent:** make stochastic history safe under adaptive resolution. Refining one actor, process or region must not shift unrelated outcomes merely because additional random numbers were consumed.
+
+**New primitive:** `SeedStreams` derives Python and NumPy generators from the root seed plus canonical semantic keys using BLAKE2; scoped namespaces provide domain-level isolation. Python's process-randomized `hash()` is never part of seed derivation.
+
+**Current integration:** population-field initialization and initial household placement use separate keys; aggregate demography is keyed by year; compatibility harvest shocks by anchor/year; household relocation and local construction by household/year/process; individual movement/activity by person/year/location; encounter ranking/outcome by cell/year/pair.
+
+**New invariants:** unrelated random scopes cannot advance each other; semantic RNG keys must be stable; each decision key must include enough causal scope to prevent accidental draw reuse; local refinement may affect distant history only through explicit causal propagation, never shared RNG cursor position.
+
+**Validation:** same-key streams replay identically; distinct keys remain separate; 10,000 draws in an unrelated stream do not change a target draw; a complete authoritative-demography run is unchanged after injecting 50,000 unrelated adaptive-detail draws. Full CI passed with 65 tests.
+
+**Next dependency:** adaptive materialization accounting must reserve population from the authoritative raster when detailed people are instantiated and return compatible population when detail is collapsed. This creates a genuine multi-resolution demographic representation rather than two populations.
+
+**Reference:** `docs/KEYED_RNG_SUBSTREAMS.md`.
