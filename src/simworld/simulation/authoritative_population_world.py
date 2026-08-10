@@ -23,18 +23,13 @@ class AuthoritativePopulationSimulationResult:
 
 
 class AuthoritativePopulationWorldSimulation(DistributedPopulationWorldSimulation):
-    """Use the distributed raster as the sole aggregate demographic truth.
-
-    Legacy settlement population attributes survive only as reporting projections needed
-    by older social vertical slices. They never feed growth or migration back into the
-    population field. The nearest-anchor partition is compatibility infrastructure, not
-    a geographic/political region model.
-    """
+    """Use the distributed raster as the sole aggregate demographic truth."""
 
     def __init__(self, config: FirstWorldConfig) -> None:
         super().__init__(config)
         self._population_partition: NDArray[np.int32] | None = None
         self._population_summaries: dict[str, PopulationSummaryView] = {}
+        self.harvest_streams = self.seed_streams.scoped("harvest")
 
     def initialize(self) -> None:
         super().initialize()
@@ -84,13 +79,14 @@ class AuthoritativePopulationWorldSimulation(DistributedPopulationWorldSimulatio
                 )
 
     def _run_harvests(self, year: int) -> dict[str, float]:
-        """Expose local food pressure to legacy social code without using settlement demography."""
+        """Expose local food pressure to legacy social code without shared RNG coupling."""
         summaries = self._summaries()
         food_ratio: dict[str, float] = {}
         for settlement_id in self.settlement_ids:
             summary = summaries[settlement_id]
-            climate_noise = float(self.rng.normal(0.0, 0.11))
-            rare_shock = float(self.rng.normal(-0.30, 0.06)) if self.rng.random() < 0.045 else 0.0
+            rng = self.harvest_streams.numpy(settlement_id, year)
+            climate_noise = float(rng.normal(0.0, 0.11))
+            rare_shock = float(rng.normal(-0.30, 0.06)) if rng.random() < 0.045 else 0.0
             production_factor = max(0.35, 1.0 + climate_noise + rare_shock)
             effective_capacity = summary.capacity * production_factor
             ratio = effective_capacity / max(1.0, summary.population)
@@ -116,10 +112,10 @@ class AuthoritativePopulationWorldSimulation(DistributedPopulationWorldSimulatio
         return food_ratio
 
     def _run_demography(self, year: int, food_ratio: dict[str, float]) -> None:
-        """Advance only the raster; settlement population numbers are projections."""
+        """Advance only the raster with a year-keyed demographic stream."""
         assert self.population_field is not None
         before = self.population_field.total_population
-        self.population_field.step(self.population_rng)
+        self.population_field.step(self.population_streams.numpy("demography", year))
         after = self.population_field.total_population
         self.world.record_event(
             Event(
@@ -136,15 +132,9 @@ class AuthoritativePopulationWorldSimulation(DistributedPopulationWorldSimulatio
         self._sync_legacy_population_summaries(time=year)
 
     def _advance_background_population(self, year: int) -> None:
-        # Population already advances exactly once in _run_demography. The inherited
-        # microgeography hook must not create a second demographic clock.
         return
 
     def _run_migration(self, year: int, food_ratio: dict[str, float]) -> None:
-        # Local aggregate redistribution is already part of PopulationField.step().
-        # The former settlement-to-settlement transfer would mutate reporting summaries
-        # and create a second population truth. Long-range route migration will be added
-        # later as transfers directly on the authoritative field.
         return
 
     def run(self) -> AuthoritativePopulationSimulationResult:
