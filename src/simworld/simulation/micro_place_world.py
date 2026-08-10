@@ -5,7 +5,11 @@ from random import Random
 
 from simworld.core.event import Event
 from simworld.simulation.disequilibrium_world import DisequilibriumSimulationResult, DisequilibriumWorldSimulation
-from simworld.simulation.first_world import FirstWorldConfig
+from simworld.simulation.first_world import FirstWorldConfig, SimulationResult
+from simworld.simulation.generational_world import GenerationalSimulationResult
+from simworld.simulation.institutional_world import InstitutionalSimulationResult
+from simworld.simulation.material_world import MaterialSimulationResult
+from simworld.simulation.social_world import SocialSimulationResult
 from simworld.social.network import SocialTie
 from simworld.spatial.activity import CellKey, PlaceActivityLedger, PlaceView, Presence
 
@@ -160,9 +164,48 @@ class MicroPlaceWorldSimulation(DisequilibriumWorldSimulation):
             self._interact_at_cell(cell, tuple(actors), year)
 
     def _evolve_social_network(self, year: int) -> None:
-        # In this layer new weak ties arise from actual co-presence rather than random
-        # pairing within a settlement. Existing relationships still evolve elsewhere.
+        # New weak ties in this layer arise from actual co-presence rather than random
+        # pairing inside a settlement. Existing ties still evolve in their own process.
         return
+
+    def _build_disequilibrium_result(self) -> DisequilibriumSimulationResult:
+        base = SimulationResult(self.config, self.generated, self.world, tuple(self.settlement_ids))
+        social = SocialSimulationResult(
+            base=base,
+            house_ids=tuple(self.house_ids),
+            representative_ids=tuple(self.representative_ids),
+            social_memory=self.social_memory,
+        )
+        generational = GenerationalSimulationResult(
+            social=social,
+            kinship=self.kinship,
+            network=self.network,
+            households=self.households,
+            pregnancies=self.pregnancies,
+            inheritance_transfers=tuple(self.inheritance_transfers),
+            person_ids=tuple(self.person_ids),
+            lineage_candidates=self._lineage_candidates(),
+        )
+        material = MaterialSimulationResult(
+            generational=generational,
+            property_registry=self.property_registry,
+            inventories=self.inventories,
+            exchange_count=self.exchange_count,
+        )
+        institutional = InstitutionalSimulationResult(
+            material=material,
+            obligations=self.obligations,
+            organizations=self.organizations,
+            cooperation=self.cooperation,
+            authority=self.authority,
+        )
+        return DisequilibriumSimulationResult(
+            institutional=institutional,
+            storage_profiles=self.storage_profiles,
+            demand_profiles=self.demand_profiles,
+            material_shocks=self.material_shocks,
+            spoilage_events=self.spoilage_events,
+        )
 
     def run(self) -> MicroPlaceSimulationResult:
         self.initialize()
@@ -192,9 +235,8 @@ class MicroPlaceWorldSimulation(DisequilibriumWorldSimulation):
             self._run_mortality(year)
             self._transmit_memory(year)
 
-        disequilibrium = super().run_result_only()
         return MicroPlaceSimulationResult(
-            disequilibrium=disequilibrium,
+            disequilibrium=self._build_disequilibrium_result(),
             place_ledger=self.place_ledger,
             place_views=self.place_ledger.views(min_visits=2.0),
             encounters=self.encounters,
