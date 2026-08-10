@@ -1,7 +1,7 @@
 from random import Random
 
 from simworld.culture.conventions import ConventionState, evolve_convention
-from simworld.culture.knowledge import KnowledgeState, KnowledgeUnit, transmit_knowledge
+from simworld.culture.knowledge import KnowledgeState, KnowledgeUnit, decay_knowledge, transmit_knowledge
 from simworld.culture.technology import Affordance, InnovationContext, innovation_probability
 
 
@@ -62,6 +62,29 @@ def test_knowledge_transmission_can_fail_or_be_partial() -> None:
     learned = [outcome for outcome in outcomes if outcome is not None]
     assert learned
     assert any(outcome.mastery < source.mastery for outcome in learned)
+
+
+def test_unused_knowledge_can_decay_while_practice_preserves_it() -> None:
+    unit = KnowledgeUnit("rare-technique", "technique", complexity=0.9)
+    state = KnowledgeState("rare-technique", mastery=0.5, confidence=0.6, acquired_at=0)
+    unused = decay_knowledge(
+        unit,
+        state,
+        practice=0.0,
+        social_reinforcement=0.0,
+        record_support=0.0,
+        elapsed=4.0,
+    )
+    practised = decay_knowledge(
+        unit,
+        state,
+        practice=1.0,
+        social_reinforcement=0.8,
+        record_support=0.0,
+        elapsed=4.0,
+    )
+    assert unused is not None and practised is not None
+    assert unused.mastery < practised.mastery
 
 
 def test_contact_converges_conventions_relative_to_isolated_drift() -> None:
