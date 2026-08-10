@@ -2,50 +2,28 @@
 
 ## Current phase
 
-**Adaptive-resolution-safe stochastic foundation + deterministic replay + authoritative terrain-distributed demography active**
+**True multi-resolution population accounting + adaptive-resolution-safe randomness + deterministic replay active**
 
-The repository now has sixteen connected foundations:
-
-1. causal/event kernel;
-2. remote automation;
-3. spatial/geopolitical substrate;
-4. epistemic-social/cultural layer;
-5. biological generations + multiplex social networks;
-6. household, gestation, relationship evolution and inheritance;
-7. assets, inventories, production/consumption and spatial exchange;
-8. obligations, cooperation, generic organizations and derived authority/legitimacy;
-9. household storage, spoilage, heterogeneous demand and local material shocks;
-10. pre-legal asset relations: possession, use, control, claim and recognition;
-11. terrain-derived hydrology, cell-level resources, local movement/co-presence and sparse place history;
-12. persistent household residence, relocation/site improvement and derived residential nuclei;
-13. settlement-independent aggregate population raster and household placement;
-14. authoritative raster demography with legacy settlement populations reduced to derived compatibility summaries;
-15. deterministic semantic replay independent of opaque technical identifiers and unordered traversal;
-16. stable keyed RNG substreams isolating stochastic consumption by causal scope.
-
-Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
+The repository now has seventeen connected foundations. M17 adds the first genuine aggregate↔individual demographic bridge: detailed people are no longer a parallel population but a reserved high-resolution representation of the authoritative raster.
 
 ## Current architecture
 
 ```text
 ROOT SEED
     ↓
-STABLE KEYED RNG NAMESPACES
-(domain / process / actor / place / time)
+KEYED RNG NAMESPACES + DETERMINISTIC CAUSAL ORDER
     ↓
-DETERMINISTIC CAUSAL ORDER + TIME + FINE SPACE
+TIME + FINE PHYSICAL SPACE
     ↓
-TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
+AUTHORITATIVE TOTAL POPULATION FIELD
+    ├─ unresolved share → aggregate demographic dynamics
+    └─ reserved share   → detailed people / life histories
+                             ↓
+                    births / deaths / residence movement
+                             ↓
+                    same physical population field
     ↓
-AUTHORITATIVE POPULATION FIELD
-    ↓                         ↓
-BACKGROUND DEMOGRAPHY     DERIVED REPORTING SUMMARIES
-    ↓                         ↓
-SELECTIVE MATERIALIZATION   LEGACY COMPATIBILITY ONLY
-    ↓
-RESIDENCE ↔ LOCAL USE / MOVEMENT / ENCOUNTERS
-    ↓
-SPARSE CELL HISTORY
+RESIDENCE / LOCAL USE / ENCOUNTERS / SPARSE CELL HISTORY
     ↓
 DERIVED PLACES + RESIDENTIAL NUCLEI
     ↓
@@ -58,70 +36,59 @@ COOPERATION / ORGANIZATIONS / AUTHORITY
 FUTURE HIGHER-ORDER STRUCTURES
 ```
 
-## M16 keyed random substreams
+## M17 adaptive population accounting
 
-`SeedStreams` derives reproducible Python and NumPy generators from the root seed plus semantic keys using a stable BLAKE2 derivation. Random consumption in one scope does not advance another scope.
+`PopulationField.population` is total physical headcount. `PopulationField.reserved` marks the share currently represented by detailed people. `PopulationRefinementLedger` records the backing cell of every detailed person.
 
-The current high-resolution spatial/demographic path is already migrated: aggregate demography is keyed by year; residence decisions by household/year; local movement/activity by person/year/location; encounters by cell/year/pair. This means future adaptive refinement can add large amounts of local stochastic computation without mechanically perturbing quiet distant regions.
+Materializing/dematerializing existing people changes only resolution. Detailed births and deaths alter physical headcount exactly once. Detailed residence movement transfers both total and reserved population between cells while conserving the world total. Aggregate demographic growth and mobility operate only on unresolved population.
 
-This does not make regions causally independent. Effects can still propagate through movement, trade, information, conflict and other world state. The invariant only removes accidental coupling through a shared RNG cursor.
+The 24-year reference run closed with total population 9,443.701, 38 materialized people, 9,405.701 unresolved people and accounting gap 0.0. Every living detailed person had one active backing record.
 
 ## Critical invariants
 
+- `total population = unresolved population + materialized population`;
+- resolution change != birth/death/migration;
+- every living detailed person has exactly one population backing record;
+- detailed birth/death changes population exactly once;
+- aggregate demographic dynamics exclude detailed/reserved people;
+- detailed spatial relocation moves physical population, not only metadata;
 - same seed + same configuration + same code => same semantic history;
-- unrelated stochastic scopes must not advance each other's random state;
-- stable semantic keys, never Python `hash()` or memory address, determine substreams;
-- local refinement may affect distant history only through explicit causal propagation;
-- technical identifier values must not influence causal outcomes;
-- unordered iteration must not determine random draw ownership;
-- one authoritative aggregate demographic state;
-- population != settlement;
-- density hotspot != settlement;
+- unrelated stochastic scopes must not advance each other's RNG state;
+- relevance may change resolution, never causal likelihood;
+- one authoritative demographic truth;
+- population != settlement; residence != settlement; place != place type;
 - reporting partition != region/border/territory;
-- legacy settlement population is a projection, not state;
-- materialized people must reserve/release aggregate population rather than create a parallel population universe;
-- quiet regions continue evolving at aggregate resolution;
-- terrain label != historical role;
-- place != place type;
-- residence != settlement;
-- settlement nucleus != named settlement;
-- construction != building type;
-- local movement != migration;
 - derived views must not create causality;
-- asset != property;
-- possession != use != control != claim;
-- claim != recognition != enforcement;
-- document != truth;
-- co-presence != relationship;
+- world truth != actor knowledge;
 - kinship != household != loyalty != political identity;
-- organization != state;
-- authority != legitimacy;
-- never tune event quotas to obtain a desired storyline;
-- social state over planet-scale space must remain sparse/adaptive;
-- prefer generic primitives and derived structures.
+- asset != property; claim != recognition != control;
+- organization != state; authority != legitimacy;
+- never tune event counts to obtain a desired storyline;
+- quiet regions continue evolving at aggregate resolution;
+- social state over planet-scale space must remain sparse/adaptive.
 
 ## Next work toward the ultimate objective
 
-1. adaptive materialization accounting: reserve population from authoritative cells when creating detailed people/households and release compatible population when collapsing detail;
-2. demographic cohorts so aggregate births/deaths/age structure and detailed life histories reconcile;
-3. relevance-driven refinement/dematerialization policy that changes resolution but not causal likelihood;
-4. long-range household/person migration that moves authoritative population along terrain-constrained routes;
-5. household fission/fusion and settlement abandonment/growth from residence history;
-6. exchange/credit from actual co-presence and transport routes;
-7. cell/area possession/use/control/claims using generic asset relations;
-8. refinable persistent site improvements and emergent transport infrastructure;
-9. richer ecology/resources and terrain dynamics;
-10. norms, offices, evidence/documents and dispute resolution only as organizations acquire those capabilities;
-11. emergent family/house recognition from people + genealogy + memory + resources + names + outsider recognition;
-12. organization competition/protection/extraction and spatial authority;
-13. territorial claims/borders and state detection as derived configurations;
-14. diplomacy/conflict under imperfect beliefs;
+1. demographic cohorts over the unresolved field: age structure and reproductive role/composition;
+2. coherent refinement from cohorts and collapse back into cohorts;
+3. relevance-driven automatic materialization/dematerialization that changes resolution only;
+4. route-based authoritative long-range population migration;
+5. household fission/fusion and endogenous abandonment/growth of inhabited nuclei;
+6. exchange/credit from actual co-presence and transport networks;
+7. cell/area possession-use-control-claim relations and refinable infrastructure;
+8. richer ecology, hazards and physical dynamics;
+9. norms, offices, evidence/documents and institutional memory;
+10. emergent family/casata recognition from genealogy + memory + resources + names + recognition;
+11. organization competition/protection/extraction and spatial authority;
+12. territorial claims, borders and state detection as derived configurations;
+13. diplomacy/conflict under imperfect beliefs;
+14. historical/narrative extraction without a canonical story;
 15. counterfactuals, inverse inference and real-world calibration.
 
 ## Complexity budget
 
-Before adding a primitive, ask whether it can instead be state, relation, process, observation or derived view over existing primitives, whether it exists independently of the era/institution, and whether it removes rather than adds special cases.
+Prefer generic state, relations, processes and derived views over era-specific primitive objects. Refinement must remove computational cost, not create parallel truths.
 
 ## Temporary naming warning
 
-The early social vertical slice still contains `house` / `House-XX` placeholders for local authority. They are not genealogical houses and must be refactored before emergent houses are exposed as a first-class derived concept.
+The early social slice still contains `house` / `House-XX` placeholders for local authority. They are not genealogical houses and must be renamed/refactored before true emergent casate are exposed.

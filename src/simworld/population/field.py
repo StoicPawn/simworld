@@ -11,23 +11,54 @@ from simworld.spatial import CellCoord
 
 @dataclass(slots=True)
 class PopulationField:
-    """Aggregate population distributed over physical cells.
+    """Authoritative aggregate population with explicit high-resolution reservations.
 
-    This is background demographic state, not a set of settlements. Cells can gain or
-    lose population continuously; materialized people are a refinement layer over it.
+    `population` is total underlying population. `reserved` is the portion currently
+    represented by detailed agents. Unmaterialized population is therefore
+    `population - reserved`, not a second population universe.
     """
 
     population: NDArray[np.float64]
     capacity: NDArray[np.float64]
     suitability: NDArray[np.float64]
     water: NDArray[np.bool_]
+    reserved: NDArray[np.float64] | None = None
+
+    def __post_init__(self) -> None:
+        if self.reserved is None:
+            self.reserved = np.zeros_like(self.population, dtype=np.float64)
+        else:
+            self.reserved = self.reserved.astype(np.float64, copy=True)
+        if self.reserved.shape != self.population.shape:
+            raise ValueError("reserved population shape must match population field")
+        if np.any(self.reserved < -1e-9):
+            raise ValueError("reserved population cannot be negative")
+        if np.any(self.reserved - self.population > 1e-9):
+            raise ValueError("reserved population cannot exceed total population")
+        self.reserved[self.water] = 0.0
 
     @property
     def total_population(self) -> float:
         return float(self.population.sum())
 
+    @property
+    def total_reserved_population(self) -> float:
+        assert self.reserved is not None
+        return float(self.reserved.sum())
+
+    @property
+    def total_unmaterialized_population(self) -> float:
+        return self.total_population - self.total_reserved_population
+
     def population_at(self, cell: CellCoord) -> float:
         return float(self.population[cell.y, cell.x])
+
+    def reserved_at(self, cell: CellCoord) -> float:
+        assert self.reserved is not None
+        return float(self.reserved[cell.y, cell.x])
+
+    def available_at(self, cell: CellCoord) -> float:
+        return max(0.0, self.population_at(cell) - self.reserved_at(cell))
 
     def capacity_at(self, cell: CellCoord) -> float:
         return float(self.capacity[cell.y, cell.x])
@@ -38,18 +69,61 @@ class PopulationField:
             return 0.0
         return min(2.0, self.population_at(cell) / capacity)
 
+    def reserve(self, cell: CellCoord, amount: float) -> None:
+        if amount <= 0:
+            raise ValueError("reservation amount must be positive")
+        if self.water[cell.y, cell.x]:
+            raise ValueError("cannot reserve land population on water")
+        available = self.available_at(cell)
+        if amount > available + 1e-9:
+            raise ValueError(
+                f"insufficient unmaterialized population at {cell}: requested {amount}, available {available}"
+            )
+        assert self.reserved is not None
+        self.reserved[cell.y, cell.x] += amount
+
+    def release(self, cell: CellCoord, amount: float) -> None:
+        if amount <= 0:
+            raise ValueError("release amount must be positive")
+        current = self.reserved_at(cell)
+        if amount > current + 1e-9:
+            raise ValueError(
+                f"cannot release more population than reserved at {cell}: requested {amount}, reserved {current}"
+            )
+        assert self.reserved is not None
+        self.reserved[cell.y, cell.x] = max(0.0, current - amount)
+
+    def move_reservation(self, source: CellCoord, destination: CellCoord, amount: float) -> None:
+        if source == destination:
+            return
+        if amount <= 0:
+            raise ValueError("reservation transfer amount must be positive")
+        if self.reserved_at(source) + 1e-9 < amount:
+            raise ValueError("source cell does not contain enough reserved population")
+        if self.available_at(destination) + 1e-9 < amount:
+            raise ValueError("destination cell does not contain enough unmaterialized population")
+        self.release(source, amount)
+        try:
+            self.reserve(destination, amount)
+        except Exception:
+            self.reserve(source, amount)
+            raise
+
     def step(self, rng: np.random.Generator, *, growth_rate: float = 0.018, mobility: float = 0.035) -> None:
-        """Advance aggregate demography by local growth and neighbour redistribution."""
+        """Advance total demography while keeping detailed reservations locally backed."""
         pop = self.population
+        assert self.reserved is not None
         cap = np.maximum(self.capacity, 1e-9)
         crowding = pop / cap
         local_growth = growth_rate * pop * (1.0 - crowding)
         noise = rng.normal(0.0, 0.0045, size=pop.shape) * np.sqrt(np.maximum(pop, 1.0))
-        updated = np.maximum(0.0, pop + local_growth + noise)
+        updated = np.maximum(self.reserved, pop + local_growth + noise)
         updated[self.water] = 0.0
 
-        # Small local redistribution. Only a fraction of each cell can move in one step.
-        outflow = mobility * updated * np.clip((updated / cap) - 0.72, 0.0, 0.55)
+        # Only the unresolved share may be redistributed by the aggregate process.
+        # Materialized people move through explicit detailed movement/migration processes.
+        unresolved = np.maximum(0.0, updated - self.reserved)
+        outflow = mobility * unresolved * np.clip((updated / cap) - 0.72, 0.0, 0.55)
         retained = updated - outflow
         inflow = np.zeros_like(updated)
         height, width = updated.shape
@@ -75,13 +149,17 @@ class PopulationField:
                 for (ny, nx), weight in zip(neighbours, weights, strict=True):
                     inflow[ny, nx] += amount * weight / total_weight
 
-        self.population = np.maximum(0.0, retained + inflow)
+        self.population = np.maximum(self.reserved, retained + inflow)
         self.population[self.water] = 0.0
 
-    def sample_cells(self, count: int, rng: np.random.Generator) -> tuple[CellCoord, ...]:
+    def sample_cells(self, count: int, rng: np.random.Generator, *, use_available: bool = False) -> tuple[CellCoord, ...]:
         if count <= 0:
             return ()
-        weights = self.population.copy()
+        if use_available:
+            assert self.reserved is not None
+            weights = np.maximum(0.0, self.population - self.reserved)
+        else:
+            weights = self.population.copy()
         weights[self.water] = 0.0
         flat = weights.ravel()
         if float(flat.sum()) <= 0:
@@ -122,8 +200,6 @@ def build_population_field(
     suitability = np.clip(suitability, 0.0, 1.0)
     suitability[generated.water] = 0.0
 
-    # Fine noise prevents equal physical cells from being socially identical while
-    # geography remains the dominant driver.
     micro_variation = np.clip(rng.lognormal(mean=0.0, sigma=0.22, size=suitability.shape), 0.55, 1.8)
     weights = np.power(suitability, 1.65) * micro_variation
     weights[generated.water] = 0.0
