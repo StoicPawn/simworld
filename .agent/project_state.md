@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Distributed background population + emergent residential nuclei + material/institutional foundations active**
+**Authoritative terrain-distributed demography + emergent residential nuclei + material/institutional foundations active**
 
-The repository now has thirteen connected foundations:
+The repository now has fourteen connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -18,7 +18,8 @@ The repository now has thirteen connected foundations:
 10. pre-legal asset relations: possession, use, control, claim and recognition;
 11. terrain-derived hydrology, cell-level resources, local movement/co-presence and sparse place history;
 12. persistent household residence, relocation/site improvement and derived residential nuclei;
-13. settlement-independent aggregate population raster with local demographic evolution and household materialization sampling.
+13. settlement-independent aggregate population raster and household placement;
+14. authoritative raster demography with legacy settlement populations reduced to derived compatibility summaries.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
@@ -29,15 +30,17 @@ TIME + FINE SPACE
     ↓
 TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
     ↓
-DISTRIBUTED BACKGROUND POPULATION FIELD
+AUTHORITATIVE POPULATION FIELD
+    ↓                         ↓
+BACKGROUND DEMOGRAPHY     DERIVED REPORTING SUMMARIES
+    ↓                         ↓
+SELECTIVE MATERIALIZATION   LEGACY COMPATIBILITY ONLY
     ↓
-SELECTIVE PERSON / HOUSEHOLD MATERIALIZATION
-    ↓
-RESIDENCE ↔ LOCAL EXCURSIONS / USE / ENCOUNTERS
+RESIDENCE ↔ LOCAL USE / MOVEMENT / ENCOUNTERS
     ↓
 SPARSE CELL HISTORY
     ↓
-DERIVED PLACE VIEWS + RESIDENTIAL NUCLEI
+DERIVED PLACES + RESIDENTIAL NUCLEI
     ↓
 ASSETS / CLAIMS / INVENTORIES / OBLIGATIONS
     ↓
@@ -45,25 +48,25 @@ MEMORY / BELIEF / RELATIONSHIPS / GENERATIONS
     ↓
 COOPERATION / ORGANIZATIONS / AUTHORITY
     ↓
-FUTURE: NAMED SETTLEMENTS / MARKETS / HOUSES / STATES AS EMERGENT STRUCTURES
+FUTURE HIGHER-ORDER STRUCTURES
 ```
 
-## M13 distributed population
+## M14 single demographic truth
 
-`PopulationField` is the first demographic state that does not require settlements. Each cell stores aggregate population, local capacity and terrain-derived suitability. Initial density depends on habitability, fertility, freshwater, coastal food and timber plus bounded micro-variation.
+`PopulationField` is the sole authoritative aggregate demographic state in the newest vertical slice. Old `settlement.population` values are overwritten from reporting-only summaries and never advance population independently.
 
-Background population evolves through density-dependent local growth and limited neighbour redistribution. Quiet cells therefore continue demographic evolution without creating one entity per person.
+The compatibility partition assigns land cells to the nearest old bootstrap anchor only so legacy social processes can receive local summaries. It is not a region, border or territory and has no causal force.
 
-Materialized households are now sampled from the background field rather than being forced to occupy the legacy settlement cells. This decouples detailed social history from the bootstrap settlement geometry while preserving compatibility with older layers.
-
-The old settlement population totals still exist temporarily and therefore are not yet the authoritative demographic state. This duplication is explicitly transitional: the raster must become authoritative before the bootstrap settlement layer can be removed.
+Population advances exactly once per year on the raster. The previous background-population hook is disabled in this layer to prevent double stepping. Old settlement-to-settlement migration is disabled because changing summary values would create a second population truth; future long-range migration must transfer population directly on the field along feasible routes.
 
 ## Critical invariants
 
+- one authoritative aggregate demographic state;
 - population != settlement;
 - density hotspot != settlement;
-- aggregate population != materialized people;
-- materialization is refinement, not a separate source of people;
+- reporting partition != region/border/territory;
+- legacy settlement population is a projection, not state;
+- materialized people must eventually reserve/release aggregate population rather than create a parallel population universe;
 - quiet regions continue evolving at aggregate resolution;
 - terrain label != historical role;
 - place != place type;
@@ -86,14 +89,14 @@ The old settlement population totals still exist temporarily and therefore are n
 
 ## Next work toward the ultimate objective
 
-1. validate M13 across seeds and confirm detailed household homes/nuclei are no longer structurally tied to bootstrap settlement cells;
-2. make `PopulationField` the authoritative aggregate demographic state and turn old settlement population totals into derived summaries;
-3. adaptive person/household materialization and de-materialization around causally relevant cells/nuclei;
-4. household fission/fusion, abandonment and true migration over route networks;
-5. connect exchange/credit to actual co-presence and transport routes;
-6. cell/area possession/use/control/claims using generic asset relations;
-7. persistent site improvements refined into specific assets only when causally relevant;
-8. deterministic RNG substreams by actor/process/domain;
+1. adaptive materialization accounting: reserve people from cells/cohorts when creating detailed persons/households and return compatible aggregate state when detail is collapsed;
+2. deterministic RNG substreams before adaptive resolution becomes widespread;
+3. demographic cohorts so aggregate births/deaths/age structure and detailed life histories reconcile;
+4. long-range household/person migration that moves authoritative population along terrain-constrained routes;
+5. household fission/fusion and settlement abandonment/growth from residence history;
+6. exchange/credit from actual co-presence and transport routes;
+7. cell/area possession/use/control/claims using generic asset relations;
+8. refinable persistent site improvements and emergent transport infrastructure;
 9. richer ecology/resources and terrain dynamics;
 10. norms, offices, evidence/documents and dispute resolution only as organizations acquire those capabilities;
 11. emergent family/house recognition from people + genealogy + memory + resources + names + outsider recognition;

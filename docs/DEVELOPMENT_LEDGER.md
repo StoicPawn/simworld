@@ -137,16 +137,9 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** remove the next major hard-coded macro category by letting inhabited nuclei arise from household residence and local history rather than a `create_settlement()` decision.
 
-**New processes/views:**
-- persistent household residential anchors distinct from short-range excursions;
-- probabilistic local residence shifts;
-- sparse residence history;
-- generic local construction/site improvement;
-- retrospective `SettlementNucleusView` clustering.
+**New processes/views:** persistent household residential anchors; probabilistic local residence shifts; sparse residence history; generic local construction/site improvement; retrospective `SettlementNucleusView` clustering.
 
 **New invariants:** residence != settlement; settlement nucleus != named village/town/city; construction != building type; local movement != migration; derived clustering must not itself create causal advantage.
-
-**Known limitation:** aggregate population and founder placement still originate from bootstrap settlements.
 
 **Reference:** `docs/EMERGENT_SETTLEMENT_NUCLEI.md`.
 
@@ -156,25 +149,39 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** make population a terrain-distributed state that exists before settlements and can evolve in quiet/unresolved regions without materializing every person.
 
-**New substrate/processes:**
-- `PopulationField` raster containing aggregate population, local capacity and physical suitability;
-- initial population distribution depends on continuous habitability, fertility, freshwater, coastal food and timber plus bounded micro-variation;
-- water cells carry no land population;
-- density-dependent local growth and small demographic noise;
-- limited neighbour redistribution under local crowding, weighted by suitability and available capacity;
-- materialized households are sampled from the population field rather than being forced onto legacy settlement coordinates;
-- annual `background_population_change` events summarize aggregate demographic evolution without emitting per-cell event floods.
+**New substrate/processes:** `PopulationField` raster; terrain-weighted population distribution; local capacity; density-dependent growth; neighbour redistribution; materialized household homes sampled from the field.
 
-**New invariants:**
-- population != settlement;
-- population hotspot != settlement;
-- aggregate population != materialized people;
-- settlement labels must not determine where population is allowed to exist;
-- materialization must refine existing aggregate population rather than create population conceptually from nothing;
-- quiet regions continue demographic evolution at aggregate resolution.
+**New invariants:** population != settlement; population hotspot != settlement; aggregate population != materialized people; quiet regions continue demographic evolution at aggregate resolution.
 
-**Scalability rationale:** a raster cell may stand for zero to many thousands of unresolved people. Detailed persons/households remain a selective refinement layer. This avoids one Python object per human while preserving planet-scale background causality.
-
-**Transitional limitation:** legacy settlement population totals still evolve in lower layers and are not yet derived from the raster, so there are temporarily two aggregate demographic representations. M14 should make the raster authoritative and turn settlement totals into regional/derived summaries, then materialize/dematerialize people adaptively around causally important cells and nuclei.
+**Scalability rationale:** a raster cell may stand for zero to many thousands of unresolved people. Detailed persons/households remain a selective refinement layer.
 
 **Reference:** `docs/DISTRIBUTED_POPULATION_FIELD.md`.
+
+---
+
+## 2026-08-10 — M14 Authoritative aggregate population field
+
+**Intent:** eliminate the temporary double demographic truth. `PopulationField` becomes the only authoritative aggregate population state; legacy settlement population values become read-only-in-principle derived summaries used only by older layers during migration away from bootstrap settlements.
+
+**New views/processes:**
+- `PopulationSummaryView` reports population, capacity, suitability and cell count over a derived compatibility partition;
+- a nearest-anchor partition assigns land cells to old bootstrap points only for reporting; it explicitly has no territorial, political or causal semantics;
+- legacy `settlement.population` values are overwritten from field summaries rather than advanced independently;
+- harvest/food-pressure summaries are derived from field population/capacity and exposed to old social systems as compatibility inputs;
+- demographic growth advances the raster exactly once per year;
+- inherited background-population stepping is disabled to prevent a second demographic clock;
+- old settlement-to-settlement migration is disabled because mutating summary values would create a second population truth; future long-range migration must transfer population directly on the raster/route substrate.
+
+**New invariants:**
+- `PopulationField` is authoritative aggregate demography;
+- compatibility summaries cannot feed population back into the field;
+- reporting partition != region != border != territory;
+- legacy settlement population is projection, not state;
+- demographic change occurs once per simulation time step;
+- future migration must conserve/transfer authoritative field population rather than modify labels or summaries.
+
+**Scalability/complexity rationale:** one demographic truth removes synchronization logic and prevents later state/settlement abstractions from silently becoming alternative population stores.
+
+**Validation target:** corrupting a legacy population summary must not alter the field and resynchronization must overwrite it; field growth occurs once per year; derived summaries approximately cover field total; legacy migration no longer mutates demographic state; full lower-layer CI plus dedicated authoritative-demography run.
+
+**Next dependency:** adaptive materialization/dematerialization must explicitly reserve/release people from the authoritative field, so detailed individuals become true refinements of aggregate population rather than a parallel population universe.
