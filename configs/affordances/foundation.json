@@ -68,6 +68,7 @@
       "complexity": 0.70,
       "observability": 0.43,
       "effects": [
+        {"channel": "record_creation", "operation": "add", "magnitude": 1.0, "required_context": {"marking_material_available": 0.25}},
         {"channel": "record_persistence", "operation": "multiply", "magnitude": 0.85, "required_context": {"record_created": 1.0}},
         {"channel": "transmission_fidelity", "operation": "multiply", "magnitude": 0.45, "required_context": {"record_used": 1.0}},
         {"channel": "claim_credibility", "operation": "multiply", "magnitude": 0.28, "activation_chance": 0.65, "required_context": {"record_available": 1.0, "reader_accepts_medium": 0.25}}
