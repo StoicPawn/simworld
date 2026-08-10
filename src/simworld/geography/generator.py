@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
+from simworld.geography.hydrology import flow_accumulation, freshwater_access
 from simworld.spatial import GridSpec, SpatialMap
 
 
@@ -18,6 +19,9 @@ class GeneratedWorld:
     fertility: NDArray[np.float32]
     timber: NDArray[np.float32]
     ore: NDArray[np.float32]
+    river_strength: NDArray[np.float32]
+    freshwater_access: NDArray[np.float32]
+    coastal_food: NDArray[np.float32]
     habitability: NDArray[np.float32]
 
 
@@ -65,7 +69,7 @@ def _coastal_mask(water: NDArray[np.bool_]) -> NDArray[np.bool_]:
 
 
 def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34) -> GeneratedWorld:
-    """Generate a deterministic physical world whose geography constrains later history."""
+    """Generate deterministic physical geography that later history must respond to."""
     if not 0.05 <= sea_fraction <= 0.8:
         raise ValueError("sea_fraction must be between 0.05 and 0.8")
 
@@ -98,12 +102,21 @@ def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34)
     rainfall *= np.exp(-np.maximum(elevation, 0.0) / 5000.0)
     rainfall = np.where(water, rainfall * 1.25, rainfall)
 
+    river_strength = flow_accumulation(elevation, water, rainfall)
+    fresh_access = freshwater_access(river_strength)
+
     temp_fit = np.exp(-((temperature - 17.0) / 15.0) ** 2)
     rain_fit = np.clip((rainfall - 250.0) / 1100.0, 0.0, 1.0)
     slope_fit = np.exp(-8.0 * slope)
-    fertility = temp_fit * rain_fit * slope_fit * (~water)
+    local_water_fit = np.clip(0.84 + 0.32 * fresh_access, 0.0, 1.16)
+    fertility = temp_fit * rain_fit * slope_fit * local_water_fit * (~water)
+    fertility = np.clip(fertility, 0.0, 1.0)
 
     coast = _coastal_mask(water)
+    shore_patchiness = _normalize(_smooth(rng.random(shape), 1))
+    coastal_food = coast * np.clip(0.18 + 0.82 * shore_patchiness, 0.0, 1.0)
+    coastal_food *= np.clip((temperature + 8.0) / 34.0, 0.15, 1.0)
+
     timber = np.clip((rainfall - 500.0) / 1300.0, 0.0, 1.0) * np.clip((temperature + 5) / 30, 0, 1)
     timber *= (~water)
 
@@ -111,7 +124,17 @@ def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34)
     ore = np.clip(0.55 * ore_noise + 0.45 * np.clip(slope * 18.0, 0.0, 1.0), 0.0, 1.0)
     ore *= (~water)
 
-    habitability = np.clip(0.58 * fertility + 0.13 * timber + 0.09 * ore + 0.10 * coast + 0.10 * slope_fit, 0, 1)
+    habitability = np.clip(
+        0.50 * fertility
+        + 0.11 * timber
+        + 0.08 * ore
+        + 0.08 * coast
+        + 0.08 * slope_fit
+        + 0.09 * fresh_access
+        + 0.06 * coastal_food,
+        0,
+        1,
+    )
     habitability *= (~water)
 
     spatial_map = SpatialMap.create(spec)
@@ -120,6 +143,9 @@ def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34)
         ("temperature_c", np.float32, 0.0),
         ("timber", np.float32, 0.0),
         ("ore", np.float32, 0.0),
+        ("river_strength", np.float32, 0.0),
+        ("freshwater_access", np.float32, 0.0),
+        ("coastal_food", np.float32, 0.0),
         ("habitability", np.float32, 0.0),
     ):
         spatial_map.layers.add(name, dtype=dtype, fill_value=fill)
@@ -136,6 +162,9 @@ def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34)
     spatial_map.layers.require("temperature_c").write_array(temperature.astype(np.float32))
     spatial_map.layers.require("timber").write_array(timber.astype(np.float32))
     spatial_map.layers.require("ore").write_array(ore.astype(np.float32))
+    spatial_map.layers.require("river_strength").write_array(river_strength.astype(np.float32))
+    spatial_map.layers.require("freshwater_access").write_array(fresh_access.astype(np.float32))
+    spatial_map.layers.require("coastal_food").write_array(coastal_food.astype(np.float32))
     spatial_map.layers.require("habitability").write_array(habitability.astype(np.float32))
 
     return GeneratedWorld(
@@ -147,5 +176,8 @@ def generate_world(spec: GridSpec, *, seed: int = 0, sea_fraction: float = 0.34)
         fertility=fertility.astype(np.float32),
         timber=timber.astype(np.float32),
         ore=ore.astype(np.float32),
+        river_strength=river_strength.astype(np.float32),
+        freshwater_access=fresh_access.astype(np.float32),
+        coastal_food=coastal_food.astype(np.float32),
         habitability=habitability.astype(np.float32),
     )

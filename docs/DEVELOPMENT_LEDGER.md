@@ -51,7 +51,7 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-09 — M4 Epistemic/cultural foundation
 
-**Intent:** separate reality, observation, memory, belief, speech, action and perceived learning.
+**Intent:** separate reality, observation, memory, belief, speech and action.
 
 **Primitives:** needs, probabilistic beliefs, contextual trust, messages, distorted reports, strategy learning, narrative objects and branching transmission.
 
@@ -88,12 +88,6 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - claims, norms, wills/intent, social power and recognition are separate inputs;
 - the same death may produce multiple incompatible succession outcomes across property, debt, office, name and narrative custody;
 - relationship state must evolve through accumulated interaction rather than static labels.
-
-**Integration target:** generational vertical slice and event store.
-
-**Validation target:** unit tests for household membership, relationship evolution, gestation delay, contested inheritance and integrated multi-year simulation.
-
-**Known limitation:** this remains a vertical slice; production, explicit ownership registries, law, institutions, marriage norms, child development, spatial encounter networks and fully endogenous political organizations are subsequent layers.
 
 ---
 
@@ -146,8 +140,6 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 - effective authority and legitimacy are separate signals;
 - authority is domain-specific and historically derived;
 - economic dependency may become political power later, but never automatically.
-
-**Validation:** unit tests cover partial/full obligation fulfilment, cooperation-derived group candidates, authority/legitimacy separation and an integrated no-primitive-state run. CI runs the institutional vertical slice after all previous layers.
 
 **Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
 
@@ -202,3 +194,39 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 **Scalability rationale:** the simulator keeps a small set of generic relations and lets historical institutions add meaning later. This is preferred to creating separate hard-coded systems for prehistoric possession, feudal tenure, customary property and modern title.
 
 **Reference:** `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
+
+---
+
+## 2026-08-10 — M11 Terrain-derived hydrology, individual local activity and emergent places
+
+**Intent:** move the causal substrate closer to micro→macro history: terrain should create opportunities at the cell level; individuals should discover/use those opportunities; socially meaningful places should be derived from accumulated use rather than predeclared as markets, villages or centres.
+
+**Physical additions:**
+- continuous D8-like flow accumulation derived from elevation and rainfall;
+- continuous `river_strength` rather than primitive river objects;
+- diffused `freshwater_access` around drainage channels;
+- spatially patchy `coastal_food` so two nearby shore cells can have materially different histories;
+- fertility/habitability now respond modestly to freshwater and coastal productivity.
+
+**Social-spatial additions:**
+- sparse `CellActivityLedger`: cells acquire social state only after use;
+- activity channels: visit, residence, gathering, cultivation, exchange, conflict, construction;
+- `PlaceView` is a retrospective summary over accumulated cell activity, not a causal entity;
+- materialized people hold local cell positions and make short-range movements based on continuous physical affordances plus familiarity;
+- gathering/cultivation can add small real food quantities to the relevant household inventory;
+- co-presence creates opportunities for individual encounters;
+- encounters may be friendly, neutral or hostile and can seed friendship/rivalry ties;
+- exact cell coordinates are retained in event payloads while existing settlement entities remain the coarse event-location reference.
+
+**New invariants:**
+- terrain features influence history through continuous physical signals, not narrative labels;
+- place != place type;
+- market/village/port/political centre are derived interpretations of repeated activity unless they later acquire autonomous institutional structure;
+- social state over geography must remain sparse;
+- individual movement creates encounter opportunity; it must not guarantee interaction or relationship outcome;
+- familiarity can reinforce paths of use but must not override material constraints;
+- microgeographic importance can emerge, decay and relocate.
+
+**Known transitional limitation:** the current vertical slices still seed coarse `settlement` entities before individual history. M11 deliberately does not hide this. The future population refactor should let residence clusters and settlements themselves become derived/materialized from repeated individual/household location and infrastructure, with aggregate population used only for unresolved background regions.
+
+**Next dependencies:** settlement de-hardcoding, residence/household relocation, persistent site improvements, explicit cell/area claims, movement-generated exchange encounters, and later resource/interaction feedback into organizations and authority.
