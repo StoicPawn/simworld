@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from simworld.culture.catalog import AffordanceCatalog
+
 
 @dataclass(frozen=True, slots=True)
 class MapConfig:
@@ -85,7 +87,7 @@ class SimulationConfig:
 class WorldBlueprint:
     """Single declarative entry point for a SimWorld experiment.
 
-    This object is configuration, not causal state.  It controls initial conditions
+    This object is configuration, not causal state. It controls initial conditions
     and which possibility catalogs exist in a run, while the simulator remains free
     to produce very different histories from those conditions.
     """
@@ -167,3 +169,48 @@ class WorldBlueprint:
         if not isinstance(raw, dict):
             raise ValueError("world blueprint root must be an object")
         return cls.from_mapping(raw)
+
+
+def load_effective_affordance_catalog(
+    blueprint: WorldBlueprint,
+    *,
+    project_root: str | Path = ".",
+) -> AffordanceCatalog:
+    """Merge configured possibility catalogs and apply world-level filters.
+
+    This determines what is possible in the universe, not what is known. Initial
+    knowledge is kept separately in `TechnologyConfig.initially_known`.
+    """
+
+    root = Path(project_root)
+    merged = {}
+    version = 1
+    for configured_path in blueprint.technology.catalog_paths:
+        path = Path(configured_path)
+        if not path.is_absolute():
+            path = root / path
+        catalog = AffordanceCatalog.from_json(path)
+        version = max(version, catalog.version)
+        overlap = set(merged) & set(catalog.affordances)
+        if overlap:
+            raise ValueError(f"duplicate affordance ids across catalogs: {sorted(overlap)}")
+        merged.update(catalog.affordances)
+
+    known_ids = set(merged)
+    requested = set(blueprint.technology.enabled or known_ids)
+    disabled = set(blueprint.technology.disabled)
+    unknown = (requested | disabled) - known_ids
+    if unknown:
+        raise ValueError(f"unknown configured affordance ids: {sorted(unknown)}")
+
+    selected = requested - disabled
+    for actor_id, units in blueprint.technology.initially_known.items():
+        missing = set(units) - selected
+        if missing:
+            raise ValueError(
+                f"initial knowledge for {actor_id!r} references disabled/unavailable affordances: {sorted(missing)}"
+            )
+    return AffordanceCatalog(
+        affordances={key: merged[key] for key in sorted(selected)},
+        version=version,
+    )
