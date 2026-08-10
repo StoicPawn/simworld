@@ -5,8 +5,19 @@ intended to be derived from lower-level transmitted knowledge, conventions, beli
 skills and capabilities rather than created as primitive historical objects.
 """
 
-from simworld.culture.knowledge import KnowledgeLedger, KnowledgeState, KnowledgeUnit, transmit_knowledge
-from simworld.culture.technology import Affordance, InnovationContext, innovation_probability, innovation_occurs
+from simworld.culture.knowledge import (
+    KnowledgeLedger,
+    KnowledgeState,
+    KnowledgeUnit,
+    decay_knowledge,
+    transmit_knowledge,
+)
+from simworld.culture.technology import (
+    Affordance,
+    InnovationContext,
+    innovation_occurs,
+    innovation_probability,
+)
 
 __all__ = [
     "Affordance",
@@ -14,6 +25,7 @@ __all__ = [
     "KnowledgeLedger",
     "KnowledgeState",
     "KnowledgeUnit",
+    "decay_knowledge",
     "innovation_occurs",
     "innovation_probability",
     "transmit_knowledge",
