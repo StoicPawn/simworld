@@ -1,6 +1,6 @@
 project: simworld
-version: 10
-current_phase: microgeography_and_emergent_places
+version: 11
+current_phase: emergent_residential_nuclei
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -9,6 +9,8 @@ foundational_principles:
   map_is_causal_state_not_decoration: true
   terrain_roles_are_emergent: true
   place_types_are_derived_views: true
+  settlements_are_derived_when_possible: true
+  residence_is_not_settlement: true
   sparse_social_state_over_space: true
   regions_are_derived_views: true
   strategic_value_is_emergent: true
@@ -70,6 +72,7 @@ phases:
       - least_cost_routing_a_star
       - sparse_cell_activity_ledger
       - derived_place_views
+      - derived_residential_nucleus_clustering
     remaining_capabilities:
       - coordinate_reference_system
       - real_world_georeferencing
@@ -112,26 +115,30 @@ phases:
   - id: phase_4_population
     status: in_progress
     implemented_capabilities:
-      - settlement_population
-      - geography_constrained_settlement_sites
+      - settlement_population_legacy_bootstrap
+      - geography_constrained_settlement_sites_legacy_bootstrap
       - food_linked_demography
       - geography_constrained_migration
       - materialized_persons
       - biological_birth_death
       - local_person_cell_position
       - short_range_affordance_driven_movement
-      - co_presence_encounter_opportunity
+      - copresence_encounter_opportunity
       - micro_gathering_and_cultivation
+      - persistent_household_residence_anchor
+      - household_local_relocation
+      - sparse_residence_history
+      - generic_local_construction
+      - derived_residential_nuclei
     remaining_capabilities:
-      - derived_residence_clusters
-      - dehardcoded_settlements
       - distributed_population_raster
+      - bootstrap_settlement_removal
       - demographic_cohorts
       - adaptive_person_materialization
-      - household_relocation
       - settlement_founding_abandonment_from_activity
       - migration_of_materialized_people_and_households
-      - persistent_dwellings_and_site_improvements
+      - household_fission_fusion
+      - persistent_site_improvements_as_refinable_assets
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
@@ -232,6 +239,10 @@ constraints:
   inheritance_must_not_be_single_heir_by_default: true
   terrain_label_must_not_imply_historical_role: true
   place_view_must_not_create_causality: true
+  residence_must_not_imply_settlement: true
+  settlement_nucleus_must_not_create_causality: true
+  construction_must_not_imply_building_type: true
+  local_movement_must_not_imply_migration: true
   market_village_port_state_should_be_derived_when_possible: true
   social_spatial_state_must_be_sparse: true
   movement_must_not_imply_interaction: true

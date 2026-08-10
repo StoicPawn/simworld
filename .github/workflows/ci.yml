@@ -41,3 +41,6 @@ jobs:
       - name: Microgeography and emergent-place simulation
         run: >-
           python scripts/run_microgeography_world.py --seed 104729 --years 20 --width 48 --height 36 --settlements 5 --output /tmp/simworld-microgeography-world
+      - name: Emergent residential nuclei simulation
+        run: >-
+          python scripts/run_emergent_settlement_world.py --seed 104729 --years 24 --width 48 --height 36 --settlements 5 --output /tmp/simworld-emergent-settlement-world
