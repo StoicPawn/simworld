@@ -129,17 +129,15 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Invariant:** place != place type; market/village/port/political centre remain derived interpretations.
 
-**Known limitation:** coarse settlements are still bootstrap entities created before individual history.
-
 ---
 
 ## 2026-08-10 — M12 Persistent residence and emergent settlement nuclei
 
-**Intent:** remove the next major hard-coded macro category by letting inhabited nuclei arise from household residence and local history rather than a `create_settlement()` decision.
+**Intent:** let inhabited nuclei arise from persistent household residence and local history rather than a primitive settlement-founding decision.
 
-**New processes/views:** persistent household residential anchors; probabilistic local residence shifts; sparse residence history; generic local construction/site improvement; retrospective `SettlementNucleusView` clustering.
+**New processes/views:** residential anchors; probabilistic residence shifts; sparse residence history; generic site improvement; retrospective `SettlementNucleusView` clustering.
 
-**New invariants:** residence != settlement; settlement nucleus != named village/town/city; construction != building type; local movement != migration; derived clustering must not itself create causal advantage.
+**Invariants:** residence != settlement; settlement nucleus != named village/town/city; construction != building type; local movement != migration; derived clustering cannot create causal advantage.
 
 **Reference:** `docs/EMERGENT_SETTLEMENT_NUCLEI.md`.
 
@@ -147,13 +145,11 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-10 — M13 Distributed background population field
 
-**Intent:** make population a terrain-distributed state that exists before settlements and can evolve in quiet/unresolved regions without materializing every person.
+**Intent:** make population terrain-distributed state that exists before settlements and evolves in quiet/unresolved regions without one object per person.
 
-**New substrate/processes:** `PopulationField` raster; terrain-weighted population distribution; local capacity; density-dependent growth; neighbour redistribution; materialized household homes sampled from the field.
+**New substrate/processes:** `PopulationField`; terrain-weighted distribution; local capacity; density-dependent growth; neighbour redistribution; household-home sampling from the field.
 
-**New invariants:** population != settlement; population hotspot != settlement; aggregate population != materialized people; quiet regions continue demographic evolution at aggregate resolution.
-
-**Scalability rationale:** a raster cell may stand for zero to many thousands of unresolved people. Detailed persons/households remain a selective refinement layer.
+**Invariants:** population != settlement; population hotspot != settlement; aggregate population != materialized people; quiet regions continue demographic evolution at aggregate resolution.
 
 **Reference:** `docs/DISTRIBUTED_POPULATION_FIELD.md`.
 
@@ -161,20 +157,11 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-10 — M14 Authoritative aggregate population field
 
-**Intent:** eliminate the temporary double demographic truth. `PopulationField` becomes the only authoritative aggregate population state; legacy settlement population values become read-only-in-principle derived summaries used only by older layers during migration away from bootstrap settlements.
+**Intent:** eliminate double demographic truth. `PopulationField` becomes the only authoritative aggregate state; legacy settlement populations become compatibility projections.
 
-**New views/processes:**
-- `PopulationSummaryView` reports population, capacity, suitability and cell count over a derived compatibility partition;
-- a nearest-anchor partition assigns land cells to old bootstrap points only for reporting; it explicitly has no territorial, political or causal semantics;
-- legacy `settlement.population` values are overwritten from field summaries rather than advanced independently;
-- harvest/food-pressure summaries are derived from field population/capacity and exposed to old social systems as compatibility inputs;
-- demographic growth advances the raster exactly once per year;
-- inherited background-population stepping is disabled to prevent a second demographic clock;
-- old settlement-to-settlement migration is disabled because mutating summary values would create a second population truth; future long-range migration must transfer population directly on the raster/route substrate.
+**Changes:** reporting-only nearest-anchor summaries; one demographic clock; compatibility harvest signals from raster population/capacity; legacy settlement migration disabled in the authoritative slice.
 
-**New invariants:** `PopulationField` is authoritative aggregate demography; compatibility summaries cannot feed population back into the field; reporting partition != region != border != territory; legacy settlement population is projection, not state; demographic change occurs once per simulation time step.
-
-**Validation:** corrupting a legacy population summary cannot alter the field; field growth occurs once per year; derived summaries cover field total up to rounding; legacy migration no longer mutates demographic state; full lower-layer CI plus dedicated authoritative-demography run passed.
+**Invariants:** compatibility summaries cannot feed population back into the field; reporting partition != region/border/territory; legacy settlement population is projection, not state.
 
 **Reference:** `docs/AUTHORITATIVE_POPULATION_FIELD.md`.
 
@@ -182,13 +169,11 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-10 — M15 Deterministic semantic replay foundation
 
-**Intent:** ensure adaptive resolution cannot perturb unrelated history merely because technical identifiers or container iteration order change. Same root seed must reproduce the same simulated causal history before large-scale materialization/dematerialization is introduced.
+**Intent:** same seed/config/code must reproduce the same semantic history before adaptive resolution becomes widespread.
 
-**Changes:** deterministic context-local identifiers for structural actors; deterministic settlement, household and organization identifiers; deterministic graph traversal; replay fingerprint over world state, event sequence, demographic raster and emergent nuclei.
+**Changes:** deterministic structural identifiers where ordering matters; deterministic graph traversal; normalized semantic replay fingerprint over state/events/raster/nuclei.
 
-**New invariants:** same seed + same configuration + same code must produce the same semantic history; UUID/token value must not influence causal decisions; unordered container traversal must not choose who consumes a random draw; technical identifiers may remain opaque only when causally inert.
-
-**Validation:** complete authoritative-demography world executed twice in one process with the same seed produced identical normalized fingerprints; a different seed diverged; full CI passed.
+**Invariants:** technical IDs cannot influence causal outcomes; unordered traversal cannot decide who consumes a draw.
 
 **Reference:** `docs/DETERMINISTIC_REPLAY_FOUNDATION.md`.
 
@@ -196,16 +181,38 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-10 — M16 Stable keyed RNG substreams
 
-**Intent:** make stochastic history safe under adaptive resolution. Refining one actor, process or region must not shift unrelated outcomes merely because additional random numbers were consumed.
+**Intent:** local refinement must not perturb unrelated stochastic history through a shared random cursor.
 
-**New primitive:** `SeedStreams` derives Python and NumPy generators from the root seed plus canonical semantic keys using BLAKE2; scoped namespaces provide domain-level isolation. Python's process-randomized `hash()` is never part of seed derivation.
+**New primitive:** `SeedStreams` derives independent Python/NumPy streams from root seed + canonical semantic keys with stable BLAKE2 hashing.
 
-**Current integration:** population-field initialization and initial household placement use separate keys; aggregate demography is keyed by year; compatibility harvest shocks by anchor/year; household relocation and local construction by household/year/process; individual movement/activity by person/year/location; encounter ranking/outcome by cell/year/pair.
+**Integration:** population initialization/demography, harvests, household relocation/construction, individual movement/activity and pair encounters use keyed scopes.
 
-**New invariants:** unrelated random scopes cannot advance each other; semantic RNG keys must be stable; each decision key must include enough causal scope to prevent accidental draw reuse; local refinement may affect distant history only through explicit causal propagation, never shared RNG cursor position.
-
-**Validation:** same-key streams replay identically; distinct keys remain separate; 10,000 draws in an unrelated stream do not change a target draw; a complete authoritative-demography run is unchanged after injecting 50,000 unrelated adaptive-detail draws. Full CI passed with 65 tests.
-
-**Next dependency:** adaptive materialization accounting must reserve population from the authoritative raster when detailed people are instantiated and return compatible population when detail is collapsed. This creates a genuine multi-resolution demographic representation rather than two populations.
+**Validation:** unrelated streams can consume tens of thousands of draws without changing the target stream or the reference authoritative world.
 
 **Reference:** `docs/KEYED_RNG_SUBSTREAMS.md`.
+
+---
+
+## 2026-08-10 — M17 Adaptive population accounting
+
+**Intent:** make detailed people a true high-resolution representation of the same authoritative physical population rather than a second population universe.
+
+**New substrate/processes:**
+- `PopulationField.reserved` records the portion of physical population represented by detailed people;
+- `PopulationRefinementLedger` maps each detailed person to the cell backing that representation;
+- materializing existing people reserves aggregate population without changing headcount;
+- dematerialization releases representation without changing headcount;
+- detailed birth adds one unit to total and reserved population;
+- detailed death removes one unit from both;
+- detailed household residence movement transfers both physical and reserved population between cells;
+- aggregate demographic growth/mobility in the refined slice is applied only to unresolved population, preventing detailed people from being simulated twice.
+
+**Core identity:** `total population = unresolved population + materialized population`.
+
+**Invariants:** resolution change != demographic event; birth/death are demographic events exactly once; materialized movement changes spatial population but conserves global population; every living detailed person must have exactly one active backing record; aggregate dynamics must exclude reserved people.
+
+**Validation:** full CI is green. The 24-year reference run ended with total population 9,443.701, materialized population 38, unresolved population 9,405.701, accounting gap 0.0, 38 living detailed people and 38 active refinement records; it included 8 detailed births and 14 residence shifts.
+
+**Next dependency:** demographic cohorts. The unresolved layer must carry age/reproductive composition so future materialization samples locally coherent people and dematerialization can return demographic structure without information loss.
+
+**Reference:** `docs/ADAPTIVE_POPULATION_ACCOUNTING.md`.
