@@ -1,6 +1,6 @@
 from random import Random
 
-from simworld.culture.conventions import ConventionState, evolve_convention
+from simworld.culture.conventions import ConventionState, cluster_conventions, evolve_convention
 from simworld.culture.knowledge import KnowledgeState, KnowledgeUnit, decay_knowledge, transmit_knowledge
 from simworld.culture.technology import Affordance, InnovationContext, innovation_probability
 
@@ -134,3 +134,16 @@ def test_identity_resistance_reduces_but_does_not_define_group() -> None:
         rng=Random(2),
     )
     assert low.distance(b) < high.distance(b)
+
+
+def test_cluster_count_is_derived_not_preassigned() -> None:
+    states = {
+        "a": ConventionState((0.10, 0.10)),
+        "b": ConventionState((0.12, 0.15)),
+        "c": ConventionState((0.88, 0.90)),
+        "d": ConventionState((0.84, 0.87)),
+    }
+    strict = cluster_conventions(states, compatibility_threshold=0.85)
+    permissive = cluster_conventions(states, compatibility_threshold=0.10)
+    assert len(strict) == 2
+    assert len(permissive) == 1
