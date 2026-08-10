@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
-from uuid import uuid4
+
+from simworld.core.ids import next_id
 
 
 def new_entity_id() -> str:
-    return f"ent_{uuid4().hex}"
+    return next_id("ent")
 
 
 @dataclass(slots=True)
