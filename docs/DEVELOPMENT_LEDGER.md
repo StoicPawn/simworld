@@ -197,22 +197,81 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** make detailed people a true high-resolution representation of the same authoritative physical population rather than a second population universe.
 
-**New substrate/processes:**
-- `PopulationField.reserved` records the portion of physical population represented by detailed people;
-- `PopulationRefinementLedger` maps each detailed person to the cell backing that representation;
-- materializing existing people reserves aggregate population without changing headcount;
-- dematerialization releases representation without changing headcount;
-- detailed birth adds one unit to total and reserved population;
-- detailed death removes one unit from both;
-- detailed household residence movement transfers both physical and reserved population between cells;
-- aggregate demographic growth/mobility in the refined slice is applied only to unresolved population, preventing detailed people from being simulated twice.
+**New substrate/processes:** `PopulationField.reserved`; `PopulationRefinementLedger`; reserve/release without demographic change; detailed birth/death accounting; detailed residence population transfer; unresolved-only aggregate demography.
 
 **Core identity:** `total population = unresolved population + materialized population`.
 
-**Invariants:** resolution change != demographic event; birth/death are demographic events exactly once; materialized movement changes spatial population but conserves global population; every living detailed person must have exactly one active backing record; aggregate dynamics must exclude reserved people.
-
-**Validation:** full CI is green. The 24-year reference run ended with total population 9,443.701, materialized population 38, unresolved population 9,405.701, accounting gap 0.0, 38 living detailed people and 38 active refinement records; it included 8 detailed births and 14 residence shifts.
-
-**Next dependency:** demographic cohorts. The unresolved layer must carry age/reproductive composition so future materialization samples locally coherent people and dematerialization can return demographic structure without information loss.
+**Invariants:** resolution change != demographic event; birth/death are demographic events exactly once; every living detailed person must have exactly one active backing record; aggregate dynamics exclude reserved people.
 
 **Reference:** `docs/ADAPTIVE_POPULATION_ACCOUNTING.md`.
+
+---
+
+## 2026-08-10 — M18 Unresolved demographic cohorts
+
+**Intent:** give unresolved/background population enough biological-demographic structure to evolve realistically while preserving adaptive resolution and one authoritative population truth.
+
+**New substrate/processes:** unresolved population split into age bands and minimal reproductive biological classes per cell; cohort aging; age-specific mortality; aggregate births; local mobility preserving cohort composition; authoritative population reconstructed from reserved detailed population + unresolved cohort totals.
+
+**Invariants:** detailed people and unresolved cohorts are alternative resolution representations of the same population; cohort processes never re-simulate reserved people; biological reproductive class is not gender identity or social role.
+
+**Validation:** dedicated M18 tests require non-negative cohort evolution, exact unresolved partitioning and consistency with authoritative population.
+
+**Next dependency:** cohort-aware materialization/dematerialization.
+
+---
+
+## 2026-08-10 — M19 Cultural knowledge, convention dynamics and technical affordances
+
+**Intent:** establish one generic substrate from which technological traditions, languages, religions and identities can later emerge without assigning those historical categories as primitive labels.
+
+**Architecture decision:** SimWorld hard-codes constraints and **possibility spaces**, not historical outcomes. Full first-principles chemistry/biology/physics discovery is intentionally out of scope for the initial engine; technology therefore uses data-defined technical affordances rather than a chronological tech tree.
+
+**New primitives/processes:**
+- `KnowledgeUnit`: generic transmissible know-how/convention/practice unit with complexity, demonstrability and mutation parameters;
+- actor-specific `KnowledgeState` with partial mastery, confidence, source and transmission generation;
+- sparse `KnowledgeLedger`;
+- imperfect `transmit_knowledge()` driven by source mastery, trust, communication compatibility, exposure, demonstrability and complexity;
+- transmission can fail or create only partial mastery;
+- `decay_knowledge()` allows unused/unreinforced knowledge to weaken and disappear while practice/social reinforcement/records improve retention;
+- generic continuous `ConventionState` for learned conventions without declaring them linguistic/religious/etc.;
+- contact-driven convention convergence and isolation-driven stochastic drift;
+- retrospective `ConventionClusterView` / `cluster_conventions()` detect compatibility clusters but have no causal force;
+- `Affordance`: data-defined technical possibility with material, prior-capability and environmental requirements;
+- `InnovationContext` and bounded innovation probability from actual opportunity, experience, experimentation, contact and problem pressure;
+- `AffordanceCatalog` loads technical possibility definitions from JSON, separating simulation mechanics from catalog growth;
+- initial low-level catalog in `configs/affordances/foundation.json` demonstrates controlled heat processing, fired clay, managed water channels and ore reduction as independent possibilities rather than historical eras;
+- `attempt_innovation()` creates/improves knowledge **only for the discovering actor**; it never changes a global civilization technology level;
+- hard prerequisites failing implies zero discovery probability;
+- prerequisites passing still does not guarantee discovery.
+
+**Language design:** future languages/dialects will be derived from bundles of communicative conventions and mutual intelligibility. Contact, mobility, trade, family transmission, prestige, administration and education can promote convergence; isolation, drift, local networks and identity resistance can promote divergence. Valid runs may have one broad language network or many; no language-count target exists.
+
+**Religion design:** future religions/cults will be derived from lower-level beliefs, narratives, rituals, prescriptions, norms, symbols, trusted transmitters and institutions. Private belief, ritual participation and social membership remain distinct.
+
+**Identity/ancestry design:** biological ancestry, inherited phenotype and actor-created social identity are separate. Human ethnicity/race-like categories are social classifications, never automatic biological labels. Truly different fantasy species may be biological primitives only if physically present in the world definition.
+
+**Technology design:** high-level historical labels such as agriculture, metallurgy, navigation or industrialization should be derived capability bundles. Individual techniques may be independently discovered, remain local, spread, mutate, combine, disappear or be rediscovered. `possible != discovered != widespread != retained`.
+
+**Equilibrium/path-dependence rule:** there is no target equilibrium such as one language or inevitable technological progress. Convergence, divergence, persistence and loss compete locally. Temporary attractors may form and later dissolve.
+
+**New invariants:**
+- hard-code laws/constraints/opportunity spaces, not historical outcomes;
+- knowledge possessed by one actor is not society-wide knowledge;
+- knowledge may be incomplete, wrong, lost or rediscovered;
+- language != primitive population label;
+- religion != primitive population label;
+- biological ancestry != phenotype != social identity;
+- technological affordance != discovery;
+- discovery != diffusion;
+- discovery modifies actor knowledge, not a universal tech level;
+- no chronological tech tree in the causal kernel;
+- no automatic technological progress;
+- no target number of languages/religions/cultures/technologies;
+- derived cultural clusters cannot create causal advantage merely because they were detected.
+
+**Validation added:** tests cover data catalog loading, zero innovation opportunity without required materials, low/non-guaranteed discovery with prerequisites, actor-local innovation, imperfect/partial knowledge transmission, practice-sensitive knowledge decay, contact convergence versus isolated drift, identity resistance, and derived cluster counts changing with actual convention similarity rather than preassignment.
+
+**Known limitation:** M19 is still a generic substrate rather than a fully integrated cultural world loop. Knowledge must next connect to detailed people, actual activity experience, encounters, parent-child socialization, death, records and aggregate cultural state for unresolved population. Affordance requirements must progressively bind to actual material/environmental properties instead of placeholder capability names.
+
+**Reference:** `docs/CULTURE_TECHNOLOGY_FOUNDATION.md`.

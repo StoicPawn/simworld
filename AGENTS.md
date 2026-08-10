@@ -1,6 +1,6 @@
 # SimWorld agent constitution
 
-This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/MATERIAL_ECONOMY_FOUNDATION.md`, `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`, `docs/DEVELOPMENT_LEDGER.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
+This file contains permanent rules for coding agents working in this repository. Read it together with `docs/PROJECT_MATRIX.md`, `docs/SPATIAL_FOUNDATION.md`, `docs/EPISTEMIC_CULTURAL_FOUNDATION.md`, `docs/KINSHIP_SOCIAL_NETWORK_FOUNDATION.md`, `docs/MATERIAL_ECONOMY_FOUNDATION.md`, `docs/INSTITUTIONAL_AUTHORITY_FOUNDATION.md`, `docs/CULTURE_TECHNOLOGY_FOUNDATION.md`, `docs/DEVELOPMENT_LEDGER.md`, `.agent/project_state.md`, `.agent/roadmap.yaml`, and `.agent/rules.yaml` before changing code.
 
 ## Mission
 
@@ -26,7 +26,7 @@ DECISIONS / ACTIONS
 CHANGED WORLD STATE
 ```
 
-The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Ownership is not control. Organization is not statehood. Read the relevant foundation document before changing each domain.
+The map is causal state, not decoration. Actor knowledge is not world truth. Biological descent is not social identity. Ownership is not control. Organization is not statehood. Cultural categories are not primitive population labels. Read the relevant foundation document before changing each domain.
 
 ## Architectural invariants
 
@@ -65,24 +65,36 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 33. **Birth creates parenthood, not romance.** Offspring establishes biological parent links and a co-parent relation, but not mandatory love, marriage, trust or cooperation.
 34. **Social graphs are multiplex and temporal.** Friendship, rivalry, intimacy, care, dependence, trust, employment, debt and political ties may coexist between the same actors and change over time.
 35. **Networks contain networks.** Higher-order connections must be queryable; friends-of-friends, in-laws, patrons, creditors and story-carriers may create causal pathways.
-36. **Family/house/dynasty are emergent categories.** Never use biological descent alone as a primitive political unit. Derive them from descent plus social cohesion, property, memory, names, institutions and recognition when applicable.
+36. **Family/house/dynasty are emergent categories.** Never use biological descent alone as a primitive political unit. Derive them from descent plus social cohesion, resources, memory, names, institutions and recognition when applicable.
 37. **Lineages can branch or dissolve.** Related branches may become separate institutions; unrelated people may be incorporated; kin can become enemies.
 38. **Kinship may influence information flow, never guarantee truth.** High family trust can preserve stories and falsehoods alike.
 39. **Household is not kinship.** Co-residence and resource sharing may include unrelated people and may change independently of genealogy.
 40. **Conception is not birth.** Gestation and pregnancy outcome are processes with their own state and uncertainty.
 41. **Relationships evolve.** Strength, sentiment, trust, dependence, separation and reconciliation must be historical processes rather than permanent labels.
-42. **Inheritance is multi-dimensional.** Property, debt, names, offices, claims and narrative custody may pass differently and to different people.
+42. **Inheritance is multi-dimensional.** Property-like claims, debt, names, offices, claims and narrative custody may pass differently and to different people.
 43. **Succession is not blood-only.** Biology, dependence, social ties, expressed intent, norms, institutions, power and recognition can compete; no universal single-heir function is allowed.
 44. **Life-process detail must scale adaptively.** Do not require every aggregate person in a planet-scale simulation to be permanently materialized as a full agent.
-45. **Material categories stay distinct.** Resource truth, access, possession, ownership, effective control, productive capacity, inventory, wealth and actor beliefs about them are different states.
+45. **Material categories stay distinct.** Resource truth, access, possession, use, control, claim, inventory, wealth and actor beliefs about them are different states.
 46. **Scarcity is not a scripted social event.** It changes constraints and incentives but never directly calls revolt, migration, trade, repression or another prescribed response.
-47. **Property is historical.** Rights are temporal, partial, typed and may later be contested; do not overwrite provenance.
+47. **Property is historical.** Formal property is derived from more elementary possession/use/control/claim/recognition/enforcement; do not project universal legal title into the kernel.
 48. **Economic specialization should emerge.** Prefer continuous heterogeneity, geography, learning and accumulated advantages over unexplained permanent castes.
 49. **Obligation is not consent.** A duty may be accepted, tolerated, disputed, imposed, misunderstood or unknown to third parties.
 50. **Compliance is not legitimacy.** Compliance may arise from trust, dependency, norms, incentives, fear, coercion or error.
 51. **Dependency is not loyalty.** Material or informational dependence may create effective power without affection or political identification.
 52. **Organization is not statehood.** Generic organizations may remain economic, familial, religious, military or mixed; size and durability alone never make a state.
 53. **Authority is derived, domain-specific and distinct from legitimacy.** Track compliance, dependency, recognition, provision and coercion separately. Economic authority does not automatically imply military, religious or territorial authority.
+54. **Hard-code constraints and opportunity spaces, not historical outcomes.** A domain model may define what is possible, but it must not prescribe which civilization or trajectory will appear.
+55. **Knowledge is actor-specific and degradable.** A discovery possessed by one actor is not society-wide knowledge. Knowledge may transmit imperfectly, mutate, decay, disappear and be rediscovered.
+56. **Technological possibility is not technological discovery.** Meeting physical/cognitive prerequisites only opens an opportunity; it must never guarantee an innovation event.
+57. **No chronological tech tree in the causal kernel.** Technical possibilities may be data-defined affordances with physical/material/capability requirements, but history chooses ordering, diffusion and loss.
+58. **No automatic technological progress.** Runs with little or no innovation are valid. Independent rediscovery and technological regression are valid.
+59. **Language is not a primitive population label.** Future languages/dialects are derived from bundles of communicative conventions and mutual intelligibility. A detected language cluster has no causal force by itself.
+60. **Cultural convergence and divergence compete.** Contact, prestige, mobility and institutions may increase convergence; isolation, drift, local inheritance and resistance may increase divergence. Do not target a desired number of languages or cultures.
+61. **Religion is not a primitive assignment.** Derive future religious/cult structures from beliefs, narratives, ritual practices, norms, symbols, transmitters and institutions. Private belief, participation and group identity remain distinct.
+62. **Biological ancestry, phenotype and social identity are distinct.** Never infer ethnicity/race-like social categories automatically from inherited phenotype. Actor-created classifications and identities belong to the social layer.
+63. **Fantasy species are separate from human social race categories.** Genuinely distinct biological species may be world-definition primitives only if the simulated universe physically contains them.
+64. **Derived cultural labels are analytical views until actors institutionalize them.** An analyst detecting a cluster must not make that cluster more causally likely to persist.
+65. **Cultural state must scale adaptively.** Detailed people may carry sparse individual knowledge; unresolved populations need aggregate summaries later so quiet regions can culturally evolve without one object per person.
 
 ## Development discipline
 
@@ -99,6 +111,8 @@ The map is causal state, not decoration. Actor knowledge is not world truth. Bio
 - Epistemic/social foundations must be used rather than bypassed by later political actors, families, institutions and cultures.
 - Never model houses/dynasties as unexplained containers if membership can be derived from biological/social/economic/institutional relations.
 - Never model a state merely by renaming an organization; territorial control, recognition, extraction/provision, coercive capacity and institutional persistence must be explicit substrates.
+- For technology, prefer a data-defined affordance catalog over domain-specific `if era/year then unlock` code.
+- For language/religion/identity, implement lower-level transmission and clustering first; do not add primitive macro labels merely to make reports visually interesting.
 
 ## Mandatory validation
 
@@ -111,7 +125,7 @@ When configured, also run formatting/lint/type checks through `scripts/validate.
 
 ## Git and PR rules
 
-- Agent branches use `agent/<run-id>-<slug>`.
+- Agent branches use `agent/<run-id>-<slug>` when executed by the autonomous coding loop; manually staged simulation branches may use the repository milestone naming convention.
 - Never force-push `main`.
 - No automatic merge to `main` unless repository policy is explicitly changed by a human.
 - Before commit/push inspect `git status` and `git diff`.
