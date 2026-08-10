@@ -2,9 +2,9 @@
 
 ## Current phase
 
-**Microgeography + material disequilibrium + institutional emergence active**
+**Microgeography + emergent residential nuclei + material/institutional foundations active**
 
-The repository now has eleven connected foundations:
+The repository now has twelve connected foundations:
 
 1. causal/event kernel;
 2. remote automation;
@@ -16,7 +16,8 @@ The repository now has eleven connected foundations:
 8. obligations, cooperation, generic organizations and derived authority/legitimacy;
 9. household storage, spoilage, heterogeneous demand and local material shocks;
 10. pre-legal asset relations: possession, use, control, claim and recognition;
-11. terrain-derived hydrology, cell-level resources, individual local movement/co-presence and sparse emergent-place history.
+11. terrain-derived hydrology, cell-level resources, local movement/co-presence and sparse place history;
+12. persistent household residence, relocation/site improvement and derived residential nuclei.
 
 Every material milestone must be recorded in `docs/DEVELOPMENT_LEDGER.md`.
 
@@ -27,13 +28,15 @@ TIME + FINE SPACE
     ↓
 TERRAIN / WATER / DRAINAGE / LOCAL RESOURCES
     ↓
-INDIVIDUAL + HOUSEHOLD LOCATION / MOVEMENT / USE
+INDIVIDUALS + HOUSEHOLDS
     ↓
-CO-PRESENCE / ENCOUNTER / PRODUCTION / CONFLICT
+RESIDENCE ↔ LOCAL EXCURSIONS / USE / ENCOUNTERS
     ↓
 SPARSE CELL HISTORY
     ↓
-DERIVED PLACE VIEWS
+RESIDENCE / PRODUCTION / EXCHANGE / CONFLICT / CONSTRUCTION SIGNALS
+    ↓
+DERIVED PLACE VIEWS + RESIDENTIAL NUCLEI
     ↓
 ASSETS / CLAIMS / INVENTORIES / OBLIGATIONS
     ↓
@@ -41,73 +44,62 @@ MEMORY / BELIEF / RELATIONSHIPS / GENERATIONS
     ↓
 COOPERATION / ORGANIZATIONS / AUTHORITY
     ↓
-FUTURE: EMERGENT SETTLEMENTS / MARKETS / HOUSES / STATES
+FUTURE: NAMED SETTLEMENTS / MARKETS / HOUSES / STATES AS EMERGENT STRUCTURES
 ```
 
-## Microgeography foundation
+## M12 residence and settlement de-hardcoding
 
-Physical geography now includes continuous `river_strength`, nearby `freshwater_access` and spatially patchy `coastal_food`. These are physical affordances, not labels such as river town, port or good fishing beach.
+A household now has a persistent residential anchor that is distinct from an individual's short-range activity location. Annual micro-activity is treated as an excursion from that anchor, so random walk drift is not mistaken for migration.
 
-`CellActivityLedger` is sparse. Only used cells acquire social history. It tracks channels such as visits, gathering, cultivation, exchange, conflict and construction. `PlaceView` is derived from accumulated history and does not itself cause events.
+Households can probabilistically shift residence toward nearby cells that offer persistently better physical/material opportunities. Residence and generic site improvement are recorded in the existing sparse cell ledger.
 
-Materialized individuals now have local cell positions in the microgeography vertical slice. Short-range movement is influenced by physical affordances and familiarity. Co-presence creates encounter opportunities; friendly/neutral/hostile outcomes may modify the multiplex social network.
+`SettlementNucleusView` clusters adjacent residentially used cells and summarizes actors, persistence, residence, production, exchange, construction and conflict. It is a retrospective projection only: it does not create a village/town/city object and cannot itself affect causal probability.
 
-## Complexity rule
-
-Prefer **small generic primitives + derived historical structures**.
-
-Do not add `Market`, `Village`, `House`, `NobleFamily`, `State`, `Port` or similar concepts merely because an observer could name a configuration that way. First ask whether the phenomenon can be reconstructed from physical state, actors, relations, repeated activity, memory, recognition and institutions.
-
-Formal property remains derived from possession/use/control/claim/recognition plus later norms/enforcement. Documents are evidence/information, not truth.
+Bootstrap `settlement` entities still exist because older vertical slices need them for initial aggregate population and founder placement. They are now explicitly compatibility coordinates, not proof that a social settlement already exists.
 
 ## Critical invariants
 
 - world truth != actor knowledge;
 - terrain label != historical role;
 - place != place type;
+- residence != settlement;
+- settlement nucleus != named settlement;
+- construction != building type;
+- local movement != migration;
+- derived views must not create causality;
 - asset != property;
 - possession != use != control != claim;
 - claim != recognition != enforcement;
 - document != truth;
-- movement != guaranteed interaction;
-- co-presence != friendship/conflict;
-- need/shock != prescribed action;
+- co-presence != relationship;
 - kinship != household != loyalty != political identity;
 - organization != state;
 - authority != legitimacy;
 - never tune event quotas to obtain a desired storyline;
-- social state over the planet-scale map must stay sparse/adaptive;
-- prefer derived concepts over hard-coded historical categories.
-
-## Important transitional limitation
-
-The current vertical slices still seed coarse `settlement` entities before individual history. This is now the largest conceptual mismatch with the ultimate micro→macro objective. The next population/spatial refactor should allow residence clusters and settlements to arise from repeated household/person location, infrastructure and activity, while unresolved background population remains aggregate.
+- social state over planet-scale space must remain sparse/adaptive;
+- prefer generic primitives and derived structures.
 
 ## Next work toward the ultimate objective
 
-1. validate M11 and compare whether high-activity cells correlate with physical affordances without being predetermined by them;
-2. de-hardcode settlements into derived residence/activity clusters with adaptive materialization;
-3. household relocation, persistent dwellings/site improvements and abandonment;
-4. individual movement over longer paths, not only local excursions;
-5. connect exchange/credit opportunities to actual co-presence and routes;
+1. validate M12 across seeds and inspect whether nuclei relocate/concentrate around terrain affordances without being predetermined;
+2. remove bootstrap settlements from initial population placement: use a distributed population field over habitable terrain;
+3. adaptive person/household materialization around causally relevant cells and nuclei;
+4. household fission/fusion, abandonment and true migration over route networks;
+5. connect exchange/credit to actual co-presence and transport routes;
 6. cell/area possession/use/control/claims using generic asset relations;
-7. deterministic RNG substreams by actor/process/domain;
-8. richer ecology/resources and terrain dynamics: drainage networks, flood/drought, soils, renewable stocks;
-9. norms, sanctions, offices, evidence/documents and dispute resolution only as organizations acquire those capabilities;
-10. emergent family/house recognition from people + genealogy + memory + resources + names + outsider recognition;
-11. organization competition/protection/extraction and spatial authority;
-12. territorial claims/borders and state detection as derived configurations;
-13. diplomacy/conflict under imperfect beliefs;
-14. counterfactuals, inverse inference and real-world calibration.
+7. persistent site improvements refined into specific assets only when causally relevant;
+8. deterministic RNG substreams by actor/process/domain;
+9. richer ecology/resources and terrain dynamics;
+10. norms, offices, evidence/documents and dispute resolution only as organizations acquire those capabilities;
+11. emergent family/house recognition from people + genealogy + memory + resources + names + outsider recognition;
+12. organization competition/protection/extraction and spatial authority;
+13. territorial claims/borders and state detection as derived configurations;
+14. diplomacy/conflict under imperfect beliefs;
+15. counterfactuals, inverse inference and real-world calibration.
 
 ## Complexity budget
 
-Before adding a primitive, ask:
-1. Can it be state, relation, process, observation or derived view over existing primitives?
-2. Does it exist independently of the era/institution being simulated?
-3. Does it eliminate special cases rather than create them?
-
-If not, keep it derived.
+Before adding a primitive, ask whether it can instead be state, relation, process, observation or derived view over existing primitives, whether it exists independently of the era/institution, and whether it removes rather than adds special cases.
 
 ## Temporary naming warning
 
