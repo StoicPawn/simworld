@@ -8,6 +8,7 @@ import numpy as np
 
 from simworld.core.entity import Entity
 from simworld.core.event import Event
+from simworld.core.ids import reset_id_scope
 from simworld.core.world import WorldState
 from simworld.geography import GeneratedWorld, generate_world
 from simworld.spatial import CellCoord, GridSpec
@@ -72,6 +73,7 @@ class FirstWorldSimulation:
     def initialize(self) -> None:
         if self.settlement_ids:
             return
+        reset_id_scope()
         selected: list[CellCoord] = []
         min_spacing = max(4.0, min(self.config.width, self.config.height) / max(4.0, self.config.settlements**0.5 * 2.2))
 
