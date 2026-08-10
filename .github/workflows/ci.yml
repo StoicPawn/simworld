@@ -44,3 +44,6 @@ jobs:
       - name: Emergent residential nuclei simulation
         run: >-
           python scripts/run_emergent_settlement_world.py --seed 104729 --years 24 --width 48 --height 36 --settlements 5 --output /tmp/simworld-emergent-settlement-world
+      - name: Distributed population field simulation
+        run: >-
+          python scripts/run_distributed_population_world.py --seed 104729 --years 24 --width 48 --height 36 --settlements 5 --output /tmp/simworld-distributed-population-world

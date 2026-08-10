@@ -138,26 +138,43 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 **Intent:** remove the next major hard-coded macro category by letting inhabited nuclei arise from household residence and local history rather than a `create_settlement()` decision.
 
 **New processes/views:**
-- each materialized household has a persistent residential anchor distinct from short-range excursions;
-- annual local activity starts from that residence, preventing random-walk drift from masquerading as migration;
-- households may probabilistically relocate toward nearby cells with persistently better physical/material affordances;
-- residence is recorded sparsely in the cell activity ledger;
-- generic `local_construction` records persistent site improvement without declaring building type;
-- adjacent residentially used cells are clustered retrospectively into `SettlementNucleusView` projections;
-- nucleus projections contain centre, cells, actors, persistence, residence, production, exchange, construction and conflict signals.
+- persistent household residential anchors distinct from short-range excursions;
+- probabilistic local residence shifts;
+- sparse residence history;
+- generic local construction/site improvement;
+- retrospective `SettlementNucleusView` clustering.
 
-**New invariants:**
-- residence != settlement;
-- settlement nucleus != named village/town/city;
-- construction != building type;
-- local movement != migration;
-- derived clustering must not itself create causal advantage;
-- bootstrap settlements are compatibility coordinates, not social truth.
+**New invariants:** residence != settlement; settlement nucleus != named village/town/city; construction != building type; local movement != migration; derived clustering must not itself create causal advantage.
 
-**Scalability:** no dense settlement layer is introduced. Residence/construction reuse the sparse cell ledger; only active cells participate in nucleus derivation.
-
-**Validation target:** cluster derivation, persistent residence, relocation/construction events, integrated multi-year run and dedicated CI slice.
-
-**Known limitation / next dependency:** initial aggregate population and founder placement still originate from bootstrap settlements. The next population refactor should distribute unresolved population over habitable terrain and materialize people/households around causally relevant cells/nuclei, so emergent nuclei become the primary anchors rather than compatibility settlements.
+**Known limitation:** aggregate population and founder placement still originate from bootstrap settlements.
 
 **Reference:** `docs/EMERGENT_SETTLEMENT_NUCLEI.md`.
+
+---
+
+## 2026-08-10 — M13 Distributed background population field
+
+**Intent:** make population a terrain-distributed state that exists before settlements and can evolve in quiet/unresolved regions without materializing every person.
+
+**New substrate/processes:**
+- `PopulationField` raster containing aggregate population, local capacity and physical suitability;
+- initial population distribution depends on continuous habitability, fertility, freshwater, coastal food and timber plus bounded micro-variation;
+- water cells carry no land population;
+- density-dependent local growth and small demographic noise;
+- limited neighbour redistribution under local crowding, weighted by suitability and available capacity;
+- materialized households are sampled from the population field rather than being forced onto legacy settlement coordinates;
+- annual `background_population_change` events summarize aggregate demographic evolution without emitting per-cell event floods.
+
+**New invariants:**
+- population != settlement;
+- population hotspot != settlement;
+- aggregate population != materialized people;
+- settlement labels must not determine where population is allowed to exist;
+- materialization must refine existing aggregate population rather than create population conceptually from nothing;
+- quiet regions continue demographic evolution at aggregate resolution.
+
+**Scalability rationale:** a raster cell may stand for zero to many thousands of unresolved people. Detailed persons/households remain a selective refinement layer. This avoids one Python object per human while preserving planet-scale background causality.
+
+**Transitional limitation:** legacy settlement population totals still evolve in lower layers and are not yet derived from the raster, so there are temporarily two aggregate demographic representations. M14 should make the raster authoritative and turn settlement totals into regional/derived summaries, then materialize/dematerialize people adaptively around causally important cells and nuclei.
+
+**Reference:** `docs/DISTRIBUTED_POPULATION_FIELD.md`.

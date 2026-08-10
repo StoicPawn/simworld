@@ -1,6 +1,6 @@
 project: simworld
-version: 11
-current_phase: emergent_residential_nuclei
+version: 12
+current_phase: distributed_background_population
 
 foundational_principles:
   geopolitical_by_construction: true
@@ -8,6 +8,8 @@ foundational_principles:
   time_and_space_are_coequal_substrates: true
   map_is_causal_state_not_decoration: true
   terrain_roles_are_emergent: true
+  population_precedes_settlements: true
+  aggregate_population_is_distinct_from_materialized_people: true
   place_types_are_derived_views: true
   settlements_are_derived_when_possible: true
   residence_is_not_settlement: true
@@ -130,11 +132,18 @@ phases:
       - sparse_residence_history
       - generic_local_construction
       - derived_residential_nuclei
-    remaining_capabilities:
       - distributed_population_raster
-      - bootstrap_settlement_removal
+      - terrain_weighted_population_initialization
+      - aggregate_density_dependent_growth
+      - local_background_population_redistribution
+      - household_home_sampling_from_population_field
+    remaining_capabilities:
+      - population_field_as_authoritative_demography
+      - bootstrap_settlement_population_removal
+      - derived_population_summaries_for_places_regions
       - demographic_cohorts
       - adaptive_person_materialization
+      - adaptive_person_dematerialization
       - settlement_founding_abandonment_from_activity
       - migration_of_materialized_people_and_households
       - household_fission_fusion
@@ -227,6 +236,9 @@ constraints:
   relevance_must_not_create_causality: true
   quiet_regions_continue_evolving: true
   support_simultaneous_events: true
+  aggregate_population_must_not_imply_settlement: true
+  population_hotspot_must_not_create_settlement: true
+  materialization_must_not_be_separate_population_truth: true
   actor_information_must_not_leak_world_truth: true
   needs_must_not_call_prescribed_actions: true
   communication_may_be_false_or_incomplete: true
