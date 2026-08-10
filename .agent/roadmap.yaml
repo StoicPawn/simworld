@@ -68,97 +68,26 @@ foundational_principles:
 phases:
   - id: phase_0_kernel
     status: implemented
-    capabilities:
-      - entity
-      - event
-      - world_state
-      - causal_graph
-      - relevance
-      - adaptive_resolution
-      - event_driven_scheduler
+    capabilities: [entity, event, world_state, causal_graph, relevance, adaptive_resolution, event_driven_scheduler]
 
   - id: phase_0_automation
     status: implemented
-    capabilities:
-      - permanent_agent_rules
-      - remote_workflow_dispatch
-      - bounded_agent_loop
-      - validation_pipeline
-      - simulation_dispatch_skeleton
-      - local_cloud_capability_routing
-      - ordered_development_ledger
+    capabilities: [permanent_agent_rules, remote_workflow_dispatch, bounded_agent_loop, validation_pipeline, simulation_dispatch_skeleton, local_cloud_capability_routing, ordered_development_ledger]
 
   - id: phase_1_core_foundations
     status: in_progress
-    implemented_capabilities:
-      - deterministic_structural_ids
-      - deterministic_graph_traversal
-      - same_seed_semantic_replay_regression
-      - stable_keyed_rng_substreams
-      - scoped_python_rng
-      - scoped_numpy_rng
-    remaining_capabilities:
-      - typed_relations
-      - state_delta_reducers
-      - serialization
-      - experiment_metadata
-      - byte_exact_replay_when_required
+    implemented_capabilities: [deterministic_structural_ids, deterministic_graph_traversal, same_seed_semantic_replay_regression, stable_keyed_rng_substreams, scoped_python_rng, scoped_numpy_rng]
+    remaining_capabilities: [typed_relations, state_delta_reducers, serialization, experiment_metadata, byte_exact_replay_when_required]
 
   - id: phase_2_spatial_foundation
     status: in_progress
-    implemented_capabilities:
-      - planar_coordinate_grid
-      - raster_grid_abstraction
-      - lazy_chunk_allocation
-      - aligned_spatial_layers
-      - neighbourhood_queries
-      - distance_utilities
-      - movement_cost_surface
-      - elevation_slope_movement_penalty
-      - passability_layer
-      - least_cost_routing_a_star
-      - sparse_cell_activity_ledger
-      - derived_place_views
-      - derived_residential_nucleus_clustering
-      - keyed_microgeography_rng
-    remaining_capabilities:
-      - coordinate_reference_system
-      - real_world_georeferencing
-      - chunk_persistence
-      - spatial_serialization
-      - region_views_over_cells
-      - sparse_spatial_indexes
-      - multi_resolution_tiles
-      - long_range_individual_route_execution
+    implemented_capabilities: [planar_coordinate_grid, raster_grid_abstraction, lazy_chunk_allocation, aligned_spatial_layers, neighbourhood_queries, distance_utilities, movement_cost_surface, elevation_slope_movement_penalty, passability_layer, least_cost_routing_a_star, sparse_cell_activity_ledger, derived_place_views, derived_residential_nucleus_clustering, keyed_microgeography_rng]
+    remaining_capabilities: [coordinate_reference_system, real_world_georeferencing, chunk_persistence, spatial_serialization, region_views_over_cells, sparse_spatial_indexes, multi_resolution_tiles, long_range_individual_route_execution]
 
   - id: phase_3_physical_geography
     status: in_progress
-    implemented_capabilities:
-      - generated_elevation
-      - slope
-      - land_water
-      - rainfall_baseline
-      - temperature_baseline
-      - fertility
-      - timber_truth
-      - ore_truth
-      - habitability
-      - accessibility
-      - terrain_derived_flow_accumulation
-      - continuous_river_strength
-      - freshwater_access
-      - spatially_patchy_coastal_food
-    remaining_capabilities:
-      - coastline_topology
-      - explicit_confluences_as_derived_queries
-      - floodplains
-      - lakes
-      - soils
-      - biomes
-      - renewable_resource_stocks
-      - dynamic_climate
-      - flood_drought_and_other_hazards
-      - material_properties_needed_by_technical_affordances
+    implemented_capabilities: [generated_elevation, slope, land_water, rainfall_baseline, temperature_baseline, fertility, timber_truth, ore_truth, habitability, accessibility, terrain_derived_flow_accumulation, continuous_river_strength, freshwater_access, spatially_patchy_coastal_food]
+    remaining_capabilities: [coastline_topology, explicit_confluences_as_derived_queries, floodplains, lakes, soils, biomes, renewable_resource_stocks, dynamic_climate, flood_drought_and_other_hazards, material_properties_needed_by_technical_affordances]
 
   - id: phase_4_population
     status: in_progress
@@ -200,97 +129,22 @@ phases:
       - cohort_specific_mortality
       - unresolved_cohort_births
       - cohort_composition_mobility
-    remaining_capabilities:
-      - cohort_aware_refinement
-      - cohort_aware_dematerialization
-      - relevance_driven_person_materialization
-      - relevance_driven_person_dematerialization
-      - bootstrap_settlement_population_removal
-      - bootstrap_settlement_entity_removal
-      - derived_population_summaries_for_actual_places_regions
-      - settlement_founding_abandonment_from_activity
-      - route_based_authoritative_population_migration
-      - migration_of_materialized_people_and_households
-      - household_fission_fusion
-      - persistent_site_improvements_as_refinable_assets
+    remaining_capabilities: [cohort_aware_refinement, cohort_aware_dematerialization, relevance_driven_person_materialization, relevance_driven_person_dematerialization, bootstrap_settlement_population_removal, bootstrap_settlement_entity_removal, derived_population_summaries_for_actual_places_regions, settlement_founding_abandonment_from_activity, route_based_authoritative_population_migration, migration_of_materialized_people_and_households, household_fission_fusion, persistent_site_improvements_as_refinable_assets]
 
   - id: phase_4b_epistemic_social_foundation
     status: in_progress
-    implemented_capabilities:
-      - needs_as_pressures
-      - probabilistic_beliefs
-      - memory_traces
-      - contextual_trust
-      - messages_and_distortion
-      - later_message_accuracy_evaluation
-      - perceived_strategy_learning
-      - latent_effect_separation
-      - bounded_stochastic_action_choice
-      - narrative_information_objects
-      - narrative_transmission_and_mutation
-      - multiplex_social_network
-      - biological_kinship_graph
-      - derived_lineages
-      - copresence_seeded_friendship_rivalry
-    remaining_capabilities:
-      - causal_models_inside_agents
-      - memory_retrieval_and_forgetting
-      - richer_deception_strategy
-      - identity_and_group_membership
-      - norms_and_sanctions
-      - institutional_memory
-      - endogenous_value_formation
-      - metacognition_and_confidence_calibration
+    implemented_capabilities: [needs_as_pressures, probabilistic_beliefs, memory_traces, contextual_trust, messages_and_distortion, later_message_accuracy_evaluation, perceived_strategy_learning, latent_effect_separation, bounded_stochastic_action_choice, narrative_information_objects, narrative_transmission_and_mutation, multiplex_social_network, biological_kinship_graph, derived_lineages, copresence_seeded_friendship_rivalry]
+    remaining_capabilities: [causal_models_inside_agents, memory_retrieval_and_forgetting, richer_deception_strategy, identity_and_group_membership, norms_and_sanctions, institutional_memory, endogenous_value_formation, metacognition_and_confidence_calibration]
 
   - id: phase_4c_life_processes
     status: in_progress
-    implemented_capabilities:
-      - household_registry
-      - household_resource_pool
-      - household_care_pressure
-      - household_stress_events
-      - pregnancy_state
-      - gestation_delay
-      - pregnancy_loss_or_live_birth
-      - relationship_strength_sentiment_trust_evolution
-      - probabilistic_separation
-      - multi_asset_estate
-      - competing_succession_claims
-      - divisible_contested_inheritance
-      - separate_wealth_debt_name_memory_transfers
-    remaining_capabilities:
-      - reconciliation_process
-      - endogenous_partner_formation
-      - caregiving_events
-      - childhood_dependency_and_development
-      - education_and_socialization
-      - household_fission_fusion
-      - adoption_and_incorporation
-      - land_inheritance
-      - office_and_claim_inheritance
-      - wills_customs_law_and_coercive_succession
-      - family_self_recognition
-      - outsider_recognition
-      - emergent_house_detection
+    implemented_capabilities: [household_registry, household_resource_pool, household_care_pressure, household_stress_events, pregnancy_state, gestation_delay, pregnancy_loss_or_live_birth, relationship_strength_sentiment_trust_evolution, probabilistic_separation, multi_asset_estate, competing_succession_claims, divisible_contested_inheritance, separate_wealth_debt_name_memory_transfers]
+    remaining_capabilities: [reconciliation_process, endogenous_partner_formation, caregiving_events, childhood_dependency_and_development, education_and_socialization, household_fission_fusion, adoption_and_incorporation, land_inheritance, office_and_claim_inheritance, wills_customs_law_and_coercive_succession, family_self_recognition, outsider_recognition, emergent_house_detection]
 
   - id: phase_4d_spatial_life
     status: in_progress
-    implemented_capabilities:
-      - terrain_derived_micro_affordances
-      - local_cell_activity
-      - individual_short_range_movement
-      - copresence_encounters
-      - sparse_place_history
-      - residence_history
-      - retrospective_place_views
-      - retrospective_settlement_nuclei
-    remaining_capabilities:
-      - persistent_individual_routes
-      - habitual_activity_sites
-      - route_memory
-      - actual_transport_of_goods
-      - long_range_travel
-      - contact_networks_for_cultural_diffusion
+    implemented_capabilities: [terrain_derived_micro_affordances, local_cell_activity, individual_short_range_movement, copresence_encounters, sparse_place_history, residence_history, retrospective_place_views, retrospective_settlement_nuclei]
+    remaining_capabilities: [persistent_individual_routes, habitual_activity_sites, route_memory, actual_transport_of_goods, long_range_travel, contact_networks_for_cultural_diffusion]
 
   - id: phase_4e_cultural_knowledge
     status: foundation_started
@@ -308,11 +162,16 @@ phases:
       - generic_continuous_convention_state
       - contact_driven_convention_convergence
       - isolation_driven_convention_drift
+      - derived_convention_cluster_view
       - generic_technical_affordance_definition
       - material_capability_environment_prerequisites
       - bounded_innovation_probability
       - zero_probability_when_hard_requirements_absent
       - non_guaranteed_discovery_when_requirements_present
+      - data_driven_affordance_catalog
+      - initial_low_level_affordance_catalog
+      - actor_local_innovation_attempt
+      - innovation_creates_actor_knowledge_not_global_unlock
     next_capabilities:
       - integrate_knowledge_with_materialized_people
       - experience_traces_from_real_activities
@@ -332,188 +191,46 @@ phases:
       - continuous_heritable_traits
       - actor_created_identity_categories
       - social_identity_transmission
-      - small_data_defined_technical_affordance_catalog
+      - bind_affordance_requirements_to_world_material_properties
       - independent_rediscovery
       - technique_mutation_and_recombination
       - capability_bundle_views_for_agriculture_metallurgy_navigation_industry
       - technology_diffusion_over_social_spatial_networks
       - technology_loss_after_carrier_network_collapse
-    forbidden_shortcuts:
-      - primitive_language_assignment
-      - primitive_religion_assignment
-      - primitive_ethnicity_from_phenotype
-      - chronological_tech_tree_unlocks
-      - automatic_progress
-      - target_number_of_languages
-      - target_number_of_religions
-      - guaranteed_technology_discovery
+    forbidden_shortcuts: [primitive_language_assignment, primitive_religion_assignment, primitive_ethnicity_from_phenotype, chronological_tech_tree_unlocks, automatic_progress, target_number_of_languages, target_number_of_religions, guaranteed_technology_discovery]
 
   - id: phase_5_social_economic
     status: in_progress
-    implemented_capabilities:
-      - explicit_asset_registry
-      - temporal_asset_relations
-      - possession_use_control_claim_separation
-      - observer_specific_claim_recognition
-      - derived_property_architecture
-      - household_inventories
-      - generic_production_process
-      - labour_and_environment_constrained_output
-      - real_stock_consumption
-      - bilateral_barter
-      - spatially_constrained_exchange
-      - general_obligation_registry
-      - grain_credit_vertical_slice
-      - repayment_partial_repayment_default
-      - storage_profiles
-      - storage_capacity
-      - spoilage
-      - heterogeneous_age_structured_demand
-      - local_household_material_shocks
-      - explicit_unmet_food_need
-      - micro_cell_food_gathering
-    remaining_capabilities:
-      - exchange_from_actual_copresence
-      - route_based_transport
-      - cell_area_asset_relations
-      - contested_possession_and_control
-      - claim_disputes_and_recognition_networks
-      - generic_evidence_document_objects
-      - institution_defined_property_views
-      - transport_capacity_and_transport_loss
-      - roads_ports_market_infrastructure_as_accumulated_improvements
-      - richer_credit_contracts
-      - debt_networks
-      - rent_tribute_tax
-      - labour_service_obligations
-      - protection_contracts
-      - endogenous_specialization_from_capabilities
-      - technology_modified_production_processes
-      - organization_level_production
-      - price_or_nonprice_allocation_institutions
-      - inheritance_of_asset_relations
-      - asset_concentration_metrics
+    implemented_capabilities: [explicit_asset_registry, temporal_asset_relations, possession_use_control_claim_separation, observer_specific_claim_recognition, derived_property_architecture, household_inventories, generic_production_process, labour_and_environment_constrained_output, real_stock_consumption, bilateral_barter, spatially_constrained_exchange, general_obligation_registry, grain_credit_vertical_slice, repayment_partial_repayment_default, storage_profiles, storage_capacity, spoilage, heterogeneous_age_structured_demand, local_household_material_shocks, explicit_unmet_food_need, micro_cell_food_gathering]
+    remaining_capabilities: [exchange_from_actual_copresence, route_based_transport, cell_area_asset_relations, contested_possession_and_control, claim_disputes_and_recognition_networks, generic_evidence_document_objects, institution_defined_property_views, transport_capacity_and_transport_loss, roads_ports_market_infrastructure_as_accumulated_improvements, richer_credit_contracts, debt_networks, rent_tribute_tax, labour_service_obligations, protection_contracts, endogenous_specialization_from_capabilities, technology_modified_production_processes, organization_level_production, price_or_nonprice_allocation_institutions, inheritance_of_asset_relations, asset_concentration_metrics]
 
   - id: phase_5b_institutional_emergence
     status: in_progress
-    implemented_capabilities:
-      - cooperation_ledger
-      - cooperation_components
-      - generic_organization_registry
-      - organization_membership
-      - shared_organization_resources
-      - probabilistic_organization_formation_from_cooperation
-      - organization_contribution
-      - organization_aid
-      - derived_domain_authority_index
-      - effective_authority_signal
-      - separate_legitimacy_signal
-      - dependency_compliance_recognition_provision_coercion_dimensions
-    remaining_capabilities:
-      - organization_fission_merge_competition
-      - nested_organizations
-      - leadership_and_roles
-      - offices_and_role_succession
-      - rules_and_norms
-      - actor_specific_obligation_recognition
-      - institutional_memory
-      - enforcement_capacity
-      - protection_and_extraction
-      - collective_action
-      - organizational_identity
-      - outsider_recognition
-      - organization_asset_relations_and_production
-      - institutions_as_cultural_transmission_amplifiers
+    implemented_capabilities: [cooperation_ledger, cooperation_components, generic_organization_registry, organization_membership, shared_organization_resources, probabilistic_organization_formation_from_cooperation, organization_contribution, organization_aid, derived_domain_authority_index, effective_authority_signal, separate_legitimacy_signal, dependency_compliance_recognition_provision_coercion_dimensions]
+    remaining_capabilities: [organization_fission_merge_competition, nested_organizations, leadership_and_roles, offices_and_role_succession, rules_and_norms, actor_specific_obligation_recognition, institutional_memory, enforcement_capacity, protection_and_extraction, collective_action, organizational_identity, outsider_recognition, organization_asset_relations_and_production, institutions_as_cultural_transmission_amplifiers]
 
   - id: phase_6_political_epistemic
     status: foundation_started
-    depends_on:
-      - phase_5_social_economic
-      - phase_5b_institutional_emergence
-      - phase_4b_epistemic_social_foundation
-      - phase_4e_cultural_knowledge
-    capabilities:
-      - states_as_derived_views
-      - authority
-      - claims
-      - territorial_control
-      - borders
-      - diplomacy
-      - actor_information
-      - actor_spatial_knowledge
-      - strategic_deception
-      - legitimacy
-      - political_learning
-      - bounded_llm_decisions
-    next_prerequisites:
-      - spatial_control_fields
-      - territorial_claims
-      - protection_extraction
-      - coercive_capacity
-      - recognized_offices
-      - coalition_processes
-      - cultural_identity_and_language_effects_on_coordination
-      - technology_effects_on_transport_information_and_coercion
+    depends_on: [phase_5_social_economic, phase_5b_institutional_emergence, phase_4b_epistemic_social_foundation, phase_4e_cultural_knowledge]
+    capabilities: [states_as_derived_views, authority, claims, territorial_control, borders, diplomacy, actor_information, actor_spatial_knowledge, strategic_deception, legitimacy, political_learning, bounded_llm_decisions]
+    next_prerequisites: [spatial_control_fields, territorial_claims, protection_extraction, coercive_capacity, recognized_offices, coalition_processes, cultural_identity_and_language_effects_on_coordination, technology_effects_on_transport_information_and_coercion]
 
   - id: phase_7_culture_institutions_conflict
     status: foundation_started
-    depends_on:
-      - phase_4e_cultural_knowledge
-      - phase_5b_institutional_emergence
-    planned_capabilities:
-      - family_and_dynastic_memory
-      - norms
-      - ideology
-      - derived_languages_and_dialects
-      - derived_religions_and_cults
-      - emergent_ethnic_people_identity
-      - emergent_political_culture
-      - institutional_path_dependence
-      - technology_traditions_and_diffusion
-      - conflict
-      - military_capacity
-      - terrain_and_technology_constrained_operations
-      - fronts_and_occupation
-      - historical_views
-      - narrative_extraction
+    depends_on: [phase_4e_cultural_knowledge, phase_5b_institutional_emergence]
+    planned_capabilities: [family_and_dynastic_memory, norms, ideology, derived_languages_and_dialects, derived_religions_and_cults, emergent_ethnic_people_identity, emergent_political_culture, institutional_path_dependence, technology_traditions_and_diffusion, conflict, military_capacity, terrain_and_technology_constrained_operations, fronts_and_occupation, historical_views, narrative_extraction]
 
   - id: phase_8_experiments
     status: planned
-    capabilities:
-      - batch_simulation
-      - counterfactuals
-      - sensitivity_analysis
-      - trajectory_comparison
-      - causal_attribution
-      - epistemic_counterfactuals
-      - narrative_path_dependence_analysis
-      - cultural_fragmentation_convergence_analysis
-      - innovation_diffusion_loss_analysis
+    capabilities: [batch_simulation, counterfactuals, sensitivity_analysis, trajectory_comparison, causal_attribution, epistemic_counterfactuals, narrative_path_dependence_analysis, cultural_fragmentation_convergence_analysis, innovation_diffusion_loss_analysis]
 
   - id: phase_9_inverse_inference
     status: planned
-    capabilities:
-      - latent_hypotheses
-      - approximate_bayesian_inference
-      - abductive_search
-      - posterior_over_explanations
-      - hidden_spatial_hypotheses
-      - hidden_resource_hypotheses
-      - hidden_information_hypotheses
-      - hidden_belief_hypotheses
-      - hidden_institution_hypotheses
-      - hidden_technology_hypotheses
-      - hidden_cultural_network_hypotheses
+    capabilities: [latent_hypotheses, approximate_bayesian_inference, abductive_search, posterior_over_explanations, hidden_spatial_hypotheses, hidden_resource_hypotheses, hidden_information_hypotheses, hidden_belief_hypotheses, hidden_institution_hypotheses, hidden_technology_hypotheses, hidden_cultural_network_hypotheses]
 
   - id: phase_10_real_world
     status: long_term
-    capabilities:
-      - real_world_geospatial_ingestion
-      - empirical_calibration
-      - historical_reconstruction
-      - geopolitical_scenario_analysis
-      - uncertainty_aware_helper
-      - spatially_epistemically_culturally_grounded_inverse_analysis
+    capabilities: [real_world_geospatial_ingestion, empirical_calibration, historical_reconstruction, geopolitical_scenario_analysis, uncertainty_aware_helper, spatially_epistemically_culturally_grounded_inverse_analysis]
 
 constraints:
   never_assume_single_story: true
