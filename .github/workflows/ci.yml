@@ -38,3 +38,6 @@ jobs:
       - name: Material disequilibrium simulation
         run: >-
           python scripts/run_disequilibrium_world.py --seed 104729 --years 30 --width 52 --height 40 --settlements 5 --output /tmp/simworld-disequilibrium-world
+      - name: Spatial life and emergent places simulation
+        run: >-
+          python scripts/run_spatial_life_world.py --seed 104729 --years 20 --width 46 --height 34 --settlements 5 --output /tmp/simworld-spatial-life
