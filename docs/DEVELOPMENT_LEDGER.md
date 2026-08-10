@@ -73,125 +73,47 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 **Intent:** move from static relationship snapshots toward persistent life processes capable of generating endogenous families, branches, property continuity, dependency and later institutions.
 
-**New processes:**
-- household formation and membership independent of blood;
-- shared household resources and care burden;
-- relationship strengthening, decay, separation and reconciliation as probabilistic processes;
-- conception separated from birth by a pregnancy/gestation state;
-- inheritance as competing claims over distinct assets, debts, names, roles and stories rather than a single automatic heir;
-- death can open an estate and transfer different things to different people;
-- materialized-person detail remains a refinement layer over aggregate population.
+**New processes:** household formation independent of blood; shared resources/care burden; relationship evolution; gestation; contested multi-channel succession.
 
-**New invariants:**
-- co-residence != family != kinship;
-- inheritance != biological descent;
-- claims, norms, wills/intent, social power and recognition are separate inputs;
-- the same death may produce multiple incompatible succession outcomes across property, debt, office, name and narrative custody;
-- relationship state must evolve through accumulated interaction rather than static labels.
+**Invariant:** co-residence != family != kinship; inheritance != biological descent.
 
 ---
 
 ## 2026-08-09 — M7 Material economy, property and spatial exchange
 
-**Intent:** create the material substrate from which durable economic asymmetry and later political power can emerge without assigning economic castes, houses or rulers in advance.
+**Intent:** create a material substrate for durable economic asymmetry and later political power.
 
-**Historical note:** this milestone initially introduced `PropertyRight` as if a recognized ownership relation could be a primitive. M10 below supersedes that choice: modern/formal property is now derived from more elementary actor↔asset relations and recognition.
+**Historical note:** the initial `PropertyRight` primitive is superseded by M10.
 
-**Other primitives/processes retained:**
-- `Asset` as a real productive/material object;
-- `Inventory` for actual stocks, distinct from abstract wealth;
-- generic `ProductionProcess` and environmental/labour context;
-- bilateral `ExchangeProposal`/`ExchangeResult`;
-- integrated household-level field assets, production, consumption, shortage, debt effects and barter;
-- spatial accessibility for repeated exchange cached by settlement pair.
-
-**Invariant retained:** scarcity alters constraints and incentives, never directly triggers a prescribed social/political outcome.
+**Retained:** assets, inventories, production, consumption, bilateral exchange and spatial accessibility.
 
 ---
 
 ## 2026-08-09 — M8 Obligations, organizations and derived authority
 
-**Intent:** bridge material/social interaction into durable institutional structure without declaring rulers, classes, houses, governments or states as primitive objects.
+**Intent:** bridge repeated material/social interaction toward durable organization and authority without primitive rulers/states.
 
-**New primitives:**
-- general `Obligation` and `ObligationRegistry` for resource/labour/service duties with provenance, due time, fulfilment, debtor acceptance, external recognition and enforceability;
-- `CooperationLedger` accumulating repeated successful/failed interaction;
-- generic `Organization`, `Membership` and `OrganizationRegistry`;
-- `AuthorityObservation`, `AuthoritySignal` and `AuthorityIndex` separating effective authority from legitimacy.
+**Primitives:** obligations, cooperation ledger, generic organizations, derived authority/legitimacy observations.
 
-**Integrated processes:**
-- severe household grain shortage may generate a credit request rather than an automatic policy response;
-- possible creditors are constrained by actual surplus, spatial access, social connection and previous cooperation;
-- accepted credit moves real grain and creates an explicit obligation;
-- repayment, partial repayment and default become historical events;
-- repeated successful interaction can reinforce cooperation while failed interaction can weaken it;
-- connected cooperation networks may probabilistically form a generic organization;
-- organizations can pool voluntary grain contributions and redistribute aid;
-- authority signals emerge from observed compliance, dependency, recognition, provision and coercion;
-- organization-level authority can grow in the resource-coordination domain through repeated contribution/provision without making the organization a government.
-
-**New invariants:**
-- request != obligation;
-- obligation != financial debt only;
-- compliance != consent;
-- dependency != loyalty;
-- coercion != legitimacy;
-- organization != institution != government != state;
-- effective authority and legitimacy are separate signals;
-- authority is domain-specific and historically derived;
-- economic dependency may become political power later, but never automatically.
-
-**Observed baseline:** with seed `104729`, 20 years and 5 settlements, the first institutional run produced zero obligations, organizations and authority relations. This was treated as a model diagnostic rather than a failure: the material layer was too homogeneous to create the disequilibria required for those processes to activate naturally.
+**Invariant:** organization != state; authority != legitimacy; dependency != loyalty.
 
 ---
 
 ## 2026-08-09 — M9 Material disequilibrium, storage and local shocks
 
-**Intent:** create plausible asynchronous surplus/deficit conditions so exchange, credit, dependency and organization can emerge from material history instead of being forced by event quotas or lowered thresholds.
+**Intent:** create asynchronous surplus/deficit from storage, demand and local shocks so exchange/credit/cooperation can activate without quotas.
 
-**New primitives/processes:**
-- per-household `StorageProfile` with capacity, preservation and exposure;
-- grain spoilage and overflow loss;
-- heterogeneous `HouseholdDemandProfile` with age-sensitive food needs and reserve targets;
-- household-specific vulnerability to local material shocks;
-- local pest/crop loss, storage damage and tool breakage events that affect actual inventories;
-- explicit unmet household food need events after real stock consumption;
-- integrated disequilibrium run layered on top of obligations, organizations and authority.
-
-**New invariants:**
-- heterogeneous outcomes must arise from heterogeneous state/processes, not from a target count of historical events;
-- do not tune the simulator to produce a desired number of wars, trades, revolts, organizations or states;
-- storage and spoilage are material processes independent of later social interpretation;
-- two households in the same settlement may experience the same macro year differently;
-- shocks create opportunities/constraints, never prescribed behavioural responses.
+**Invariant:** never tune event counts to obtain a desired historical storyline.
 
 ---
 
 ## 2026-08-09 — M10 Primitive simplification: asset relations before property
 
-**Intent:** reduce conceptual complexity and avoid projecting modern legal property backward into worlds that may not yet contain institutions capable of defining, recording or enforcing it.
+**Intent:** avoid projecting modern property law into worlds without institutions capable of defining/enforcing it.
 
-**Architectural change:**
-- `Asset` remains physical/material truth;
-- primitive `PropertyRight` is superseded by temporal `AssetRelation`;
-- minimal relation kinds are `possess`, `use`, `control`, and `claim`;
-- `Recognition` records that one actor accepts another actor's claim, independently of physical control;
-- formal/legal property becomes a future **derived view** over claims, recognition, control, norms and enforcement;
-- deeds, titles, cadastral records and contracts will later be information/evidence objects whose force depends on issuer recognition and institutional enforcement;
-- compatibility wrappers remain temporarily so prior vertical slices do not require a destructive rewrite.
+**Architecture:** `Asset`; temporal `AssetRelation` (`possess`, `use`, `control`, `claim`); actor-specific `Recognition`; formal property becomes derived from claim + recognition + control + norms + enforcement.
 
-**Integrated change:** initial farming households now occupy, use and effectively control their field plots. The simulation no longer asserts that they own those plots under a universal legal regime. Production depends on `use`, not legal ownership.
-
-**New invariants:**
-- asset != property;
-- possession != use != control != claim;
-- claim != recognized claim;
-- recognized claim != effective control;
-- document != truth;
-- legal/formal property requires institutional context;
-- no universal property law is built into the kernel.
-
-**Scalability rationale:** the simulator keeps a small set of generic relations and lets historical institutions add meaning later. This is preferred to creating separate hard-coded systems for prehistoric possession, feudal tenure, customary property and modern title.
+**Invariant:** document != truth; asset != property; claim != recognition != control.
 
 **Reference:** `docs/RESOURCE_CLAIMS_FOUNDATION.md`.
 
@@ -199,34 +121,43 @@ Do not use this ledger as a marketing changelog. It exists so future humans and 
 
 ## 2026-08-10 — M11 Terrain-derived hydrology, individual local activity and emergent places
 
-**Intent:** move the causal substrate closer to micro→macro history: terrain should create opportunities at the cell level; individuals should discover/use those opportunities; socially meaningful places should be derived from accumulated use rather than predeclared as markets, villages or centres.
+**Intent:** let terrain create micro-local opportunities, individuals discover/use them, and socially meaningful places emerge from accumulated use.
 
-**Physical additions:**
-- continuous D8-like flow accumulation derived from elevation and rainfall;
-- continuous `river_strength` rather than primitive river objects;
-- diffused `freshwater_access` around drainage channels;
-- spatially patchy `coastal_food` so two nearby shore cells can have materially different histories;
-- fertility/habitability now respond modestly to freshwater and coastal productivity.
+**Physical additions:** terrain-derived flow accumulation, continuous river strength, freshwater access, patchy coastal food.
 
-**Social-spatial additions:**
-- sparse `CellActivityLedger`: cells acquire social state only after use;
-- activity channels: visit, residence, gathering, cultivation, exchange, conflict, construction;
-- `PlaceView` is a retrospective summary over accumulated cell activity, not a causal entity;
-- materialized people hold local cell positions and make short-range movements based on continuous physical affordances plus familiarity;
-- gathering/cultivation can add small real food quantities to the relevant household inventory;
-- co-presence creates opportunities for individual encounters;
-- encounters may be friendly, neutral or hostile and can seed friendship/rivalry ties;
-- exact cell coordinates are retained in event payloads while existing settlement entities remain the coarse event-location reference.
+**Social-spatial additions:** sparse cell activity, local movement, gathering/cultivation, co-presence encounters, retrospective `PlaceView`.
+
+**Invariant:** place != place type; market/village/port/political centre remain derived interpretations.
+
+**Known limitation:** coarse settlements are still bootstrap entities created before individual history.
+
+---
+
+## 2026-08-10 — M12 Persistent residence and emergent settlement nuclei
+
+**Intent:** remove the next major hard-coded macro category by letting inhabited nuclei arise from household residence and local history rather than a `create_settlement()` decision.
+
+**New processes/views:**
+- each materialized household has a persistent residential anchor distinct from short-range excursions;
+- annual local activity starts from that residence, preventing random-walk drift from masquerading as migration;
+- households may probabilistically relocate toward nearby cells with persistently better physical/material affordances;
+- residence is recorded sparsely in the cell activity ledger;
+- generic `local_construction` records persistent site improvement without declaring building type;
+- adjacent residentially used cells are clustered retrospectively into `SettlementNucleusView` projections;
+- nucleus projections contain centre, cells, actors, persistence, residence, production, exchange, construction and conflict signals.
 
 **New invariants:**
-- terrain features influence history through continuous physical signals, not narrative labels;
-- place != place type;
-- market/village/port/political centre are derived interpretations of repeated activity unless they later acquire autonomous institutional structure;
-- social state over geography must remain sparse;
-- individual movement creates encounter opportunity; it must not guarantee interaction or relationship outcome;
-- familiarity can reinforce paths of use but must not override material constraints;
-- microgeographic importance can emerge, decay and relocate.
+- residence != settlement;
+- settlement nucleus != named village/town/city;
+- construction != building type;
+- local movement != migration;
+- derived clustering must not itself create causal advantage;
+- bootstrap settlements are compatibility coordinates, not social truth.
 
-**Known transitional limitation:** the current vertical slices still seed coarse `settlement` entities before individual history. M11 deliberately does not hide this. The future population refactor should let residence clusters and settlements themselves become derived/materialized from repeated individual/household location and infrastructure, with aggregate population used only for unresolved background regions.
+**Scalability:** no dense settlement layer is introduced. Residence/construction reuse the sparse cell ledger; only active cells participate in nucleus derivation.
 
-**Next dependencies:** settlement de-hardcoding, residence/household relocation, persistent site improvements, explicit cell/area claims, movement-generated exchange encounters, and later resource/interaction feedback into organizations and authority.
+**Validation target:** cluster derivation, persistent residence, relocation/construction events, integrated multi-year run and dedicated CI slice.
+
+**Known limitation / next dependency:** initial aggregate population and founder placement still originate from bootstrap settlements. The next population refactor should distribute unresolved population over habitable terrain and materialize people/households around causally relevant cells/nuclei, so emergent nuclei become the primary anchors rather than compatibility settlements.
+
+**Reference:** `docs/EMERGENT_SETTLEMENT_NUCLEI.md`.
