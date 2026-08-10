@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from simworld.culture.effects import EffectSpec
 from simworld.culture.technology import Affordance
 
 
@@ -32,6 +33,22 @@ class AffordanceCatalog:
         for item in raw:
             if not isinstance(item, dict):
                 raise ValueError("each affordance must be an object")
+            raw_effects = item.get("effects", [])
+            if not isinstance(raw_effects, list):
+                raise ValueError("affordance effects must be a list")
+            effects = tuple(
+                EffectSpec(
+                    channel=str(effect["channel"]),
+                    operation=str(effect.get("operation", "multiply")),
+                    magnitude=float(effect.get("magnitude", 0.0)),
+                    activation_chance=float(effect.get("activation_chance", 1.0)),
+                    required_context={
+                        str(key): float(value)
+                        for key, value in effect.get("required_context", {}).items()
+                    },
+                )
+                for effect in raw_effects
+            )
             affordance = Affordance(
                 id=str(item["id"]),
                 required_materials=frozenset(str(value) for value in item.get("required_materials", [])),
@@ -45,6 +62,7 @@ class AffordanceCatalog:
                 },
                 complexity=float(item.get("complexity", 0.5)),
                 observability=float(item.get("observability", 0.5)),
+                effects=effects,
             )
             if affordance.id in affordances:
                 raise ValueError(f"duplicate affordance id: {affordance.id}")
